@@ -27,7 +27,8 @@ struct FGridSize
 UENUM()
 enum class EOrganizerShape : uint8
 {
-	Grid
+	Grid,
+	Ring
 };
 
 UCLASS()
@@ -53,6 +54,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Organizer")
 	TArray<AActor*> GeneratedActors;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
+	FVector LocationOffset{FVector::ZeroVector};
+	
 	void CreateChildActor(const FTransform& RelativeTransform);
 
 	// Grid
@@ -62,11 +66,20 @@ protected:
 		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides))
 	FGridSize GridSize;
 
-	UPROPERTY(EditAnywhere,
-		BlueprintReadOnly,
-		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides))
-	FVector LocationOffset{128.f, 128.f, 128.f};
-
 	void CreateChildActorsOnGrid();
+
+	// Ring
+	UPROPERTY(EditAnywhere,
+     		BlueprintReadOnly,
+     		Category="Organizer",
+     		meta=(EditCondition="Shape==EOrganizerShape::Ring", EditConditionHides, ClampMin="0"))
+	int32 ActorsAmount = 4;
+	
+	UPROPERTY(EditAnywhere,
+     		BlueprintReadOnly,
+     		Category="Organizer",
+     		meta=(EditCondition="Shape==EOrganizerShape::Ring", EditConditionHides, ClampMin="0"))
+	float Radius = 256.f;
+	
+	void CreateChildActorsOnRing();
 };

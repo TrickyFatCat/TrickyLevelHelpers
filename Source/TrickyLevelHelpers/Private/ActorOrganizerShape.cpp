@@ -4,6 +4,7 @@
 #include "ActorOrganizerShape.h"
 
 #include "Components/BillboardComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AActorOrganizerShape::AActorOrganizerShape()
 {
@@ -17,7 +18,7 @@ AActorOrganizerShape::AActorOrganizerShape()
 void AActorOrganizerShape::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-	
+
 #if WITH_EDITORONLY_DATA
 
 	if (!ChildActorClass)
@@ -29,6 +30,10 @@ void AActorOrganizerShape::OnConstruction(const FTransform& Transform)
 	{
 	case EOrganizerShape::Grid:
 		CreateChildActorsOnGrid();
+		break;
+
+	case EOrganizerShape::Ring:
+		CreateChildActorsOnRing();
 		break;
 	}
 
@@ -51,7 +56,6 @@ void AActorOrganizerShape::CreateChildActor(const FTransform& RelativeTransform)
 
 void AActorOrganizerShape::CreateChildActorsOnGrid()
 {
-	
 #if WITH_EDITORONLY_DATA
 
 	if (GridSize.ZeroSize())
@@ -98,6 +102,36 @@ void AActorOrganizerShape::CreateChildActorsOnGrid()
 			RelativeTransform.SetLocation(Location);
 			CreateChildActor(RelativeTransform);
 		}
+	}
+
+#endif
+}
+
+void AActorOrganizerShape::CreateChildActorsOnRing()
+{
+#if WITH_EDITORONLY_DATA
+
+	if (Radius <= 0.f || ActorsAmount <= 0)
+	{
+		return;
+	}
+
+	if (GeneratedActors.Num() != 0)
+	{
+		GeneratedActors.Empty();
+	}
+
+	FVector Location{FVector::ZeroVector};
+	FTransform RelativeTransform{FTransform::Identity};
+
+	constexpr float Angle = 360.f;
+	for (int32 i = 0; i < ActorsAmount; i++)
+	{
+		const float Yaw = i * (Angle / ActorsAmount);
+		Location = UKismetMathLibrary::CreateVectorFromYawPitch(Yaw, 0.f);
+		Location += (Location * Radius) + LocationOffset;
+		RelativeTransform.SetLocation(Location);
+		CreateChildActor(RelativeTransform);
 	}
 
 #endif
