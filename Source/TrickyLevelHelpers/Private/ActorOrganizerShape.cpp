@@ -3,13 +3,15 @@
 
 #include "ActorOrganizerShape.h"
 
+#include "Components/BillboardComponent.h"
+
 AActorOrganizerShape::AActorOrganizerShape()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	SetActorTickEnabled(false);
-	SceneComponent = CreateDefaultSubobject<USceneComponent>("Root");
-	SetRootComponent(SceneComponent);
-	SceneComponent->SetComponentTickEnabled(false);
+	BillboardComponent = CreateDefaultSubobject<UBillboardComponent>("Root");
+	SetRootComponent(BillboardComponent);
+	BillboardComponent->SetComponentTickEnabled(false);
 }
 
 void AActorOrganizerShape::OnConstruction(const FTransform& Transform)

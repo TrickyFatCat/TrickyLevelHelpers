@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ActorOrganizerShape.generated.h"
 
-class USceneComponent;
+class UBillboardComponent;
 
 USTRUCT(BlueprintType)
 struct FGridSize
@@ -42,7 +42,7 @@ protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
-	USceneComponent* SceneComponent = nullptr;
+	UBillboardComponent* BillboardComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="Organizer")
 	EOrganizerShape Shape = EOrganizerShape::Grid;
