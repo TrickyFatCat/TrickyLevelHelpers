@@ -53,12 +53,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Organizer")
 	TArray<AActor*> GeneratedActors;
 
-	void GenerateActors();
-
-	void GenerateActor(const FTransform& RelativeTransform);
+	void CreateChildActor(const FTransform& RelativeTransform);
 
 	// Grid
-
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
@@ -71,5 +68,5 @@ protected:
 		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides))
 	FVector LocationOffset{128.f, 128.f, 128.f};
 
-	void GenerateActorsOnGrid();
+	void CreateChildActorsOnGrid();
 };

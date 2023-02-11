@@ -14,13 +14,8 @@ AActorOrganizerShape::AActorOrganizerShape()
 
 void AActorOrganizerShape::OnConstruction(const FTransform& Transform)
 {
-	GenerateActors();
-
 	Super::OnConstruction(Transform);
-}
-
-void AActorOrganizerShape::GenerateActors()
-{
+	
 #if WITH_EDITORONLY_DATA
 
 	if (!ChildActorClass)
@@ -31,14 +26,14 @@ void AActorOrganizerShape::GenerateActors()
 	switch (Shape)
 	{
 	case EOrganizerShape::Grid:
-		GenerateActorsOnGrid();
+		CreateChildActorsOnGrid();
 		break;
 	}
 
 #endif
 }
 
-void AActorOrganizerShape::GenerateActor(const FTransform& RelativeTransform)
+void AActorOrganizerShape::CreateChildActor(const FTransform& RelativeTransform)
 {
 	UActorComponent* NewComponent = AddComponentByClass(UChildActorComponent::StaticClass(),
 	                                                    false,
@@ -52,7 +47,7 @@ void AActorOrganizerShape::GenerateActor(const FTransform& RelativeTransform)
 	}
 }
 
-void AActorOrganizerShape::GenerateActorsOnGrid()
+void AActorOrganizerShape::CreateChildActorsOnGrid()
 {
 	
 #if WITH_EDITORONLY_DATA
@@ -99,7 +94,7 @@ void AActorOrganizerShape::GenerateActorsOnGrid()
 			Location.X = x * LocationOffset.X;
 			Location.Y = y * LocationOffset.Y;
 			RelativeTransform.SetLocation(Location);
-			GenerateActor(RelativeTransform);
+			CreateChildActor(RelativeTransform);
 		}
 	}
 
