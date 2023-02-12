@@ -73,7 +73,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
 	TSubclassOf<AActor> ChildActorClass = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category="Organizer")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Organizer")
 	TArray<AActor*> GeneratedActors;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
