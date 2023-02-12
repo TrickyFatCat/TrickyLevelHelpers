@@ -97,8 +97,8 @@ void AActorOrganizerShape::CreateChildActorsOnGrid()
 	{
 		for (int32 y = 0; y < GridSize.Y; y++)
 		{
-			Location.X = x * LocationOffset.X;
-			Location.Y = y * LocationOffset.Y;
+			Location.X = x * SectorSize.X + LocationOffset.X;
+			Location.Y = y * SectorSize.Y + LocationOffset.Y;
 			RelativeTransform.SetLocation(Location);
 			CreateChildActor(RelativeTransform);
 		}

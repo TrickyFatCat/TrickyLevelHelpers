@@ -28,7 +28,8 @@ UENUM()
 enum class EOrganizerShape : uint8
 {
 	Grid,
-	Ring
+	Ring,
+	Arc
 };
 
 UCLASS()
@@ -65,10 +66,16 @@ protected:
 		Category="Organizer",
 		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides))
 	FGridSize GridSize;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Organizer",
+		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides))
+	FVector2D SectorSize{128.f, 128.f};
 
 	void CreateChildActorsOnGrid();
 
-	// Ring
+	// Ring, Arc
 	UPROPERTY(EditAnywhere,
      		BlueprintReadOnly,
      		Category="Organizer",
