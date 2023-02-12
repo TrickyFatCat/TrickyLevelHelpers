@@ -122,8 +122,8 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=()EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides,
-		ClampMin="0")
+		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides,
+		ClampMin="0"))
 	float Radius = 256.f;
 
 	UPROPERTY(EditAnywhere,
@@ -135,6 +135,4 @@ protected:
 	void GenerateRing();
 
 	void GenerateArc();
-
-	void GenerateCircle();
 };
