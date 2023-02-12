@@ -57,7 +57,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
 	FVector LocationOffset{FVector::ZeroVector};
-	
+
 	void CreateChildActor(const FTransform& RelativeTransform);
 
 	// Grid
@@ -66,7 +66,7 @@ protected:
 		Category="Organizer",
 		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides))
 	FGridSize GridSize;
-	
+
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
@@ -77,16 +77,24 @@ protected:
 
 	// Ring, Arc
 	UPROPERTY(EditAnywhere,
-     		BlueprintReadOnly,
-     		Category="Organizer",
-     		meta=(EditCondition="Shape==EOrganizerShape::Ring", EditConditionHides, ClampMin="0"))
+		BlueprintReadOnly,
+		Category="Organizer",
+		meta=(EditCondition="Shape!=EOrganizerShape::Grid", EditConditionHides, ClampMin="0"))
 	int32 ActorsAmount = 4;
-	
+
 	UPROPERTY(EditAnywhere,
-     		BlueprintReadOnly,
-     		Category="Organizer",
-     		meta=(EditCondition="Shape==EOrganizerShape::Ring", EditConditionHides, ClampMin="0"))
+		BlueprintReadOnly,
+		Category="Organizer",
+		meta=(EditCondition="Shape!=EOrganizerShape::Grid", EditConditionHides, ClampMin="0"))
 	float Radius = 256.f;
-	
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Organizer",
+		meta=(EditCondition="Shape!=EOrganizerShape::Grid", EditConditionHides, ClampMin="0"))
+	float ArcAngle = 45.f;
+
 	void CreateChildActorsOnRing();
+
+	void CreateChildActorsOnArc();
 };

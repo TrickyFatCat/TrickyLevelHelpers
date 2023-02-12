@@ -35,6 +35,10 @@ void AActorOrganizerShape::OnConstruction(const FTransform& Transform)
 	case EOrganizerShape::Ring:
 		CreateChildActorsOnRing();
 		break;
+
+	case EOrganizerShape::Arc:
+		CreateChildActorsOnArc();
+		break;
 	}
 
 #endif
@@ -128,6 +132,35 @@ void AActorOrganizerShape::CreateChildActorsOnRing()
 	for (int32 i = 0; i < ActorsAmount; i++)
 	{
 		const float Yaw = i * (Angle / ActorsAmount);
+		Location = UKismetMathLibrary::CreateVectorFromYawPitch(Yaw, 0.f);
+		Location += (Location * Radius) + LocationOffset;
+		RelativeTransform.SetLocation(Location);
+		CreateChildActor(RelativeTransform);
+	}
+
+#endif
+}
+
+void AActorOrganizerShape::CreateChildActorsOnArc()
+{
+#if WITH_EDITORONLY_DATA
+
+	if (Radius <= 0.f || ActorsAmount <= 0)
+	{
+		return;
+	}
+
+	if (GeneratedActors.Num() != 0)
+	{
+		GeneratedActors.Empty();
+	}
+
+	FVector Location{FVector::ZeroVector};
+	FTransform RelativeTransform{FTransform::Identity};
+
+	for (int32 i = 0; i < ActorsAmount; i++)
+	{
+		const float Yaw = i * (ArcAngle/ (ActorsAmount - 1)) - 0.5f * ArcAngle;
 		Location = UKismetMathLibrary::CreateVectorFromYawPitch(Yaw, 0.f);
 		Location += (Location * Radius) + LocationOffset;
 		RelativeTransform.SetLocation(Location);
