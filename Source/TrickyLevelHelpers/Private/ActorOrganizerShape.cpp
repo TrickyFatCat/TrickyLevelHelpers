@@ -29,19 +29,19 @@ void AActorOrganizerShape::OnConstruction(const FTransform& Transform)
 	switch (Shape)
 	{
 	case EOrganizerShape::Grid:
-		CreateChildActorsOnGrid();
+		GenerateGrid();
 		break;
 
 	case EOrganizerShape::Cube:
-		CreateChildActorOnCube();
+		GenerateCube();
 		break;
 
 	case EOrganizerShape::Ring:
-		CreateChildActorsOnRing();
+		GenerateRing();
 		break;
 
 	case EOrganizerShape::Arc:
-		CreateChildActorsOnArc();
+		GenerateArc();
 		break;
 	}
 
@@ -62,7 +62,7 @@ void AActorOrganizerShape::CreateChildActor(const FTransform& RelativeTransform)
 	}
 }
 
-void AActorOrganizerShape::CreateChildActorsOnGrid()
+void AActorOrganizerShape::GenerateGrid()
 {
 #if WITH_EDITORONLY_DATA
 
@@ -115,7 +115,7 @@ void AActorOrganizerShape::CreateChildActorsOnGrid()
 #endif
 }
 
-void AActorOrganizerShape::CreateChildActorOnCube()
+void AActorOrganizerShape::GenerateCube()
 {
 #if WITH_EDITORONLY_DATA
 
@@ -151,7 +151,7 @@ void AActorOrganizerShape::CreateChildActorOnCube()
 #endif
 }
 
-void AActorOrganizerShape::CreateChildActorsOnRing()
+void AActorOrganizerShape::GenerateRing()
 {
 #if WITH_EDITORONLY_DATA
 
@@ -181,7 +181,7 @@ void AActorOrganizerShape::CreateChildActorsOnRing()
 #endif
 }
 
-void AActorOrganizerShape::CreateChildActorsOnArc()
+void AActorOrganizerShape::GenerateArc()
 {
 #if WITH_EDITORONLY_DATA
 
