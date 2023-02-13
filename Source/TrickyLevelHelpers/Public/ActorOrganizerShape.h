@@ -4,44 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "LevelHelpersLibrary.h"
 #include "ActorOrganizerShape.generated.h"
 
 class UBillboardComponent;
-
-USTRUCT(BlueprintType)
-struct FGridSize
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="GridSize", meta=(ClampMin="0"))
-	int32 X = 2;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="GridSize", meta=(ClampMin="0"))
-	int32 Y = 2;
-
-	bool ZeroSize() const { return X == 0 || Y == 0; }
-
-	int32 Size() const { return X * Y; }
-};
-
-USTRUCT(BlueprintType)
-struct FCubeSize
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CubeSize", meta=(ClampMin="0"))
-	int32 X = 2;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CubeSize", meta=(ClampMin="0"))
-	int32 Y = 2;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CubeSize", meta=(ClampMin="0"))
-	int32 Z = 2;
-
-	bool ZeroSize() const { return X == 0 || Y == 0 || Z == 0; }
-
-	int32 Size() const { return X * Y * Z; }
-};
 
 UENUM()
 enum class EOrganizerShape : uint8
@@ -100,13 +66,13 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="Shape=EOrganizerShape::Cube", EditConditionHides))
+		meta=(EditCondition="Shape==EOrganizerShape::Cube", EditConditionHides))
 	FCubeSize CubeSize;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="Shape=EOrganizerShape::Cube", EditConditionHides))
+		meta=(EditCondition="Shape==EOrganizerShape::Cube", EditConditionHides))
 	FVector CubeSectorSize{128.f, 128.f, 128.f};
 
 	void GenerateCube();
@@ -123,7 +89,7 @@ protected:
 		BlueprintReadOnly,
 		Category="Organizer",
 		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides,
-		ClampMin="0"))
+			ClampMin="0"))
 	float Radius = 256.f;
 
 	UPROPERTY(EditAnywhere,

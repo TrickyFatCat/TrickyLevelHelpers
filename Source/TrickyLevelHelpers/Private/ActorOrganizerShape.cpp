@@ -71,8 +71,9 @@ void AActorOrganizerShape::GenerateGrid()
 		return;
 	}
 
-	FVector Location{LocationOffset};
-
+	TArray<FVector> Locations;
+	ULevelHelpersLibrary::CalculateGridLocations(Locations, GridSize, SectorSize, LocationOffset);
+	
 	// Strangely enough this code lead to removing generated actors in the editor.
 	// Dont' know the reason, but hope it would work in UE5 after migration.
 	//
@@ -80,15 +81,9 @@ void AActorOrganizerShape::GenerateGrid()
 	// {
 	// 	int32 Index = 0;
 	// 	
-	// 	for (int32 x = 0; x < GridSize.X; x++)
+	// 	for (int32 i = 0; i < GridLocations.Num(); i++)
 	// 	{
-	// 		for (int32 y = 0; y < GridSize.Y; y++)
-	// 		{
-	// 			Location.X = x * LocationOffset.X;
-	// 			Location.Y = y * LocationOffset.Y;
-	// 			GeneratedActors[Index]->SetActorRelativeLocation(Location);
-	// 			Index++;
-	// 		}
+	// 		GeneratedActors[i]->SetActorRelativeLocation(GridLocations[i]);
 	// 	}
 	// 	
 	// 	return;
@@ -101,16 +96,11 @@ void AActorOrganizerShape::GenerateGrid()
 
 	FTransform RelativeTransform{FTransform::Identity};
 
-	for (int32 x = 0; x < GridSize.X; x++)
+	for (int32 i = 0; i < Locations.Num(); i++)
 	{
-		for (int32 y = 0; y < GridSize.Y; y++)
-		{
-			Location.X = x * SectorSize.X + LocationOffset.X;
-			Location.Y = y * SectorSize.Y + LocationOffset.Y;
-			RelativeTransform.SetLocation(Location);
-			CreateChildActor(RelativeTransform);
-		}
-	}
+		RelativeTransform.SetLocation(Locations[i]);
+		CreateChildActor(RelativeTransform);
+	}	
 
 #endif
 }
@@ -124,7 +114,8 @@ void AActorOrganizerShape::GenerateCube()
 		return;
 	}
 
-	FVector Location{LocationOffset};
+	TArray<FVector> Locations;
+	ULevelHelpersLibrary::CalculateCubeLocations(Locations, CubeSize, CubeSectorSize, LocationOffset);
 
 	if (GeneratedActors.Num() != 0)
 	{
@@ -133,19 +124,10 @@ void AActorOrganizerShape::GenerateCube()
 
 	FTransform RelativeTransform{FTransform::Identity};
 
-	for (int32 x = 0; x < CubeSize.X; x++)
+	for (int32 i = 0; i < Locations.Num(); ++i)
 	{
-		for (int32 y = 0; y < CubeSize.Y; y++)
-		{
-			for (int32 z = 0; z < CubeSize.Z; z++)
-			{
-				Location.X = x * CubeSectorSize.X + LocationOffset.X;
-				Location.Y = y * CubeSectorSize.Y + LocationOffset.Y;
-				Location.Z = z * CubeSectorSize.Z + LocationOffset.Z;
-				RelativeTransform.SetLocation(Location);
-				CreateChildActor(RelativeTransform);
-			}
-		}
+		RelativeTransform.SetLocation(Locations[i]);
+		CreateChildActor(RelativeTransform);
 	}
 
 #endif
