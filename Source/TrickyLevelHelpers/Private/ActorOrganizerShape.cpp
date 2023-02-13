@@ -73,7 +73,7 @@ void AActorOrganizerShape::GenerateGrid()
 
 	TArray<FVector> Locations;
 	ULevelHelpersLibrary::CalculateGridLocations(Locations, GridSize, SectorSize, LocationOffset);
-	
+
 	// Strangely enough this code lead to removing generated actors in the editor.
 	// Dont' know the reason, but hope it would work in UE5 after migration.
 	//
@@ -100,7 +100,7 @@ void AActorOrganizerShape::GenerateGrid()
 	{
 		RelativeTransform.SetLocation(Locations[i]);
 		CreateChildActor(RelativeTransform);
-	}	
+	}
 
 #endif
 }
@@ -144,7 +144,7 @@ void AActorOrganizerShape::GenerateRing()
 
 	TArray<FVector> Locations;
 	ULevelHelpersLibrary::CalculateRingLocations(Locations, ActorsAmount, Radius, 360.f, LocationOffset);
-	
+
 	if (GeneratedActors.Num() != 0)
 	{
 		GeneratedActors.Empty();
@@ -154,6 +154,15 @@ void AActorOrganizerShape::GenerateRing()
 
 	for (int32 i = 0; i < ActorsAmount; i++)
 	{
+		FVector Location = Locations[i];
+
+		if (RotationDirection != ERotationDir::Forward)
+		{
+			FRotator Rotation;
+			CalculateRotation(Location, Rotation);
+			RelativeTransform.SetRotation(Rotation.Quaternion());
+		}
+
 		RelativeTransform.SetLocation(Locations[i]);
 		CreateChildActor(RelativeTransform);
 	}
@@ -174,7 +183,7 @@ void AActorOrganizerShape::GenerateArc()
 	{
 		GeneratedActors.Empty();
 	}
-	
+
 	FVector Location{FVector::ZeroVector};
 	FTransform RelativeTransform{FTransform::Identity};
 
@@ -183,9 +192,26 @@ void AActorOrganizerShape::GenerateArc()
 		const float Yaw = i * (ArcAngle / (ActorsAmount - 1)) - 0.5f * ArcAngle;
 		Location = UKismetMathLibrary::CreateVectorFromYawPitch(Yaw, 0.f);
 		Location += (Location * Radius) + LocationOffset;
+
+		if (RotationDirection != ERotationDir::Forward)
+		{
+			FVector Loc = Location;
+			FRotator Rotation;
+			CalculateRotation(Loc, Rotation);
+			RelativeTransform.SetRotation(Rotation.Quaternion());
+		}
+
 		RelativeTransform.SetLocation(Location);
 		CreateChildActor(RelativeTransform);
 	}
 
 #endif
+}
+
+void AActorOrganizerShape::CalculateRotation(FVector& Location, FRotator& Rotation) const
+{
+	Location = RotationDirection == ERotationDir::In
+		           ? Location.RotateAngleAxis(180.f, FVector::UpVector)
+		           : Location;
+	Rotation = Location.ToOrientationRotator();
 }

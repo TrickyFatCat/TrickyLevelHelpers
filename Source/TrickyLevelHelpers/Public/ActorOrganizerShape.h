@@ -19,6 +19,14 @@ enum class EOrganizerShape : uint8
 	Circle
 };
 
+UENUM()
+enum class ERotationDir : uint8
+{
+	Forward,
+	Out,
+	In
+};
+
 UCLASS()
 class TRICKYLEVELHELPERS_API AActorOrganizerShape : public AActor
 {
@@ -97,8 +105,16 @@ protected:
 		Category="Organizer",
 		meta=(EditCondition="Shape==EOrganizerShape::Arc", EditConditionHides, ClampMin="0"))
 	float ArcAngle = 45.f;
-
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Organizer",
+		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides))
+	ERotationDir RotationDirection = ERotationDir::Out;
+	
 	void GenerateRing();
 
 	void GenerateArc();
+
+	void CalculateRotation(FVector& Location, FRotator& Rotation) const;
 };
