@@ -54,11 +54,18 @@ public:
 	static void CalculateGridLocations(TArray<FVector>& Locations,
 	                                   const FGridSize& GridSize,
 	                                   const FVector2D& SectorSize,
-	                                   const FVector& GridCentre);
+	                                   const FVector& Centre);
 
 	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="CubeSize, SectorSize, CubeCentre"))
 	static void CalculateCubeLocations(TArray<FVector>& Locations,
 	                                   const FCubeSize& CubeSize,
 	                                   const FVector& SectorSize,
-	                                   const FVector& CubeCentre);
+	                                   const FVector& Centre);
+
+	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="CubeSize, SectorSize, CubeCentre"))
+	static void CalculateRingLocations(TArray<FVector>& Locations,
+	                                  int32 PointsNumber,
+	                                  const float Radius,
+	                                  const float Angle,
+	                                  const FVector& Centre);
 };

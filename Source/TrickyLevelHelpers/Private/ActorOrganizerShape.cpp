@@ -142,21 +142,19 @@ void AActorOrganizerShape::GenerateRing()
 		return;
 	}
 
+	TArray<FVector> Locations;
+	ULevelHelpersLibrary::CalculateRingLocations(Locations, ActorsAmount, Radius, 360.f, LocationOffset);
+	
 	if (GeneratedActors.Num() != 0)
 	{
 		GeneratedActors.Empty();
 	}
 
-	FVector Location{FVector::ZeroVector};
 	FTransform RelativeTransform{FTransform::Identity};
 
-	constexpr float Angle = 360.f;
 	for (int32 i = 0; i < ActorsAmount; i++)
 	{
-		const float Yaw = i * (Angle / ActorsAmount);
-		Location = UKismetMathLibrary::CreateVectorFromYawPitch(Yaw, 0.f);
-		Location += (Location * Radius) + LocationOffset;
-		RelativeTransform.SetLocation(Location);
+		RelativeTransform.SetLocation(Locations[i]);
 		CreateChildActor(RelativeTransform);
 	}
 
@@ -176,7 +174,7 @@ void AActorOrganizerShape::GenerateArc()
 	{
 		GeneratedActors.Empty();
 	}
-
+	
 	FVector Location{FVector::ZeroVector};
 	FTransform RelativeTransform{FTransform::Identity};
 
