@@ -3,36 +3,36 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "ActorOrganizerBase.h"
 #include "ActorOrganizerSpline.generated.h"
 
 class USplineComponent;
 
-UCLASS()
-class TRICKYLEVELHELPERS_API AActorOrganizerSpline : public AActor
+UCLASS(Blueprintable)
+class TRICKYLEVELHELPERS_API AActorOrganizerSpline : public AActorOrganizerBase
 {
 	GENERATED_BODY()
 
 public:
-	AActorOrganizerSpline();
+	AActorOrganizerSpline(const FObjectInitializer& ObjectInitializer);
 
 protected:
-	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual void CreateActors() override;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Components", meta=(DisplayAfter="LocationOffset"))
 	USplineComponent* SplineComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(ClampMin="1"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(ClampMin="1", DisplayAfter="ActorClass"))
 	int32 ActorsAmount = 5;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(DisplayAfter="ActorClass"))
+	bool bRotateAlongX;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(DisplayAfter="ActorClass"))
+	bool bRotateAlongY;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
-	TSubclassOf<AActor> ChildActorClass = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
-	FVector LocationOffset{FVector::ZeroVector};
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Organizer")
-	TArray<AActor*> GeneratedActors;
-
-	void CreateChildActor(const FTransform& RelativeTransform);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(DisplayAfter="ActorClass"))
+	bool bRotateAlongZ;
+	
+	void CalculateLocations(TArray<FVector>& Locations) const;
 };

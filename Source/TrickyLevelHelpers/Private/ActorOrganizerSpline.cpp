@@ -5,56 +5,59 @@
 
 #include "Components/SplineComponent.h"
 
-AActorOrganizerSpline::AActorOrganizerSpline()
+AActorOrganizerSpline::AActorOrganizerSpline(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = false;
-
 	SplineComponent = CreateDefaultSubobject<USplineComponent>("Spline");
 	SplineComponent->SetComponentTickEnabled(false);
 	SetRootComponent(SplineComponent);
 }
 
-void AActorOrganizerSpline::OnConstruction(const FTransform& Transform)
+void AActorOrganizerSpline::CreateActors()
 {
-	Super::OnConstruction(Transform);
 #if WITH_EDITORONLY_DATA
 
-	if (!ChildActorClass || ActorsAmount <= 0)
+	if (!ActorClass || ActorsAmount <= 0)
 	{
 		return;
 	}
 
-	if (GeneratedActors.Num() > 0)
+	TArray<FVector> Locations;
+	CalculateLocations(Locations);
+	
+	if (Actors.Num() == ActorsAmount)
 	{
-		GeneratedActors.Empty();
+		return;
 	}
-
-	FVector Location{FVector::ZeroVector};
+	
+	ClearActors();
+	
 	FTransform RelativeTransform{FTransform::Identity};
-	const float SplineOffset = SplineComponent->GetSplineLength() / static_cast<float>(ActorsAmount);
+	UWorld* World = GetWorld();
 
 	for (int32 i = 0; i < ActorsAmount; i++)
 	{
-		const float SplineDistance = SplineOffset * i + SplineOffset * 0.5f;
-		Location = SplineComponent->GetLocationAtDistanceAlongSpline(SplineDistance, ESplineCoordinateSpace::Local);
-		Location += LocationOffset;
-		RelativeTransform.SetLocation(Location);
-		CreateChildActor(RelativeTransform);
+		RelativeTransform.SetLocation(Locations[i]);
+		CreateActor(World, RelativeTransform);
 	}
 
 #endif
 }
 
-void AActorOrganizerSpline::CreateChildActor(const FTransform& RelativeTransform)
+void AActorOrganizerSpline::CalculateLocations(TArray<FVector>& Locations) const
 {
-	UActorComponent* NewComponent = AddComponentByClass(UChildActorComponent::StaticClass(),
-	                                                    false,
-	                                                    RelativeTransform,
-	                                                    false);
-	UChildActorComponent* ChildActorComponent = Cast<UChildActorComponent>(NewComponent);
-	if (ChildActorComponent)
+	if (ActorsAmount <= 0)
 	{
-		ChildActorComponent->SetChildActorClass(ChildActorClass);
-		GeneratedActors.Emplace(ChildActorComponent->GetChildActor());
+		return;
+	}
+
+	FVector Location{FVector::ZeroVector};
+	const float Offset = SplineComponent->GetSplineLength() / static_cast<float>(ActorsAmount);
+
+	for (int32 i = 0; i < ActorsAmount; ++i)
+	{
+		const float Distance = Offset * i + Offset * 0.5f;
+		Location = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
+		Location += LocationOffset;
+		Locations.Emplace(Location);
 	}
 }
