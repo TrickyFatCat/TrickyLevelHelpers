@@ -26,7 +26,7 @@ enum class ERotationDir : uint8
 	In
 };
 
-UCLASS()
+UCLASS(Blueprintable)
 class TRICKYLEVELHELPERS_API AActorOrganizerShape : public AActorOrganizerBase
 {
 	GENERATED_BODY()
