@@ -16,15 +16,15 @@ public:
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
-	
+
 	virtual void Destroyed() override;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
-	TSubclassOf<AActor> ChildActorClass = nullptr;
+	TSubclassOf<AActor> ActorClass = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Organizer", AdvancedDisplay)
 	TArray<AActor*> Actors;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
 	FVector LocationOffset{FVector::ZeroVector};
 

@@ -59,7 +59,7 @@ void AActorOrganizerBase::CreateActor(UWorld* World, const FTransform& RelativeT
 {
 	if (World && !World->IsPreviewWorld())
 	{
-		AActor* NewActor = World->SpawnActor<AActor>(ChildActorClass, RelativeTransform);
+		AActor* NewActor = World->SpawnActor<AActor>(ActorClass, RelativeTransform);
 
 		if (NewActor)
 		{

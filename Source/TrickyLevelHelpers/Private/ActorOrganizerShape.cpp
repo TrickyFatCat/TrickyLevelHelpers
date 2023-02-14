@@ -18,7 +18,7 @@ void AActorOrganizerShape::CreateActors()
 #if WITH_EDITORONLY_DATA
 	Super::CreateActors();
 
-	if (!ChildActorClass)
+	if (!ActorClass)
 	{
 		return;
 	}

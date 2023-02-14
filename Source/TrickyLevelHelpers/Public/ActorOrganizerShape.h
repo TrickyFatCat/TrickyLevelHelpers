@@ -15,8 +15,7 @@ enum class EOrganizerShape : uint8
 	Grid,
 	Cube,
 	Ring,
-	Arc,
-	Circle
+	Arc
 };
 
 UENUM()
@@ -28,47 +27,33 @@ enum class ERotationDir : uint8
 };
 
 UCLASS()
-class TRICKYLEVELHELPERS_API AActorOrganizerShape : public AActor
+class TRICKYLEVELHELPERS_API AActorOrganizerShape : public AActorOrganizerBase
 {
 	GENERATED_BODY()
 
 public:
-	AActorOrganizerShape();
+	AActorOrganizerShape(const FObjectInitializer& ObjectInitializer);
 
 protected:
-	virtual void OnConstruction(const FTransform& Transform) override;
-
-	virtual void Destroyed() override;
-
+	virtual void CreateActors() override;
+	
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	UBillboardComponent* BillboardComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, Category="Organizer")
+	UPROPERTY(EditAnywhere, Category="Organizer", meta=(DisplayAfter="ActorClass"))
 	EOrganizerShape Shape = EOrganizerShape::Grid;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
-	TSubclassOf<AActor> ChildActorClass = nullptr;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Organizer")
-	TArray<AActor*> GeneratedActors;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
-	FVector LocationOffset{FVector::ZeroVector};
-
-	void ClearActors();
-	void CreateChildActor(const FTransform& RelativeTransform, UWorld* World);
 
 	// Grid
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides))
+		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides, DisplayAfter="ActorClass"))
 	FGridSize GridSize;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides))
+		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides, DisplayAfter="ActorClass"))
 	FVector2D SectorSize{128.f, 128.f};
 
 	void GenerateGrid();
@@ -77,13 +62,13 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Cube", EditConditionHides))
+		meta=(EditCondition="Shape==EOrganizerShape::Cube", EditConditionHides, DisplayAfter="ActorClass"))
 	FCubeSize CubeSize;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Cube", EditConditionHides))
+		meta=(EditCondition="Shape==EOrganizerShape::Cube", EditConditionHides, DisplayAfter="ActorClass"))
 	FVector CubeSectorSize{128.f, 128.f, 128.f};
 
 	void GenerateCube();
@@ -93,26 +78,26 @@ protected:
 		BlueprintReadOnly,
 		Category="Organizer",
 		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides, ClampMin
-			="0"))
+			="0", DisplayAfter="ActorClass"))
 	int32 ActorsAmount = 4;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
 		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides,
-			ClampMin="0"))
+			ClampMin="0", DisplayAfter="ActorClass"))
 	float Radius = 256.f;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Arc", EditConditionHides, ClampMin="0"))
+		meta=(EditCondition="Shape==EOrganizerShape::Arc", EditConditionHides, ClampMin="0", DisplayAfter="ActorClass"))
 	float ArcAngle = 45.f;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides))
+		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides, DisplayAfter="ActorClass"))
 	ERotationDir RotationDirection = ERotationDir::Out;
 
 	void GenerateRing();
