@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Engine/World.h"
 #include "ActorOrganizerBase.generated.h"
 
 UCLASS(Abstract, NotBlueprintable)
