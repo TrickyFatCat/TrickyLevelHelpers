@@ -48,17 +48,48 @@ void AActorOrganizerShape::OnConstruction(const FTransform& Transform)
 #endif
 }
 
-void AActorOrganizerShape::CreateChildActor(const FTransform& RelativeTransform)
+void AActorOrganizerShape::Destroyed()
 {
-	UActorComponent* NewComponent = AddComponentByClass(UChildActorComponent::StaticClass(),
-	                                                    false,
-	                                                    RelativeTransform,
-	                                                    false);
-	UChildActorComponent* ChildActorComponent = Cast<UChildActorComponent>(NewComponent);
-	if (ChildActorComponent)
+	Super::Destroyed();
+
+#if WITH_EDITORONLY_DATA
+
+	ClearActors();
+
+#endif
+}
+
+void AActorOrganizerShape::ClearActors()
+{
+	if (GeneratedActors.Num() == 0)
 	{
-		ChildActorComponent->SetChildActorClass(ChildActorClass);
-		GeneratedActors.Emplace(ChildActorComponent->GetChildActor());
+		return;
+	}
+
+	for (const auto Actor : GeneratedActors)
+	{
+		if (!IsValid(Actor))
+		{
+			continue;
+		}
+
+		Actor->Destroy();
+	}
+
+	GeneratedActors.Empty();
+}
+
+void AActorOrganizerShape::CreateChildActor(const FTransform& RelativeTransform, UWorld* World)
+{
+	if (World && !World->IsPreviewWorld())
+	{
+		AActor* NewActor = World->SpawnActor<AActor>(ChildActorClass, RelativeTransform);
+
+		if (NewActor)
+		{
+			NewActor->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+			GeneratedActors.Emplace(NewActor);
+		}
 	}
 }
 
@@ -74,32 +105,30 @@ void AActorOrganizerShape::GenerateGrid()
 	TArray<FVector> Locations;
 	ULevelHelpersLibrary::CalculateGridLocations(Locations, GridSize, SectorSize, LocationOffset);
 
-	// Strangely enough this code lead to removing generated actors in the editor.
-	// Dont' know the reason, but hope it would work in UE5 after migration.
-	//
-	// if (GeneratedActors.Num() != 0 && GeneratedActors.Num() == GridSize.Size())
-	// {
-	// 	int32 Index = 0;
-	// 	
-	// 	for (int32 i = 0; i < GridLocations.Num(); i++)
-	// 	{
-	// 		GeneratedActors[i]->SetActorRelativeLocation(GridLocations[i]);
-	// 	}
-	// 	
-	// 	return;
-	// }
-
-	if (GeneratedActors.Num() != 0)
+	if (GeneratedActors.Num() > 0 && GeneratedActors.Num() == GridSize.Size())
 	{
-		GeneratedActors.Empty();
+		for (int32 i = 0; i < Locations.Num(); i++)
+		{
+			AActor* Actor = GeneratedActors[i];
+
+			if (!IsValid(Actor))
+			{
+				continue;
+			}
+
+			Actor->SetActorRelativeLocation(Locations[i]);
+		}
 	}
 
+	ClearActors();
+
 	FTransform RelativeTransform{FTransform::Identity};
+	UWorld* World = GetWorld();
 
 	for (int32 i = 0; i < Locations.Num(); i++)
 	{
 		RelativeTransform.SetLocation(Locations[i]);
-		CreateChildActor(RelativeTransform);
+		CreateChildActor(RelativeTransform, World);
 	}
 
 #endif
@@ -117,17 +146,31 @@ void AActorOrganizerShape::GenerateCube()
 	TArray<FVector> Locations;
 	ULevelHelpersLibrary::CalculateCubeLocations(Locations, CubeSize, CubeSectorSize, LocationOffset);
 
-	if (GeneratedActors.Num() != 0)
+	if (GeneratedActors.Num() > 0 && GeneratedActors.Num() == CubeSize.Size())
 	{
-		GeneratedActors.Empty();
+		for (int32 i = 0; i < Locations.Num(); i++)
+		{
+			AActor* Actor = GeneratedActors[i];
+
+			if (!IsValid(Actor))
+			{
+				continue;
+			}
+
+			Actor->SetActorRelativeLocation(Locations[i]);
+		}
+
+		return;
 	}
 
+	ClearActors();
 	FTransform RelativeTransform{FTransform::Identity};
+	UWorld* World = GetWorld();
 
 	for (int32 i = 0; i < Locations.Num(); ++i)
 	{
 		RelativeTransform.SetLocation(Locations[i]);
-		CreateChildActor(RelativeTransform);
+		CreateChildActor(RelativeTransform, World);
 	}
 
 #endif
@@ -145,12 +188,35 @@ void AActorOrganizerShape::GenerateRing()
 	TArray<FVector> Locations;
 	ULevelHelpersLibrary::CalculateRingLocations(Locations, ActorsAmount, Radius, 360.f, LocationOffset);
 
-	if (GeneratedActors.Num() != 0)
+
+	if (GeneratedActors.Num() > 0 && GeneratedActors.Num() == ActorsAmount)
 	{
-		GeneratedActors.Empty();
+		FRotator Rotation;
+
+		for (int32 i = 0; i < Locations.Num(); i++)
+		{
+			AActor* Actor = GeneratedActors[i];
+
+			if (!IsValid(Actor))
+			{
+				continue;
+			}
+
+			if (RotationDirection != ERotationDir::Forward)
+			{
+				CalculateRotation(Locations[i], Rotation);
+			}
+
+			Actor->SetActorRelativeLocation(Locations[i]);
+			Actor->SetActorRelativeRotation(Rotation);
+		}
+
+		return;
 	}
 
+	ClearActors();
 	FTransform RelativeTransform{FTransform::Identity};
+	UWorld* World = GetWorld();
 
 	for (int32 i = 0; i < ActorsAmount; i++)
 	{
@@ -164,7 +230,7 @@ void AActorOrganizerShape::GenerateRing()
 		}
 
 		RelativeTransform.SetLocation(Locations[i]);
-		CreateChildActor(RelativeTransform);
+		CreateChildActor(RelativeTransform, World);
 	}
 
 #endif
@@ -179,39 +245,63 @@ void AActorOrganizerShape::GenerateArc()
 		return;
 	}
 
-	if (GeneratedActors.Num() != 0)
-	{
-		GeneratedActors.Empty();
-	}
-
-	FVector Location{FVector::ZeroVector};
-	FTransform RelativeTransform{FTransform::Identity};
+	TArray<FVector> Locations;
+	FRotator Rotation{FVector::ForwardVector.Rotation()};
 
 	for (int32 i = 0; i < ActorsAmount; i++)
 	{
 		const float Yaw = i * (ArcAngle / (ActorsAmount - 1)) - 0.5f * ArcAngle;
-		Location = UKismetMathLibrary::CreateVectorFromYawPitch(Yaw, 0.f);
+		FVector Location = UKismetMathLibrary::CreateVectorFromYawPitch(Yaw, 0.f);
 		Location += (Location * Radius) + LocationOffset;
+		Locations.Emplace(Location);
+	}
+
+	if (GeneratedActors.Num() > 0 && GeneratedActors.Num() == ActorsAmount)
+	{
+		for (int32 i = 0; i < ActorsAmount; i++)
+		{
+			AActor* Actor = GeneratedActors[i];
+
+			if (!IsValid(Actor))
+			{
+				continue;
+			}
+
+			if (RotationDirection != ERotationDir::Forward)
+			{
+				CalculateRotation(Locations[i], Rotation);
+			}
+			
+			Actor->SetActorRelativeLocation(Locations[i]);
+			Actor->SetActorRelativeRotation(Rotation);
+		}
+
+		return;
+	}
+
+	ClearActors();
+	UWorld* World = GetWorld();
+	FTransform RelativeTransform{FTransform::Identity};
+
+	for (int32 i = 0; i < ActorsAmount; i++)
+	{
+		RelativeTransform.SetLocation(Locations[i]);
 
 		if (RotationDirection != ERotationDir::Forward)
 		{
-			FVector Loc = Location;
-			FRotator Rotation;
-			CalculateRotation(Loc, Rotation);
+			CalculateRotation(Locations[i], Rotation);
 			RelativeTransform.SetRotation(Rotation.Quaternion());
 		}
 
-		RelativeTransform.SetLocation(Location);
-		CreateChildActor(RelativeTransform);
+		CreateChildActor(RelativeTransform, World);
 	}
 
 #endif
 }
 
-void AActorOrganizerShape::CalculateRotation(FVector& Location, FRotator& Rotation) const
+void AActorOrganizerShape::CalculateRotation(const FVector& Location, FRotator& Rotation) const
 {
-	Location = RotationDirection == ERotationDir::In
-		           ? Location.RotateAngleAxis(180.f, FVector::UpVector)
-		           : Location;
-	Rotation = Location.ToOrientationRotator();
+	float Yaw = Location.ToOrientationRotator().Yaw * (RotationDirection != ERotationDir::Forward);
+	Yaw += 180.f * (RotationDirection == ERotationDir::In);
+	Rotation = FRotator{0.f, Yaw, 0.f};
 }

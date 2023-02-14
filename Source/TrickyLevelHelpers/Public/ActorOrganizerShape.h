@@ -38,6 +38,8 @@ public:
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
+	virtual void Destroyed() override;
+
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	UBillboardComponent* BillboardComponent = nullptr;
 
@@ -53,7 +55,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
 	FVector LocationOffset{FVector::ZeroVector};
 
-	void CreateChildActor(const FTransform& RelativeTransform);
+	void ClearActors();
+	void CreateChildActor(const FTransform& RelativeTransform, UWorld* World);
 
 	// Grid
 	UPROPERTY(EditAnywhere,
@@ -105,16 +108,16 @@ protected:
 		Category="Organizer",
 		meta=(EditCondition="Shape==EOrganizerShape::Arc", EditConditionHides, ClampMin="0"))
 	float ArcAngle = 45.f;
-	
+
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
 		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides))
 	ERotationDir RotationDirection = ERotationDir::Out;
-	
+
 	void GenerateRing();
 
 	void GenerateArc();
 
-	void CalculateRotation(FVector& Location, FRotator& Rotation) const;
+	void CalculateRotation(const FVector& Location, FRotator& Rotation) const;
 };
