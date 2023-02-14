@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "ActorOrganizerBase.h"
 #include "LevelHelpersLibrary.h"
 #include "ActorOrganizerShape.generated.h"
 

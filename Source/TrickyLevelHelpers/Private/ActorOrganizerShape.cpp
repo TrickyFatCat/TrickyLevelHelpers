@@ -6,20 +6,17 @@
 #include "Components/BillboardComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
-AActorOrganizerShape::AActorOrganizerShape()
+AActorOrganizerShape::AActorOrganizerShape(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = false;
-	SetActorTickEnabled(false);
 	BillboardComponent = CreateDefaultSubobject<UBillboardComponent>("Root");
 	SetRootComponent(BillboardComponent);
 	BillboardComponent->SetComponentTickEnabled(false);
 }
 
-void AActorOrganizerShape::OnConstruction(const FTransform& Transform)
+void AActorOrganizerShape::CreateActors()
 {
-	Super::OnConstruction(Transform);
-
 #if WITH_EDITORONLY_DATA
+	Super::CreateActors();
 
 	if (!ChildActorClass)
 	{
@@ -48,51 +45,6 @@ void AActorOrganizerShape::OnConstruction(const FTransform& Transform)
 #endif
 }
 
-void AActorOrganizerShape::Destroyed()
-{
-	Super::Destroyed();
-
-#if WITH_EDITORONLY_DATA
-
-	ClearActors();
-
-#endif
-}
-
-void AActorOrganizerShape::ClearActors()
-{
-	if (GeneratedActors.Num() == 0)
-	{
-		return;
-	}
-
-	for (const auto Actor : GeneratedActors)
-	{
-		if (!IsValid(Actor))
-		{
-			continue;
-		}
-
-		Actor->Destroy();
-	}
-
-	GeneratedActors.Empty();
-}
-
-void AActorOrganizerShape::CreateChildActor(const FTransform& RelativeTransform, UWorld* World)
-{
-	if (World && !World->IsPreviewWorld())
-	{
-		AActor* NewActor = World->SpawnActor<AActor>(ChildActorClass, RelativeTransform);
-
-		if (NewActor)
-		{
-			NewActor->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-			GeneratedActors.Emplace(NewActor);
-		}
-	}
-}
-
 void AActorOrganizerShape::GenerateGrid()
 {
 #if WITH_EDITORONLY_DATA
@@ -105,11 +57,11 @@ void AActorOrganizerShape::GenerateGrid()
 	TArray<FVector> Locations;
 	ULevelHelpersLibrary::CalculateGridLocations(Locations, GridSize, SectorSize, LocationOffset);
 
-	if (GeneratedActors.Num() > 0 && GeneratedActors.Num() == GridSize.Size())
+	if (Actors.Num() > 0 && Actors.Num() == GridSize.Size())
 	{
 		for (int32 i = 0; i < Locations.Num(); i++)
 		{
-			AActor* Actor = GeneratedActors[i];
+			AActor* Actor = Actors[i];
 
 			if (!IsValid(Actor))
 			{
@@ -128,7 +80,7 @@ void AActorOrganizerShape::GenerateGrid()
 	for (int32 i = 0; i < Locations.Num(); i++)
 	{
 		RelativeTransform.SetLocation(Locations[i]);
-		CreateChildActor(RelativeTransform, World);
+		CreateActor(World, RelativeTransform);
 	}
 
 #endif
@@ -146,11 +98,11 @@ void AActorOrganizerShape::GenerateCube()
 	TArray<FVector> Locations;
 	ULevelHelpersLibrary::CalculateCubeLocations(Locations, CubeSize, CubeSectorSize, LocationOffset);
 
-	if (GeneratedActors.Num() > 0 && GeneratedActors.Num() == CubeSize.Size())
+	if (Actors.Num() > 0 && Actors.Num() == CubeSize.Size())
 	{
 		for (int32 i = 0; i < Locations.Num(); i++)
 		{
-			AActor* Actor = GeneratedActors[i];
+			AActor* Actor = Actors[i];
 
 			if (!IsValid(Actor))
 			{
@@ -170,7 +122,7 @@ void AActorOrganizerShape::GenerateCube()
 	for (int32 i = 0; i < Locations.Num(); ++i)
 	{
 		RelativeTransform.SetLocation(Locations[i]);
-		CreateChildActor(RelativeTransform, World);
+		CreateActor(World, RelativeTransform);
 	}
 
 #endif
@@ -189,13 +141,13 @@ void AActorOrganizerShape::GenerateRing()
 	ULevelHelpersLibrary::CalculateRingLocations(Locations, ActorsAmount, Radius, 360.f, LocationOffset);
 
 
-	if (GeneratedActors.Num() > 0 && GeneratedActors.Num() == ActorsAmount)
+	if (Actors.Num() > 0 && Actors.Num() == ActorsAmount)
 	{
 		FRotator Rotation;
 
 		for (int32 i = 0; i < Locations.Num(); i++)
 		{
-			AActor* Actor = GeneratedActors[i];
+			AActor* Actor = Actors[i];
 
 			if (!IsValid(Actor))
 			{
@@ -230,7 +182,7 @@ void AActorOrganizerShape::GenerateRing()
 		}
 
 		RelativeTransform.SetLocation(Locations[i]);
-		CreateChildActor(RelativeTransform, World);
+		CreateActor(World, RelativeTransform);
 	}
 
 #endif
@@ -256,11 +208,11 @@ void AActorOrganizerShape::GenerateArc()
 		Locations.Emplace(Location);
 	}
 
-	if (GeneratedActors.Num() > 0 && GeneratedActors.Num() == ActorsAmount)
+	if (Actors.Num() > 0 && Actors.Num() == ActorsAmount)
 	{
 		for (int32 i = 0; i < ActorsAmount; i++)
 		{
-			AActor* Actor = GeneratedActors[i];
+			AActor* Actor = Actors[i];
 
 			if (!IsValid(Actor))
 			{
@@ -271,7 +223,7 @@ void AActorOrganizerShape::GenerateArc()
 			{
 				CalculateRotation(Locations[i], Rotation);
 			}
-			
+
 			Actor->SetActorRelativeLocation(Locations[i]);
 			Actor->SetActorRelativeRotation(Rotation);
 		}
@@ -293,7 +245,7 @@ void AActorOrganizerShape::GenerateArc()
 			RelativeTransform.SetRotation(Rotation.Quaternion());
 		}
 
-		CreateChildActor(RelativeTransform, World);
+		CreateActor(World, RelativeTransform);
 	}
 
 #endif
