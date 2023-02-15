@@ -26,6 +26,11 @@ void AActorOrganizerSpline::CreateActors()
 	
 	if (Actors.Num() == ActorsAmount)
 	{
+		for (int32 i = 0; i < ActorsAmount; ++i)
+		{
+			Actors[i]->SetActorRelativeLocation(Locations[i]);
+		}
+		
 		return;
 	}
 	
