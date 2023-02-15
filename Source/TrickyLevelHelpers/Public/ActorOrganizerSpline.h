@@ -22,8 +22,20 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Components", meta=(DisplayAfter="LocationOffset"))
 	USplineComponent* SplineComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(ClampMin="1", DisplayAfter="ActorClass"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
+	bool bUseCustomSpacing = false;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Organizer",
+		meta=(EditCondition = "!bUseCustomSpacing", EditConditionHides, ClampMin="1", DisplayAfter="ActorClass"))
 	int32 ActorsAmount = 5;
 
-	void CalculateLocations(TArray<FVector>& Locations) const;
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Organizer",
+		meta =(ClampMin="0", EditCondition="bUseCumstomSpacing", EditConditionHides))
+	float Spacing = 128.f;
+
+	void CalculateLocations(TArray<FVector>& Locations, const int32 ActorsNumber) const;
 };
