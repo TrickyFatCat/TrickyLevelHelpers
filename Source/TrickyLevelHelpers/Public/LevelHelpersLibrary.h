@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/SplineComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "LevelHelpersLibrary.generated.h"
+
+class USplineComponent;
 
 USTRUCT(BlueprintType)
 struct FGridSize
@@ -64,8 +67,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="CubeSize, SectorSize, CubeCentre"))
 	static void CalculateRingLocations(TArray<FVector>& Locations,
-	                                  int32 PointsNumber,
-	                                  const float Radius,
-	                                  const float Angle,
-	                                  const FVector& Centre);
+	                                   int32 PointsNumber,
+	                                   const float Radius,
+	                                   const float Angle,
+	                                   const FVector& Centre);
+
+	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="CubeSize, SectorSize, CubeCentre"))
+	static void CalculateSplineLocations(const USplineComponent* SplineComponent,
+	                                     TArray<FVector>& Locations,
+	                                     const int32 PointsAmount,
+	                                     const FVector& LocationOffset);
 };

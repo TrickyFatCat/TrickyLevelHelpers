@@ -55,16 +55,16 @@ void ULevelHelpersLibrary::CalculateCubeLocations(TArray<FVector>& Locations,
 }
 
 void ULevelHelpersLibrary::CalculateRingLocations(TArray<FVector>& Locations,
-                                                 const int32 PointsNumber,
-                                                 const float Radius,
-                                                 const float Angle,
-                                                 const FVector& Centre)
+                                                  const int32 PointsNumber,
+                                                  const float Radius,
+                                                  const float Angle,
+                                                  const FVector& Centre)
 {
 	if (PointsNumber <= 0)
 	{
 		return;
 	}
-	
+
 	if (Locations.Num() > 0)
 	{
 		Locations.Empty();
@@ -77,6 +77,28 @@ void ULevelHelpersLibrary::CalculateRingLocations(TArray<FVector>& Locations,
 	{
 		Location.X = Radius * FMath::Cos(Theta * i) + Centre.X;
 		Location.Y = Radius * FMath::Sin(Theta * i) + Centre.Y;
+		Locations.Emplace(Location);
+	}
+}
+
+void ULevelHelpersLibrary::CalculateSplineLocations(const USplineComponent* SplineComponent,
+                                                    TArray<FVector>& Locations,
+                                                    const int32 PointsAmount,
+                                                    const FVector& LocationOffset)
+{
+	if (!SplineComponent || PointsAmount <= 0)
+	{
+		return;
+	}
+
+	FVector Location{FVector::ZeroVector};
+	const float Offset = SplineComponent->GetSplineLength() / static_cast<float>(PointsAmount);
+
+	for (int32 i = 0; i < PointsAmount; ++i)
+	{
+		const float Distance = Offset * i + Offset * 0.5f;
+		Location = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
+		Location += LocationOffset;
 		Locations.Emplace(Location);
 	}
 }

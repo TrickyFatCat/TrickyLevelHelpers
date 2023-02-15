@@ -3,6 +3,7 @@
 
 #include "ActorOrganizerSpline.h"
 
+#include "LevelHelpersLibrary.h"
 #include "Components/SplineComponent.h"
 
 AActorOrganizerSpline::AActorOrganizerSpline(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -22,14 +23,14 @@ void AActorOrganizerSpline::CreateActors()
 	}
 
 	TArray<FVector> Locations;
-	const int32 ActorsNumber = bUseCustomSpacing
+	const int32 PointsAmount = bUseCustomSpacing
 		                           ? FMath::Floor(SplineComponent->GetSplineLength() / Spacing)
 		                           : ActorsAmount;
-	CalculateLocations(Locations, ActorsNumber);
+	ULevelHelpersLibrary::CalculateSplineLocations(SplineComponent, Locations, PointsAmount, LocationOffset);
 
-	if (Actors.Num() == ActorsNumber)
+	if (Actors.Num() == PointsAmount)
 	{
-		for (int32 i = 0; i < ActorsNumber; ++i)
+		for (int32 i = 0; i < PointsAmount; ++i)
 		{
 			Actors[i]->SetActorRelativeLocation(Locations[i]);
 		}
@@ -42,30 +43,11 @@ void AActorOrganizerSpline::CreateActors()
 	FTransform RelativeTransform{FTransform::Identity};
 	UWorld* World = GetWorld();
 
-	for (int32 i = 0; i < ActorsNumber; i++)
+	for (int32 i = 0; i < PointsAmount; i++)
 	{
 		RelativeTransform.SetLocation(Locations[i]);
 		CreateActor(World, RelativeTransform);
 	}
 
 #endif
-}
-
-void AActorOrganizerSpline::CalculateLocations(TArray<FVector>& Locations, const int32 ActorsNumber) const
-{
-	if (ActorsNumber <= 0)
-	{
-		return;
-	}
-
-	FVector Location{FVector::ZeroVector};
-	const float Offset = SplineComponent->GetSplineLength() / static_cast<float>(ActorsNumber);
-
-	for (int32 i = 0; i < ActorsNumber; ++i)
-	{
-		const float Distance = Offset * i + Offset * 0.5f;
-		Location = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
-		Location += LocationOffset;
-		Locations.Emplace(Location);
-	}
 }
