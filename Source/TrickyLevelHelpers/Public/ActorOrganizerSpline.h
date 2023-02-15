@@ -24,15 +24,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(ClampMin="1", DisplayAfter="ActorClass"))
 	int32 ActorsAmount = 5;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(DisplayAfter="ActorClass"))
-	bool bRotateAlongX;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(DisplayAfter="ActorClass"))
-	bool bRotateAlongY;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(DisplayAfter="ActorClass"))
-	bool bRotateAlongZ;
-	
 	void CalculateLocations(TArray<FVector>& Locations) const;
 };
