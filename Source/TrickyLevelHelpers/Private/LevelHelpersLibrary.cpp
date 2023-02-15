@@ -96,7 +96,7 @@ void ULevelHelpersLibrary::CalculateSplineLocations(const USplineComponent* Spli
 
 	for (int32 i = 0; i < PointsAmount; ++i)
 	{
-		const float Distance = Offset * i + Offset * 0.5f;
+		const float Distance = Offset * i + Offset * 0.5f * !SplineComponent->IsClosedLoop();
 		Location = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
 		Location += LocationOffset;
 		Locations.Emplace(Location);
