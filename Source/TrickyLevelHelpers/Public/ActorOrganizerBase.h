@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LevelHelpersLibrary.h"
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
 #include "ActorOrganizerBase.generated.h"
@@ -28,6 +29,17 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
 	FVector LocationOffset{FVector::ZeroVector};
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
+	ERotationMode RotationMode = ERotationMode::Manual;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Organizer",
+		meta=(EditCondition="RotationMode==ERotationMode::Custom"))
+	FRotator CustomRotation{FRotator::ZeroRotator};
+
+	virtual void CalculateCustomRotation(const FVector& Location, FRotator& Rotation);
 
 	void ClearActors();
 

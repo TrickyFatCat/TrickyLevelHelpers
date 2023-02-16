@@ -19,9 +19,9 @@ enum class EOrganizerShape : uint8
 };
 
 UENUM()
-enum class ERotationDir : uint8
+enum class ERingCustomRotation : uint8
 {
-	Forward,
+	Manual,
 	Out,
 	In
 };
@@ -97,8 +97,8 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides, DisplayAfter="ActorClass"))
-	ERotationDir RotationDirection = ERotationDir::Out;
+		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides, DisplayAfter="CustomRotation"))
+	ERingCustomRotation RotationDirection = ERingCustomRotation::Out;
 
 	void GenerateRing();
 

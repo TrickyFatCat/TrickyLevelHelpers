@@ -102,3 +102,33 @@ void ULevelHelpersLibrary::CalculateSplineLocations(const USplineComponent* Spli
 		Locations.Emplace(Location);
 	}
 }
+
+void ULevelHelpersLibrary::GetRotatorFromMode(FRotator& Rotation, const ERotationMode& RotationMode)
+{
+	switch (RotationMode)
+	{
+	case ERotationMode::Forward:
+		Rotation = FVector::ForwardVector.Rotation();
+		break;
+
+	case ERotationMode::Backward:
+		Rotation = (FVector::ForwardVector * -1).Rotation();
+		break;
+
+	case ERotationMode::Up:
+		Rotation = FVector::UpVector.Rotation();
+		break;
+
+	case ERotationMode::Down:
+		Rotation = (FVector::UpVector * -1).Rotation();
+		break;
+
+	case ERotationMode::Left:
+		Rotation = (FVector::RightVector * -1).Rotation();
+		break;
+
+	case ERotationMode::Right:
+		Rotation = FVector::RightVector.Rotation();
+		break;
+	}
+}

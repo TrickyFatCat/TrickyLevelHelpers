@@ -154,10 +154,7 @@ void AActorOrganizerShape::GenerateRing()
 				continue;
 			}
 
-			if (RotationDirection != ERotationDir::Forward)
-			{
-				CalculateRotation(Locations[i], Rotation);
-			}
+			CalculateRotation(Locations[i], Rotation);
 
 			Actor->SetActorRelativeLocation(Locations[i]);
 			Actor->SetActorRelativeRotation(Rotation);
@@ -174,12 +171,9 @@ void AActorOrganizerShape::GenerateRing()
 	{
 		FVector Location = Locations[i];
 
-		if (RotationDirection != ERotationDir::Forward)
-		{
-			FRotator Rotation;
-			CalculateRotation(Location, Rotation);
-			RelativeTransform.SetRotation(Rotation.Quaternion());
-		}
+		FRotator Rotation;
+		CalculateRotation(Location, Rotation);
+		RelativeTransform.SetRotation(Rotation.Quaternion());
 
 		RelativeTransform.SetLocation(Locations[i]);
 		CreateActor(World, RelativeTransform);
@@ -219,10 +213,7 @@ void AActorOrganizerShape::GenerateArc()
 				continue;
 			}
 
-			if (RotationDirection != ERotationDir::Forward)
-			{
-				CalculateRotation(Locations[i], Rotation);
-			}
+			CalculateRotation(Locations[i], Rotation);
 
 			Actor->SetActorRelativeLocation(Locations[i]);
 			Actor->SetActorRelativeRotation(Rotation);
@@ -239,11 +230,8 @@ void AActorOrganizerShape::GenerateArc()
 	{
 		RelativeTransform.SetLocation(Locations[i]);
 
-		if (RotationDirection != ERotationDir::Forward)
-		{
-			CalculateRotation(Locations[i], Rotation);
-			RelativeTransform.SetRotation(Rotation.Quaternion());
-		}
+		CalculateRotation(Locations[i], Rotation);
+		RelativeTransform.SetRotation(Rotation.Quaternion());
 
 		CreateActor(World, RelativeTransform);
 	}
@@ -253,7 +241,19 @@ void AActorOrganizerShape::GenerateArc()
 
 void AActorOrganizerShape::CalculateRotation(const FVector& Location, FRotator& Rotation) const
 {
-	float Yaw = Location.ToOrientationRotator().Yaw * (RotationDirection != ERotationDir::Forward);
-	Yaw += 180.f * (RotationDirection == ERotationDir::In);
-	Rotation = FRotator{0.f, Yaw, 0.f};
+	if (RotationMode == ERotationMode::Manual)
+	{
+		return;
+	}
+
+	if (RotationMode != ERotationMode::Custom)
+	{
+		ULevelHelpersLibrary::GetRotatorFromMode(Rotation, RotationMode);
+	}
+	else
+	{
+		float Yaw = Location.ToOrientationRotator().Yaw;
+		Yaw += 180.f * (RotationDirection == ERingCustomRotation::In);
+		Rotation = FRotator{0.f, Yaw, 0.f};
+	}
 }

@@ -44,6 +44,19 @@ struct FCubeSize
 	int32 Size() const { return X * Y * Z; }
 };
 
+UENUM()
+enum class ERotationMode : uint8
+{
+	Manual,
+	Custom,
+	Forward,
+	Backward,
+	Up,
+	Down,
+	Left,
+	Right
+};
+
 /**
  * 
  */
@@ -77,4 +90,6 @@ public:
 	                                     TArray<FVector>& Locations,
 	                                     const int32 PointsAmount,
 	                                     const FVector& LocationOffset);
+
+	static void GetRotatorFromMode(FRotator& Rotation, const ERotationMode& RotationMode);
 };

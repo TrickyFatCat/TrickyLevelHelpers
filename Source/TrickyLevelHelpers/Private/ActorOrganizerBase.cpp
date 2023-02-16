@@ -27,6 +27,10 @@ void AActorOrganizerBase::Destroyed()
 #endif
 }
 
+void AActorOrganizerBase::CalculateCustomRotation(const FVector& Location, FRotator& Rotation)
+{
+}
+
 void AActorOrganizerBase::ClearActors()
 {
 #if WITH_EDITORONLY_DATA
