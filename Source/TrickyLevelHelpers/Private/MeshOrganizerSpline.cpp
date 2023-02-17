@@ -1,13 +1,13 @@
 // MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
 
-#include "MeshOrganizerSpline.h"
+#include "MeshesGeneratorSpline.h"
 
 #include "LevelHelpersLibrary.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
 #include "Components/SplineComponent.h"
 
-AMeshOrganizerSpline::AMeshOrganizerSpline(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+AMeshesGeneratorSpline::AMeshesGeneratorSpline(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	SetActorTickEnabled(false);
@@ -19,7 +19,7 @@ AMeshOrganizerSpline::AMeshOrganizerSpline(const FObjectInitializer& ObjectIniti
 	HInstancedMeshComponent->SetupAttachment(GetRootComponent());
 }
 
-void AMeshOrganizerSpline::OnConstruction(const FTransform& Transform)
+void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
