@@ -11,9 +11,9 @@ AActorOrganizerBase::AActorOrganizerBase(const FObjectInitializer& ObjectInitial
 
 void AActorOrganizerBase::OnConstruction(const FTransform& Transform)
 {
+	GenerateActors();
+	
 	Super::OnConstruction(Transform);
-
-	CreateActors();
 }
 
 void AActorOrganizerBase::Destroyed()
@@ -59,7 +59,7 @@ void AActorOrganizerBase::ChangeActorsTransform()
 	FRotator Rotation{FRotator::ZeroRotator};
 	FTransform NewTransform{FTransform::Identity};
 	NewTransform.SetScale3D(Scale);
-	
+
 	for (int32 i = 0; i < Locations.Num(); i++)
 	{
 		AActor* Actor = Actors[i];
@@ -100,14 +100,34 @@ void AActorOrganizerBase::ClearActors()
 #endif
 }
 
-void AActorOrganizerBase::CreateActors()
+void AActorOrganizerBase::GenerateActors()
 {
 }
 
-void AActorOrganizerBase::CreateActor(UWorld* World, const FTransform& RelativeTransform)
+void AActorOrganizerBase::SpawnActors()
 {
-	if (World && !World->IsPreviewWorld())
+	if (Locations.Num() == 0)
 	{
+		return;
+	}
+
+	UWorld* World = GetWorld();
+
+	if (!World || World->IsPreviewWorld())
+	{
+		return;
+	}
+
+	FTransform RelativeTransform{FTransform::Identity};
+	FRotator Rotation{FRotator::ZeroRotator};
+
+	for (int32 i = 0; i < Locations.Num(); ++i)
+	{
+		RelativeTransform.SetLocation(Locations[i]);
+		CalculateCustomRotation(Locations[i], Rotation);
+		RelativeTransform.SetRotation(Rotation.Quaternion());
+		RelativeTransform.SetScale3D(Scale);
+
 		AActor* NewActor = World->SpawnActor<AActor>(ActorClass, RelativeTransform);
 
 		if (NewActor)

@@ -13,10 +13,10 @@ AActorOrganizerShape::AActorOrganizerShape(const FObjectInitializer& ObjectIniti
 	BillboardComponent->SetComponentTickEnabled(false);
 }
 
-void AActorOrganizerShape::CreateActors()
+void AActorOrganizerShape::GenerateActors()
 {
 #if WITH_EDITORONLY_DATA
-	Super::CreateActors();
+	Super::GenerateActors();
 
 	if (!ActorClass)
 	{
@@ -84,7 +84,6 @@ void AActorOrganizerShape::GenerateGrid()
 		return;
 	}
 
-	FRotator Rotation{FRotator::ZeroRotator};
 	ULevelHelpersLibrary::CalculateGridLocations(Locations, GridSize, SectorSize, LocationOffset);
 
 	if (Actors.Num() > 0 && Actors.Num() == GridSize.Size())
@@ -94,17 +93,7 @@ void AActorOrganizerShape::GenerateGrid()
 	}
 
 	ClearActors();
-
-	FTransform RelativeTransform{FTransform::Identity};
-	UWorld* World = GetWorld();
-
-	for (int32 i = 0; i < Locations.Num(); i++)
-	{
-		RelativeTransform.SetLocation(Locations[i]);
-		CalculateRotation(Locations[i], Rotation);
-		RelativeTransform.SetRotation(Rotation.Quaternion());
-		CreateActor(World, RelativeTransform);
-	}
+	SpawnActors();
 
 #endif
 }
@@ -118,7 +107,6 @@ void AActorOrganizerShape::GenerateCube()
 		return;
 	}
 
-	FRotator Rotation{FRotator::ZeroRotator};
 	ULevelHelpersLibrary::CalculateCubeLocations(Locations, CubeSize, CubeSectorSize, LocationOffset);
 
 	if (Actors.Num() > 0 && Actors.Num() == CubeSize.Size())
@@ -128,16 +116,7 @@ void AActorOrganizerShape::GenerateCube()
 	}
 
 	ClearActors();
-	FTransform RelativeTransform{FTransform::Identity};
-	UWorld* World = GetWorld();
-
-	for (int32 i = 0; i < Locations.Num(); ++i)
-	{
-		RelativeTransform.SetLocation(Locations[i]);
-		CalculateRotation(Locations[i], Rotation);
-		RelativeTransform.SetRotation(Rotation.Quaternion());
-		CreateActor(World, RelativeTransform);
-	}
+	SpawnActors();
 
 #endif
 }
@@ -161,19 +140,7 @@ void AActorOrganizerShape::GenerateRing()
 	}
 
 	ClearActors();
-	FTransform RelativeTransform{FTransform::Identity};
-	UWorld* World = GetWorld();
-
-	for (int32 i = 0; i < ActorsAmount; i++)
-	{
-		FVector Location = Locations[i];
-
-		CalculateRotation(Location, Rotation);
-		RelativeTransform.SetRotation(Rotation.Quaternion());
-
-		RelativeTransform.SetLocation(Locations[i]);
-		CreateActor(World, RelativeTransform);
-	}
+	SpawnActors();
 
 #endif
 }
@@ -204,18 +171,7 @@ void AActorOrganizerShape::GenerateArc()
 	}
 
 	ClearActors();
-	UWorld* World = GetWorld();
-	FTransform RelativeTransform{FTransform::Identity};
-
-	for (int32 i = 0; i < ActorsAmount; i++)
-	{
-		RelativeTransform.SetLocation(Locations[i]);
-
-		CalculateRotation(Locations[i], Rotation);
-		RelativeTransform.SetRotation(Rotation.Quaternion());
-
-		CreateActor(World, RelativeTransform);
-	}
+	SpawnActors();
 
 #endif
 }

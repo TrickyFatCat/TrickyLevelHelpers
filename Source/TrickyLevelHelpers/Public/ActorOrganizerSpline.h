@@ -17,7 +17,7 @@ public:
 	AActorOrganizerSpline(const FObjectInitializer& ObjectInitializer);
 
 protected:
-	virtual void CreateActors() override;
+	virtual void GenerateActors() override;
 
 	virtual void CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const override;
 

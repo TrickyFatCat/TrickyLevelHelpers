@@ -52,7 +52,7 @@ protected:
 
 	void ClearActors();
 
-	virtual void CreateActors();
+	virtual void GenerateActors();
 
-	void CreateActor(UWorld* World, const FTransform& RelativeTransform);
+	void SpawnActors();
 };

@@ -13,7 +13,7 @@ AActorOrganizerSpline::AActorOrganizerSpline(const FObjectInitializer& ObjectIni
 	SetRootComponent(SplineComponent);
 }
 
-void AActorOrganizerSpline::CreateActors()
+void AActorOrganizerSpline::GenerateActors()
 {
 #if WITH_EDITORONLY_DATA
 
@@ -27,7 +27,6 @@ void AActorOrganizerSpline::CreateActors()
 	}
 
 	ULevelHelpersLibrary::CalculateSplineLocations(SplineComponent, Locations, PointsAmount, LocationOffset);
-	FRotator Rotation{FRotator::ZeroRotator};
 
 	if (Actors.Num() == PointsAmount)
 	{
@@ -36,17 +35,7 @@ void AActorOrganizerSpline::CreateActors()
 	}
 
 	ClearActors();
-
-	FTransform RelativeTransform{FTransform::Identity};
-	UWorld* World = GetWorld();
-
-	for (int32 i = 0; i < PointsAmount; i++)
-	{
-		RelativeTransform.SetLocation(Locations[i]);
-		CalculateRotation(Locations[i], Rotation);
-		RelativeTransform.SetRotation(Rotation.Quaternion());
-		CreateActor(World, RelativeTransform);
-	}
+	SpawnActors(); 
 
 #endif
 }
