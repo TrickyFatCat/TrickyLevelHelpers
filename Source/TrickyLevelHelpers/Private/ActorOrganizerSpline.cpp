@@ -26,26 +26,12 @@ void AActorOrganizerSpline::CreateActors()
 		return;
 	}
 
-	TArray<FVector> Locations;
-	FRotator Rotation{FRotator::ZeroRotator};
 	ULevelHelpersLibrary::CalculateSplineLocations(SplineComponent, Locations, PointsAmount, LocationOffset);
+	FRotator Rotation{FRotator::ZeroRotator};
 
 	if (Actors.Num() == PointsAmount)
 	{
-		for (int32 i = 0; i < PointsAmount; ++i)
-		{
-			AActor* Actor = Actors[i];
-
-			if (!IsValid(Actor))
-			{
-				continue;
-			}
-
-			CalculateRotation(Locations[i], Rotation);
-			Actor->SetActorRelativeLocation(Locations[i]);
-			Actor->SetActorRelativeRotation(Rotation);
-		}
-
+		ChangeActorsTransform();
 		return;
 	}
 

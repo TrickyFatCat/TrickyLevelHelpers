@@ -48,7 +48,7 @@ void AActorOrganizerShape::CreateActors()
 void AActorOrganizerShape::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
 {
 	float Yaw = 0.f;
-	
+
 	switch (Shape)
 	{
 	case EOrganizerShape::Grid:
@@ -84,26 +84,12 @@ void AActorOrganizerShape::GenerateGrid()
 		return;
 	}
 
-	TArray<FVector> Locations;
 	FRotator Rotation{FRotator::ZeroRotator};
 	ULevelHelpersLibrary::CalculateGridLocations(Locations, GridSize, SectorSize, LocationOffset);
 
 	if (Actors.Num() > 0 && Actors.Num() == GridSize.Size())
 	{
-		for (int32 i = 0; i < Locations.Num(); i++)
-		{
-			AActor* Actor = Actors[i];
-
-			if (!IsValid(Actor))
-			{
-				continue;
-			}
-
-			CalculateRotation(Locations[i], Rotation);
-			Actor->SetActorRelativeLocation(Locations[i]);
-			Actor->SetActorRelativeRotation(Rotation);
-		}
-
+		ChangeActorsTransform();
 		return;
 	}
 
@@ -132,26 +118,12 @@ void AActorOrganizerShape::GenerateCube()
 		return;
 	}
 
-	TArray<FVector> Locations;
 	FRotator Rotation{FRotator::ZeroRotator};
 	ULevelHelpersLibrary::CalculateCubeLocations(Locations, CubeSize, CubeSectorSize, LocationOffset);
 
 	if (Actors.Num() > 0 && Actors.Num() == CubeSize.Size())
 	{
-		for (int32 i = 0; i < Locations.Num(); i++)
-		{
-			AActor* Actor = Actors[i];
-
-			if (!IsValid(Actor))
-			{
-				continue;
-			}
-
-			CalculateRotation(Locations[i], Rotation);
-			Actor->SetActorRelativeLocation(Locations[i]);
-			Actor->SetActorRelativeRotation(Rotation);
-		}
-
+		ChangeActorsTransform();
 		return;
 	}
 
@@ -179,29 +151,12 @@ void AActorOrganizerShape::GenerateRing()
 		return;
 	}
 
-	TArray<FVector> Locations;
 	ULevelHelpersLibrary::CalculateRingLocations(Locations, ActorsAmount, Radius, 360.f, LocationOffset);
-
+	FRotator Rotation;
 
 	if (Actors.Num() > 0 && Actors.Num() == ActorsAmount)
 	{
-		FRotator Rotation;
-
-		for (int32 i = 0; i < Locations.Num(); i++)
-		{
-			AActor* Actor = Actors[i];
-
-			if (!IsValid(Actor))
-			{
-				continue;
-			}
-
-			CalculateRotation(Locations[i], Rotation);
-
-			Actor->SetActorRelativeLocation(Locations[i]);
-			Actor->SetActorRelativeRotation(Rotation);
-		}
-
+		ChangeActorsTransform();
 		return;
 	}
 
@@ -213,7 +168,6 @@ void AActorOrganizerShape::GenerateRing()
 	{
 		FVector Location = Locations[i];
 
-		FRotator Rotation;
 		CalculateRotation(Location, Rotation);
 		RelativeTransform.SetRotation(Rotation.Quaternion());
 
@@ -233,8 +187,7 @@ void AActorOrganizerShape::GenerateArc()
 		return;
 	}
 
-	TArray<FVector> Locations;
-	FRotator Rotation{FVector::ForwardVector.Rotation()};
+	FRotator Rotation{FRotator::ZeroRotator};
 
 	for (int32 i = 0; i < ActorsAmount; i++)
 	{
@@ -246,21 +199,7 @@ void AActorOrganizerShape::GenerateArc()
 
 	if (Actors.Num() > 0 && Actors.Num() == ActorsAmount)
 	{
-		for (int32 i = 0; i < ActorsAmount; i++)
-		{
-			AActor* Actor = Actors[i];
-
-			if (!IsValid(Actor))
-			{
-				continue;
-			}
-
-			CalculateRotation(Locations[i], Rotation);
-
-			Actor->SetActorRelativeLocation(Locations[i]);
-			Actor->SetActorRelativeRotation(Rotation);
-		}
-
+		ChangeActorsTransform();
 		return;
 	}
 

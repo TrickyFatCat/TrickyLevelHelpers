@@ -49,6 +49,33 @@ void AActorOrganizerBase::CalculateCustomRotation(const FVector& Location, FRota
 	Rotation = CustomRotation;
 }
 
+void AActorOrganizerBase::ChangeActorsTransform()
+{
+	if (Actors.Num() == 0)
+	{
+		return;
+	}
+
+	FRotator Rotation{FRotator::ZeroRotator};
+	FTransform NewTransform{FTransform::Identity};
+	NewTransform.SetScale3D(Scale);
+	
+	for (int32 i = 0; i < Locations.Num(); i++)
+	{
+		AActor* Actor = Actors[i];
+
+		if (!IsValid(Actor))
+		{
+			continue;
+		}
+
+		NewTransform.SetLocation(Locations[i]);
+		CalculateRotation(Locations[i], Rotation);
+		NewTransform.SetRotation(Rotation.Quaternion());
+		Actor->SetActorRelativeTransform(NewTransform);
+	}
+}
+
 void AActorOrganizerBase::ClearActors()
 {
 #if WITH_EDITORONLY_DATA
