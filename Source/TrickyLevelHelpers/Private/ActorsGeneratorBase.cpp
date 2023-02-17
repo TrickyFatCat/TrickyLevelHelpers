@@ -1,22 +1,22 @@
 // MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
 
-#include "ActorOrganizerBase.h"
+#include "ActorsGeneratorBase.h"
 
-AActorOrganizerBase::AActorOrganizerBase()
+AActorsGeneratorBase::AActorsGeneratorBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	SetActorTickEnabled(false);
 }
 
-void AActorOrganizerBase::OnConstruction(const FTransform& Transform)
+void AActorsGeneratorBase::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 	
 	GenerateActors();
 }
 
-void AActorOrganizerBase::Destroyed()
+void AActorsGeneratorBase::Destroyed()
 {
 	Super::Destroyed();
 
@@ -27,7 +27,7 @@ void AActorOrganizerBase::Destroyed()
 #endif
 }
 
-void AActorOrganizerBase::CalculateRotation(const FVector& Location, FRotator& Rotation) const
+void AActorsGeneratorBase::CalculateRotation(const FVector& Location, FRotator& Rotation) const
 {
 	if (RotationMode == ERotationMode::Manual)
 	{
@@ -44,12 +44,12 @@ void AActorOrganizerBase::CalculateRotation(const FVector& Location, FRotator& R
 	}
 }
 
-void AActorOrganizerBase::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
+void AActorsGeneratorBase::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
 {
 	Rotation = CustomRotation;
 }
 
-void AActorOrganizerBase::ChangeActorsTransform()
+void AActorsGeneratorBase::ChangeActorsTransform()
 {
 	if (Actors.Num() == 0)
 	{
@@ -76,7 +76,7 @@ void AActorOrganizerBase::ChangeActorsTransform()
 	}
 }
 
-void AActorOrganizerBase::ClearActors()
+void AActorsGeneratorBase::ClearActors()
 {
 #if WITH_EDITORONLY_DATA
 
@@ -100,11 +100,11 @@ void AActorOrganizerBase::ClearActors()
 #endif
 }
 
-void AActorOrganizerBase::GenerateActors()
+void AActorsGeneratorBase::GenerateActors()
 {
 }
 
-void AActorOrganizerBase::SpawnActors()
+void AActorsGeneratorBase::SpawnActors()
 {
 	if (Locations.Num() == 0)
 	{

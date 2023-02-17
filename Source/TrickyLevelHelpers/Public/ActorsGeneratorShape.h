@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ActorOrganizerBase.h"
+#include "ActorsGeneratorBase.h"
 #include "LevelHelpersLibrary.h"
-#include "ActorOrganizerShape.generated.h"
+#include "ActorsGeneratorShape.generated.h"
 
 class UBillboardComponent;
 
@@ -27,12 +27,12 @@ enum class ERingCustomRotation : uint8
 };
 
 UCLASS(Blueprintable)
-class TRICKYLEVELHELPERS_API AActorOrganizerShape : public AActorOrganizerBase
+class TRICKYLEVELHELPERS_API AActorsGeneratorShape : public AActorsGeneratorBase
 {
 	GENERATED_BODY()
 
 public:
-	AActorOrganizerShape();
+	AActorsGeneratorShape();
 
 protected:
 	virtual void GenerateActors() override;

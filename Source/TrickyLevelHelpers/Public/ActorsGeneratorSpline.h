@@ -3,18 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ActorOrganizerBase.h"
-#include "ActorOrganizerSpline.generated.h"
+#include "ActorsGeneratorBase.h"
+#include "ActorsGeneratorSpline.generated.h"
 
 class USplineComponent;
 
 UCLASS(Blueprintable)
-class TRICKYLEVELHELPERS_API AActorOrganizerSpline : public AActorOrganizerBase
+class TRICKYLEVELHELPERS_API AActorsGeneratorSpline : public AActorsGeneratorBase
 {
 	GENERATED_BODY()
 
 public:
-	AActorOrganizerSpline();
+	AActorsGeneratorSpline();
 
 protected:
 	virtual void GenerateActors() override;

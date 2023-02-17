@@ -6,15 +6,15 @@
 #include "LevelHelpersLibrary.h"
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
-#include "ActorOrganizerBase.generated.h"
+#include "ActorsGeneratorBase.generated.h"
 
 UCLASS(Abstract, NotBlueprintable)
-class TRICKYLEVELHELPERS_API AActorOrganizerBase : public AActor
+class TRICKYLEVELHELPERS_API AActorsGeneratorBase : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	AActorOrganizerBase();
+	AActorsGeneratorBase();
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;

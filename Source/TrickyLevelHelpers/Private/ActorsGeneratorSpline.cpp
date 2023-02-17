@@ -1,19 +1,19 @@
 // MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
 
-#include "ActorOrganizerSpline.h"
+#include "ActorsGeneratorSpline.h"
 
 #include "LevelHelpersLibrary.h"
 #include "Components/SplineComponent.h"
 
-AActorOrganizerSpline::AActorOrganizerSpline()
+AActorsGeneratorSpline::AActorsGeneratorSpline()
 {
 	SplineComponent = CreateDefaultSubobject<USplineComponent>("Spline");
 	SplineComponent->SetComponentTickEnabled(false);
 	SetRootComponent(SplineComponent);
 }
 
-void AActorOrganizerSpline::GenerateActors()
+void AActorsGeneratorSpline::GenerateActors()
 {
 #if WITH_EDITORONLY_DATA
 
@@ -40,7 +40,7 @@ void AActorOrganizerSpline::GenerateActors()
 #endif
 }
 
-void AActorOrganizerSpline::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
+void AActorsGeneratorSpline::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
 {
 	Super::CalculateCustomRotation(Location, Rotation);
 }

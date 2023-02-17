@@ -1,19 +1,19 @@
 // MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
 
-#include "ActorOrganizerShape.h"
+#include "ActorsGeneratorShape.h"
 
 #include "Components/BillboardComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
-AActorOrganizerShape::AActorOrganizerShape()
+AActorsGeneratorShape::AActorsGeneratorShape()
 {
 	BillboardComponent = CreateDefaultSubobject<UBillboardComponent>("Root");
 	SetRootComponent(BillboardComponent);
 	BillboardComponent->SetComponentTickEnabled(false);
 }
 
-void AActorOrganizerShape::GenerateActors()
+void AActorsGeneratorShape::GenerateActors()
 {
 #if WITH_EDITORONLY_DATA
 	Super::GenerateActors();
@@ -45,7 +45,7 @@ void AActorOrganizerShape::GenerateActors()
 #endif
 }
 
-void AActorOrganizerShape::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
+void AActorsGeneratorShape::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
 {
 	float Yaw = 0.f;
 
@@ -75,7 +75,7 @@ void AActorOrganizerShape::CalculateCustomRotation(const FVector& Location, FRot
 	}
 }
 
-void AActorOrganizerShape::GenerateGrid()
+void AActorsGeneratorShape::GenerateGrid()
 {
 #if WITH_EDITORONLY_DATA
 
@@ -98,7 +98,7 @@ void AActorOrganizerShape::GenerateGrid()
 #endif
 }
 
-void AActorOrganizerShape::GenerateCube()
+void AActorsGeneratorShape::GenerateCube()
 {
 #if WITH_EDITORONLY_DATA
 
@@ -121,7 +121,7 @@ void AActorOrganizerShape::GenerateCube()
 #endif
 }
 
-void AActorOrganizerShape::GenerateRing()
+void AActorsGeneratorShape::GenerateRing()
 {
 #if WITH_EDITORONLY_DATA
 
@@ -145,7 +145,7 @@ void AActorOrganizerShape::GenerateRing()
 #endif
 }
 
-void AActorOrganizerShape::GenerateArc()
+void AActorsGeneratorShape::GenerateArc()
 {
 #if WITH_EDITORONLY_DATA
 
