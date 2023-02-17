@@ -154,8 +154,8 @@ void AActorsGeneratorShape::GenerateArc()
 		return;
 	}
 
-	FRotator Rotation{FRotator::ZeroRotator};
-
+	Locations.Empty();
+	
 	for (int32 i = 0; i < ActorsAmount; i++)
 	{
 		const float Yaw = i * (ArcAngle / (ActorsAmount - 1)) - 0.5f * ArcAngle;
