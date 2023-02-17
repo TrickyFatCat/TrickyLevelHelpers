@@ -50,8 +50,7 @@ protected:
 	float Spacing = 512.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
-	FVector LocationOffset{FVector::ZeroVector}9c0211`	
-	UPROPERTY(EditAnywhere, BlueprintCal)
+	FVector LocationOffset{FVector::ZeroVector};
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
