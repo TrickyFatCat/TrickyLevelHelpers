@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MeshOrganizerSpline.generated.h"
+#include "MeshesGeneratorSpline.generated.h"
 
 class USplineComponent;
 class UHierarchicalInstancedStaticMeshComponent;
@@ -12,12 +12,12 @@ class UStaticMesh;
 class UMaterial;
 
 UCLASS()
-class TRICKYLEVELHELPERS_API AMeshOrganizerSpline : public AActor
+class TRICKYLEVELHELPERS_API AMeshesGeneratorSpline : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	AMeshOrganizerSpline(const FObjectInitializer& ObjectInitializer);
+	AMeshesGeneratorSpline(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
@@ -33,7 +33,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Organizer")
 	UMaterial* Material = nullptr;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
 	bool bUseCustomSpacing = false;
 
@@ -49,12 +49,12 @@ protected:
 		meta =(EditCondition="bUseCustomSpacing", EditConditionHides, ClampMin="0"))
 	float Spacing = 512.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
+	FVector LocationOffset{FVector::ZeroVector}9c0211`	
+	UPROPERTY(EditAnywhere, BlueprintCal)
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
 		meta =(EditCondition="bUseCustomSpacing", EditConditionHides, ClampMin="0"))
 	FVector Scale{FVector::OneVector};
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
-	FVector LocationOffset{FVector::ZeroVector};
 };
