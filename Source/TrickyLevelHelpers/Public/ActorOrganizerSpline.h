@@ -19,6 +19,8 @@ public:
 protected:
 	virtual void CreateActors() override;
 
+	virtual void CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const override;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Components", meta=(DisplayAfter="LocationOffset"))
 	USplineComponent* SplineComponent = nullptr;
 

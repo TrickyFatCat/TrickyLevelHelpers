@@ -45,6 +45,36 @@ void AActorOrganizerShape::CreateActors()
 #endif
 }
 
+void AActorOrganizerShape::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
+{
+	float Yaw = 0.f;
+	
+	switch (Shape)
+	{
+	case EOrganizerShape::Grid:
+	case EOrganizerShape::Cube:
+		Super::CalculateCustomRotation(Location, Rotation);
+		break;
+
+	case EOrganizerShape::Ring:
+	case EOrganizerShape::Arc:
+		if (CustomRotationMode == ERingCustomRotation::Manual)
+		{
+			Super::CalculateCustomRotation(Location, Rotation);
+			return;
+		}
+
+		Yaw = Location.ToOrientationRotator().Yaw;
+		Yaw += 180.f * (CustomRotationMode == ERingCustomRotation::In);
+		Rotation = FRotator{0.f, Yaw, 0.f};
+		break;
+
+	default:
+		Super::CalculateCustomRotation(Location, Rotation);
+		break;
+	}
+}
+
 void AActorOrganizerShape::GenerateGrid()
 {
 #if WITH_EDITORONLY_DATA
@@ -55,6 +85,7 @@ void AActorOrganizerShape::GenerateGrid()
 	}
 
 	TArray<FVector> Locations;
+	FRotator Rotation{FRotator::ZeroRotator};
 	ULevelHelpersLibrary::CalculateGridLocations(Locations, GridSize, SectorSize, LocationOffset);
 
 	if (Actors.Num() > 0 && Actors.Num() == GridSize.Size())
@@ -68,8 +99,12 @@ void AActorOrganizerShape::GenerateGrid()
 				continue;
 			}
 
+			CalculateRotation(Locations[i], Rotation);
 			Actor->SetActorRelativeLocation(Locations[i]);
+			Actor->SetActorRelativeRotation(Rotation);
 		}
+
+		return;
 	}
 
 	ClearActors();
@@ -80,6 +115,8 @@ void AActorOrganizerShape::GenerateGrid()
 	for (int32 i = 0; i < Locations.Num(); i++)
 	{
 		RelativeTransform.SetLocation(Locations[i]);
+		CalculateRotation(Locations[i], Rotation);
+		RelativeTransform.SetRotation(Rotation.Quaternion());
 		CreateActor(World, RelativeTransform);
 	}
 
@@ -96,6 +133,7 @@ void AActorOrganizerShape::GenerateCube()
 	}
 
 	TArray<FVector> Locations;
+	FRotator Rotation{FRotator::ZeroRotator};
 	ULevelHelpersLibrary::CalculateCubeLocations(Locations, CubeSize, CubeSectorSize, LocationOffset);
 
 	if (Actors.Num() > 0 && Actors.Num() == CubeSize.Size())
@@ -109,7 +147,9 @@ void AActorOrganizerShape::GenerateCube()
 				continue;
 			}
 
+			CalculateRotation(Locations[i], Rotation);
 			Actor->SetActorRelativeLocation(Locations[i]);
+			Actor->SetActorRelativeRotation(Rotation);
 		}
 
 		return;
@@ -122,6 +162,8 @@ void AActorOrganizerShape::GenerateCube()
 	for (int32 i = 0; i < Locations.Num(); ++i)
 	{
 		RelativeTransform.SetLocation(Locations[i]);
+		CalculateRotation(Locations[i], Rotation);
+		RelativeTransform.SetRotation(Rotation.Quaternion());
 		CreateActor(World, RelativeTransform);
 	}
 
@@ -237,23 +279,4 @@ void AActorOrganizerShape::GenerateArc()
 	}
 
 #endif
-}
-
-void AActorOrganizerShape::CalculateRotation(const FVector& Location, FRotator& Rotation) const
-{
-	if (RotationMode == ERotationMode::Manual)
-	{
-		return;
-	}
-
-	if (RotationMode != ERotationMode::Custom)
-	{
-		ULevelHelpersLibrary::GetRotatorFromMode(Rotation, RotationMode);
-	}
-	else
-	{
-		float Yaw = Location.ToOrientationRotator().Yaw;
-		Yaw += 180.f * (RotationDirection == ERingCustomRotation::In);
-		Rotation = FRotator{0.f, Yaw, 0.f};
-	}
 }

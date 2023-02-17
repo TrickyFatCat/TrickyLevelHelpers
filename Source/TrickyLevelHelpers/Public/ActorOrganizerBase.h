@@ -36,10 +36,12 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="RotationMode==ERotationMode::Custom"))
+		meta=(EditCondition="RotationMode==ERotationMode::Custom", EditConditionHides))
 	FRotator CustomRotation{FRotator::ZeroRotator};
 
-	virtual void CalculateCustomRotation(const FVector& Location, FRotator& Rotation);
+	void CalculateRotation(const FVector& Location, FRotator& Rotation) const;
+	
+	virtual void CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const;
 
 	void ClearActors();
 

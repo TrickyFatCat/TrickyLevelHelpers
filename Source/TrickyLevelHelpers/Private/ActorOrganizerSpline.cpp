@@ -27,6 +27,7 @@ void AActorOrganizerSpline::CreateActors()
 	}
 
 	TArray<FVector> Locations;
+	FRotator Rotation{FRotator::ZeroRotator};
 	ULevelHelpersLibrary::CalculateSplineLocations(SplineComponent, Locations, PointsAmount, LocationOffset);
 
 	if (Actors.Num() == PointsAmount)
@@ -39,8 +40,10 @@ void AActorOrganizerSpline::CreateActors()
 			{
 				continue;
 			}
-			
+
+			CalculateRotation(Locations[i], Rotation);
 			Actor->SetActorRelativeLocation(Locations[i]);
+			Actor->SetActorRelativeRotation(Rotation);
 		}
 
 		return;
@@ -54,8 +57,15 @@ void AActorOrganizerSpline::CreateActors()
 	for (int32 i = 0; i < PointsAmount; i++)
 	{
 		RelativeTransform.SetLocation(Locations[i]);
+		CalculateRotation(Locations[i], Rotation);
+		RelativeTransform.SetRotation(Rotation.Quaternion());
 		CreateActor(World, RelativeTransform);
 	}
 
 #endif
+}
+
+void AActorOrganizerSpline::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
+{
+	Super::CalculateCustomRotation(Location, Rotation);
 }

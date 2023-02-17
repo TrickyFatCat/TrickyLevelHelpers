@@ -36,7 +36,9 @@ public:
 
 protected:
 	virtual void CreateActors() override;
-	
+
+	virtual void CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const override;
+
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	UBillboardComponent* BillboardComponent = nullptr;
 
@@ -97,12 +99,12 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Organizer",
-		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides, DisplayAfter="CustomRotation"))
-	ERingCustomRotation RotationDirection = ERingCustomRotation::Out;
+		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube && RotationMode==ERotationMode::Custom",
+			EditConditionHides,
+			DisplayAfter="CustomRotation"))
+	ERingCustomRotation CustomRotationMode = ERingCustomRotation::Out;
 
 	void GenerateRing();
 
 	void GenerateArc();
-
-	void CalculateRotation(const FVector& Location, FRotator& Rotation) const;
 };

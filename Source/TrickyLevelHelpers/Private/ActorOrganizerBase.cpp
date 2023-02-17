@@ -27,8 +27,26 @@ void AActorOrganizerBase::Destroyed()
 #endif
 }
 
-void AActorOrganizerBase::CalculateCustomRotation(const FVector& Location, FRotator& Rotation)
+void AActorOrganizerBase::CalculateRotation(const FVector& Location, FRotator& Rotation) const
 {
+	if (RotationMode == ERotationMode::Manual)
+	{
+		return;
+	}
+
+	if (RotationMode != ERotationMode::Custom)
+	{
+		ULevelHelpersLibrary::GetRotatorFromMode(Rotation, RotationMode);
+	}
+	else
+	{
+		CalculateCustomRotation(Location, Rotation);
+	}
+}
+
+void AActorOrganizerBase::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
+{
+	Rotation = CustomRotation;
 }
 
 void AActorOrganizerBase::ClearActors()
