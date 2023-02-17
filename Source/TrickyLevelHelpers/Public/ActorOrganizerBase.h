@@ -14,7 +14,7 @@ class TRICKYLEVELHELPERS_API AActorOrganizerBase : public AActor
 	GENERATED_BODY()
 
 public:
-	AActorOrganizerBase(const FObjectInitializer& ObjectInitializer);
+	AActorOrganizerBase();
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;

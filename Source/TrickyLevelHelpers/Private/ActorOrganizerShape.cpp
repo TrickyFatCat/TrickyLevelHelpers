@@ -6,7 +6,7 @@
 #include "Components/BillboardComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
-AActorOrganizerShape::AActorOrganizerShape(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+AActorOrganizerShape::AActorOrganizerShape()
 {
 	BillboardComponent = CreateDefaultSubobject<UBillboardComponent>("Root");
 	SetRootComponent(BillboardComponent);

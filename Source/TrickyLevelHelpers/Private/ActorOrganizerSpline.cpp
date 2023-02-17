@@ -6,7 +6,7 @@
 #include "LevelHelpersLibrary.h"
 #include "Components/SplineComponent.h"
 
-AActorOrganizerSpline::AActorOrganizerSpline(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+AActorOrganizerSpline::AActorOrganizerSpline()
 {
 	SplineComponent = CreateDefaultSubobject<USplineComponent>("Spline");
 	SplineComponent->SetComponentTickEnabled(false);

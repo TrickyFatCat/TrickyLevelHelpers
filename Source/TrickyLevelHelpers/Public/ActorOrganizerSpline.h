@@ -14,7 +14,7 @@ class TRICKYLEVELHELPERS_API AActorOrganizerSpline : public AActorOrganizerBase
 	GENERATED_BODY()
 
 public:
-	AActorOrganizerSpline(const FObjectInitializer& ObjectInitializer);
+	AActorOrganizerSpline();
 
 protected:
 	virtual void GenerateActors() override;

@@ -32,7 +32,7 @@ class TRICKYLEVELHELPERS_API AActorOrganizerShape : public AActorOrganizerBase
 	GENERATED_BODY()
 
 public:
-	AActorOrganizerShape(const FObjectInitializer& ObjectInitializer);
+	AActorOrganizerShape();
 
 protected:
 	virtual void GenerateActors() override;

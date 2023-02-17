@@ -3,7 +3,7 @@
 
 #include "ActorOrganizerBase.h"
 
-AActorOrganizerBase::AActorOrganizerBase(const FObjectInitializer& ObjectInitializer)
+AActorOrganizerBase::AActorOrganizerBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	SetActorTickEnabled(false);
@@ -11,9 +11,9 @@ AActorOrganizerBase::AActorOrganizerBase(const FObjectInitializer& ObjectInitial
 
 void AActorOrganizerBase::OnConstruction(const FTransform& Transform)
 {
-	GenerateActors();
-	
 	Super::OnConstruction(Transform);
+	
+	GenerateActors();
 }
 
 void AActorOrganizerBase::Destroyed()
