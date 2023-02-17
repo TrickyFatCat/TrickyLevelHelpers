@@ -44,6 +44,8 @@ protected:
 	TArray<FVector> Locations;
 	
 	void CalculateRotation(const FVector& Location, FRotator& Rotation) const;
+
+	void CalculateTransform(const FVector& Location, FTransform& Transform);
 	
 	virtual void CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const;
 

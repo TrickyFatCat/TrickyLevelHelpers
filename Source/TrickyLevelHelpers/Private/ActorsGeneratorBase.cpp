@@ -45,6 +45,16 @@ void AActorsGeneratorBase::CalculateRotation(const FVector& Location, FRotator& 
 	}
 }
 
+void AActorsGeneratorBase::CalculateTransform(const FVector& Location, FTransform& Transform)
+{
+	FRotator Rotation{FRotator::ZeroRotator};
+	CalculateRotation(Location, Rotation);
+	
+	Transform.SetLocation(Location);
+	Transform.SetRotation(Rotation.Quaternion());
+	Transform.SetScale3D(Scale);
+}
+
 void AActorsGeneratorBase::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
 {
 	Rotation = CustomRotation;
@@ -57,9 +67,7 @@ void AActorsGeneratorBase::ChangeActorsTransform()
 		return;
 	}
 
-	FRotator Rotation{FRotator::ZeroRotator};
 	FTransform NewTransform{FTransform::Identity};
-	NewTransform.SetScale3D(Scale);
 
 	for (int32 i = 0; i < Locations.Num(); i++)
 	{
@@ -70,9 +78,7 @@ void AActorsGeneratorBase::ChangeActorsTransform()
 			continue;
 		}
 
-		NewTransform.SetLocation(Locations[i]);
-		CalculateRotation(Locations[i], Rotation);
-		NewTransform.SetRotation(Rotation.Quaternion());
+		CalculateTransform(Locations[i], NewTransform);
 		Actor->SetActorRelativeTransform(NewTransform);
 	}
 }
@@ -120,14 +126,10 @@ void AActorsGeneratorBase::SpawnActors()
 	}
 
 	FTransform RelativeTransform{FTransform::Identity};
-	FRotator Rotation{FRotator::ZeroRotator};
 
 	for (int32 i = 0; i < Locations.Num(); ++i)
 	{
-		RelativeTransform.SetLocation(Locations[i]);
-		CalculateCustomRotation(Locations[i], Rotation);
-		RelativeTransform.SetRotation(Rotation.Quaternion());
-		RelativeTransform.SetScale3D(Scale);
+		CalculateTransform(Locations[i], RelativeTransform);
 
 		AActor* NewActor = World->SpawnActor<AActor>(ActorClass, RelativeTransform);
 
