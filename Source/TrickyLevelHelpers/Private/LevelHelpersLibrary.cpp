@@ -90,6 +90,11 @@ void ULevelHelpersLibrary::CalculateSplineLocations(const USplineComponent* Spli
 	{
 		return;
 	}
+	
+	if (Locations.Num() > 0)
+	{
+		Locations.Empty();
+	}
 
 	FVector Location{FVector::ZeroVector};
 	const float Offset = SplineComponent->GetSplineLength() / static_cast<float>(PointsAmount);
