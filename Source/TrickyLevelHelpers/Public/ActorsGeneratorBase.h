@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "LevelHelpersLibrary.h"
 #include "GameFramework/Actor.h"
-#include "Engine/World.h"
 #include "ActorsGeneratorBase.generated.h"
 
 UCLASS(Abstract, NotBlueprintable)

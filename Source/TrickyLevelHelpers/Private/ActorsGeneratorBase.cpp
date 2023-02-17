@@ -2,6 +2,7 @@
 
 
 #include "ActorsGeneratorBase.h"
+#include "Engine/World.h"
 
 AActorsGeneratorBase::AActorsGeneratorBase()
 {
