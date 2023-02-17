@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LevelHelpersLibrary.h"
 #include "GameFramework/Actor.h"
 #include "MeshesGeneratorSpline.generated.h"
 
@@ -28,29 +29,48 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Components")
 	UHierarchicalInstancedStaticMeshComponent* HInstancedMeshComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Organizer")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generator")
 	UStaticMesh* StaticMesh = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	bool bUseCustomSpacing = false;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
+		Category="Generator",
 		meta=(EditCondition="!bUseCustomSpacing", EditConditionHides, ClampMin="1"))
 	int32 MeshesAmount = 5;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
+		Category="Generator",
 		meta =(EditCondition="bUseCustomSpacing", EditConditionHides, ClampMin="0"))
 	float Spacing = 512.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	FVector LocationOffset{FVector::ZeroVector};
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(AllowPreserveRatio))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
+	ERotationMode RotationMode = ERotationMode::Manual;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Generator",
+		meta=(EditCondition="RotationMode==ERotationMode::Custom", EditConditionHides))
+	FRotator CustomRotation{FRotator::ZeroRotator};
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(AllowPreserveRatio))
 	FVector Scale{FVector::OneVector};
 
 	int32 PointsAmount = 0;
+	
+	TArray<FTransform> Transforms;
+	
+	void CalculateRotation(FRotator& Rotation) const;
+
+	void CalculateTransforms();
+
+	void ChangeTransform();
+
+	void AddInstances();
 };
