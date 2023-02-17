@@ -24,18 +24,18 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Components", meta=(DisplayAfter="LocationOffset"))
 	USplineComponent* SplineComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(DisplayAfter="ActorClass"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(DisplayAfter="ActorClass"))
 	bool bUseCustomSpacing = false;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
+		Category="Generator",
 		meta=(EditCondition="!bUseCustomSpacing", EditConditionHides, ClampMin="1", DisplayAfter="ActorClass"))
 	int32 ActorsAmount = 5;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
+		Category="Generator",
 		meta =(EditCondition="bUseCustomSpacing", EditConditionHides, ClampMin="0", DisplayAfter="ActorClass"))
 	float Spacing = 512.f;
 };

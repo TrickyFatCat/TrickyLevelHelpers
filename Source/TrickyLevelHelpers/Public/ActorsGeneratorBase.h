@@ -21,25 +21,25 @@ protected:
 
 	virtual void Destroyed() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	TSubclassOf<AActor> ActorClass = nullptr;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Organizer", AdvancedDisplay)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Generator", AdvancedDisplay)
 	TArray<AActor*> Actors;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	FVector LocationOffset{FVector::ZeroVector};
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	ERotationMode RotationMode = ERotationMode::Manual;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
+		Category="Generator",
 		meta=(EditCondition="RotationMode==ERotationMode::Custom", EditConditionHides))
 	FRotator CustomRotation{FRotator::ZeroRotator};
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(AllowPreserveRatio))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(AllowPreserveRatio))
 	FVector Scale{FVector::OneVector};
 
 	TArray<FVector> Locations;

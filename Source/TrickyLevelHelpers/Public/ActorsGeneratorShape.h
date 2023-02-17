@@ -10,7 +10,7 @@
 class UBillboardComponent;
 
 UENUM()
-enum class EOrganizerShape : uint8
+enum class EGeneratorShape : uint8
 {
 	Grid,
 	Cube,
@@ -42,20 +42,20 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	UBillboardComponent* BillboardComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, Category="Organizer", meta=(DisplayAfter="ActorClass"))
-	EOrganizerShape Shape = EOrganizerShape::Grid;
+	UPROPERTY(EditAnywhere, Category="Generator", meta=(DisplayAfter="ActorClass"))
+	EGeneratorShape Shape = EGeneratorShape::Grid;
 
 	// Grid
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides, DisplayAfter="ActorClass"))
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Grid", EditConditionHides, DisplayAfter="ActorClass"))
 	FGridSize GridSize;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Grid", EditConditionHides, DisplayAfter="ActorClass"))
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Grid", EditConditionHides, DisplayAfter="ActorClass"))
 	FVector2D SectorSize{128.f, 128.f};
 
 	void GenerateGrid();
@@ -63,14 +63,14 @@ protected:
 	// Cube
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Cube", EditConditionHides, DisplayAfter="ActorClass"))
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Cube", EditConditionHides, DisplayAfter="ActorClass"))
 	FCubeSize CubeSize;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Cube", EditConditionHides, DisplayAfter="ActorClass"))
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Cube", EditConditionHides, DisplayAfter="ActorClass"))
 	FVector CubeSectorSize{128.f, 128.f, 128.f};
 
 	void GenerateCube();
@@ -78,28 +78,28 @@ protected:
 	// Ring, Arc, Circle
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
-		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides, ClampMin
+		Category="Generator",
+		meta=(EditCondition="Shape!=EGeneratorShape::Grid && Shape!=EGeneratorShape::Cube", EditConditionHides, ClampMin
 			="0", DisplayAfter="ActorClass"))
 	int32 ActorsAmount = 4;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
-		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube", EditConditionHides,
+		Category="Generator",
+		meta=(EditCondition="Shape!=EGeneratorShape::Grid && Shape!=EGeneratorShape::Cube", EditConditionHides,
 			ClampMin="0", DisplayAfter="ActorClass"))
 	float Radius = 256.f;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
-		meta=(EditCondition="Shape==EOrganizerShape::Arc", EditConditionHides, ClampMin="0", DisplayAfter="ActorClass"))
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Arc", EditConditionHides, ClampMin="0", DisplayAfter="ActorClass"))
 	float ArcAngle = 45.f;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
-		Category="Organizer",
-		meta=(EditCondition="Shape!=EOrganizerShape::Grid && Shape!=EOrganizerShape::Cube && RotationMode==ERotationMode::Custom",
+		Category="Generator",
+		meta=(EditCondition="Shape!=EGeneratorShape::Grid && Shape!=EGeneratorShape::Cube && RotationMode==ERotationMode::Custom",
 			EditConditionHides,
 			DisplayAfter="CustomRotation"))
 	ERingCustomRotation CustomRotationMode = ERingCustomRotation::Out;

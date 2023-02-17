@@ -25,19 +25,19 @@ void AActorsGeneratorShape::GenerateActors()
 
 	switch (Shape)
 	{
-	case EOrganizerShape::Grid:
+	case EGeneratorShape::Grid:
 		GenerateGrid();
 		break;
 
-	case EOrganizerShape::Cube:
+	case EGeneratorShape::Cube:
 		GenerateCube();
 		break;
 
-	case EOrganizerShape::Ring:
+	case EGeneratorShape::Ring:
 		GenerateRing();
 		break;
 
-	case EOrganizerShape::Arc:
+	case EGeneratorShape::Arc:
 		GenerateArc();
 		break;
 	}
@@ -51,13 +51,13 @@ void AActorsGeneratorShape::CalculateCustomRotation(const FVector& Location, FRo
 
 	switch (Shape)
 	{
-	case EOrganizerShape::Grid:
-	case EOrganizerShape::Cube:
+	case EGeneratorShape::Grid:
+	case EGeneratorShape::Cube:
 		Super::CalculateCustomRotation(Location, Rotation);
 		break;
 
-	case EOrganizerShape::Ring:
-	case EOrganizerShape::Arc:
+	case EGeneratorShape::Ring:
+	case EGeneratorShape::Arc:
 		if (CustomRotationMode == ERingCustomRotation::Manual)
 		{
 			Super::CalculateCustomRotation(Location, Rotation);
