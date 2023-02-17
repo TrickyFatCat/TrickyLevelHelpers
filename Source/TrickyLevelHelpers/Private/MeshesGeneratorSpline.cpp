@@ -29,9 +29,9 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 		return;
 	}
 
-	const int32 PointsAmount = bUseCustomSpacing
-		                           ? FMath::Floor(SplineComponent->GetSplineLength() / Spacing)
-		                           : MeshesAmount;
+	PointsAmount = bUseCustomSpacing
+		               ? FMath::Floor(SplineComponent->GetSplineLength() / Spacing)
+		               : MeshesAmount;
 
 	if (PointsAmount <= 0)
 	{
@@ -39,7 +39,7 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 	}
 
 	HInstancedMeshComponent->SetStaticMesh(StaticMesh);
-	
+
 	TArray<FVector> Locations;
 	ULevelHelpersLibrary::CalculateSplineLocations(SplineComponent, Locations, PointsAmount, LocationOffset);
 	FTransform InstanceTransform{FTransform::Identity};

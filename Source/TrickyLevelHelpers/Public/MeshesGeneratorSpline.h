@@ -31,9 +31,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Organizer")
 	UStaticMesh* StaticMesh = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Organizer")
-	UMaterial* Material = nullptr;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
 	bool bUseCustomSpacing = false;
 
@@ -51,9 +48,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer")
 	FVector LocationOffset{FVector::ZeroVector};
-	UPROPERTY(EditAnywhere,
-		BlueprintReadOnly,
-		Category="Organizer",
-		meta =(EditCondition="bUseCustomSpacing", EditConditionHides, ClampMin="0"))
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organizer", meta=(AllowPreserveRatio))
 	FVector Scale{FVector::OneVector};
+
+	int32 PointsAmount = 0;
 };
