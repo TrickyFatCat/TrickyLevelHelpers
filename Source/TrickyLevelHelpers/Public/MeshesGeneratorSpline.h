@@ -59,13 +59,19 @@ protected:
 		meta=(EditCondition="RotationMode==ERotationMode::Custom", EditConditionHides))
 	FRotator CustomRotation{FRotator::ZeroRotator};
 
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Generator",
+		meta=(EditCondition="RotationMode==ERotationMode::Custom", EditConditionHides, DisplayAfter="CustomRotation"))
+	FActiveAxis RotateAlongSpline{false, false, true};
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(AllowPreserveRatio))
 	FVector Scale{FVector::OneVector};
 
 	int32 PointsAmount = 0;
-	
+
 	TArray<FTransform> Transforms;
-	
+
 	void CalculateRotation(FRotator& Rotation) const;
 
 	void CalculateTransforms();

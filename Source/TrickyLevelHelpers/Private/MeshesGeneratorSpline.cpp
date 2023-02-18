@@ -75,19 +75,24 @@ void AMeshesGeneratorSpline::CalculateTransforms()
 {
 	Transforms.Empty();
 	
-	TArray<FVector> Locations;
-	ULevelHelpersLibrary::CalculateSplineLocations(SplineComponent, Locations, PointsAmount, LocationOffset);
+	ULevelHelpersLibrary::CalculateSplineTransforms(SplineComponent, Transforms, PointsAmount, LocationOffset);
+	
 	FRotator Rotation{FRotator::ZeroRotator};
 	CalculateRotation(Rotation);
-
-	FTransform NewTransform{FTransform::Identity};
-	NewTransform.SetRotation(Rotation.Quaternion());
-	NewTransform.SetScale3D(Scale);
-
-	for (int32 i = 0; i < Locations.Num(); ++i)
+	
+	for (int32 i = 0; i < Transforms.Num(); ++i)
 	{
-		NewTransform.SetLocation(Locations[i]);
-		Transforms.Emplace(NewTransform);
+		Transforms[i].SetScale3D(Scale);
+
+		if (RotationMode == ERotationMode::Custom)
+		{
+			const FRotator SplineRotation = Transforms[i].GetRotation().Rotator();
+			Rotation.Roll = RotateAlongSpline.bX ? SplineRotation.Roll : Rotation.Roll;
+			Rotation.Pitch = RotateAlongSpline.bY ? SplineRotation.Pitch : Rotation.Pitch;
+			Rotation.Yaw = RotateAlongSpline.bZ ? SplineRotation.Yaw : Rotation.Yaw;
+		}
+
+		Transforms[i].SetRotation(Rotation.Quaternion());
 	}
 }
 
