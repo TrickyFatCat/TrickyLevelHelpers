@@ -44,7 +44,7 @@ struct FCubeSize
 	int32 Size() const { return X * Y * Z; }
 };
 
-UENUM()
+UENUM(BlueprintType)
 enum class ERotationMode : uint8
 {
 	Manual,
@@ -55,6 +55,21 @@ enum class ERotationMode : uint8
 	Down,
 	Left,
 	Right
+};
+
+USTRUCT(BlueprintType)
+struct FActiveAxis
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ActiveAxis")
+	bool bX = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ActiveAxis")
+	bool bY = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ActiveAxis")
+	bool bZ = true;
 };
 
 /**
@@ -91,5 +106,12 @@ public:
 	                                     const int32 PointsAmount,
 	                                     const FVector& LocationOffset);
 
-	static void GetRotatorFromMode(FRotator& Rotation, const ERotationMode& RotationMode);
+	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="CubeSize, SectorSize, CubeCentre"))
+	static void CalculateSplineTransforms(const USplineComponent* SplineComponent,
+	                                      TArray<FTransform>& Transforms,
+	                                      const int32 PointsAmount,
+	                                      const FVector& LocationOffset);
+
+	UFUNCTION(BlueprintPure, Category="LevelHelpers", meta=(AutoCreateRefTerm="RotationMode"))
+	static void GetRotatorFromMode(FRotator& Rotation, const ERotationMode RotationMode);
 };

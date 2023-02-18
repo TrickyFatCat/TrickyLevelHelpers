@@ -38,4 +38,12 @@ protected:
 		Category="Generator",
 		meta =(EditCondition="bUseCustomSpacing", EditConditionHides, ClampMin="0", DisplayAfter="ActorClass"))
 	float Spacing = 512.f;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Generator",
+		meta=(EditCondition="RotationMode==ERotationMode::Custom", EditConditionHides, DisplayAfter="CustomRotation"))
+	FActiveAxis RotateAlongSpline{false, false, true};
+
+	TArray<FTransform> Transforms;
 };

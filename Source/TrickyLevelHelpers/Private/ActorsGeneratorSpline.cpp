@@ -26,7 +26,14 @@ void AActorsGeneratorSpline::GenerateActors()
 		return;
 	}
 
-	ULevelHelpersLibrary::CalculateSplineLocations(SplineComponent, Locations, PointsAmount, LocationOffset);
+	ULevelHelpersLibrary::CalculateSplineTransforms(SplineComponent, Transforms, PointsAmount, LocationOffset);
+
+	Locations.Empty();
+	
+	for (auto& Transform : Transforms)
+	{
+		Locations.Emplace(Transform.GetLocation());	
+	}
 
 	if (Actors.Num() == PointsAmount)
 	{
@@ -43,4 +50,20 @@ void AActorsGeneratorSpline::GenerateActors()
 void AActorsGeneratorSpline::CalculateCustomRotation(const FVector& Location, FRotator& Rotation) const
 {
 	Super::CalculateCustomRotation(Location, Rotation);
+	const FRotator SplineRotation = Transforms[Locations.Find(Location)].GetRotation().Rotator();
+
+	if (RotateAlongSpline.bX)
+	{
+		Rotation.Roll = SplineRotation.Roll;
+	} 
+
+	if (RotateAlongSpline.bY)
+	{
+		Rotation.Pitch = SplineRotation.Pitch;
+	}
+
+	if (RotateAlongSpline.bZ)
+	{
+		Rotation.Yaw = SplineRotation.Yaw;
+	}
 }

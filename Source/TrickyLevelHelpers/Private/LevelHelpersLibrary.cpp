@@ -90,7 +90,7 @@ void ULevelHelpersLibrary::CalculateSplineLocations(const USplineComponent* Spli
 	{
 		return;
 	}
-	
+
 	if (Locations.Num() > 0)
 	{
 		Locations.Empty();
@@ -108,7 +108,35 @@ void ULevelHelpersLibrary::CalculateSplineLocations(const USplineComponent* Spli
 	}
 }
 
-void ULevelHelpersLibrary::GetRotatorFromMode(FRotator& Rotation, const ERotationMode& RotationMode)
+void ULevelHelpersLibrary::CalculateSplineTransforms(const USplineComponent* SplineComponent,
+                                                     TArray<FTransform>& Transforms,
+                                                     const int32 PointsAmount,
+                                                     const FVector& LocationOffset)
+{
+	if (!SplineComponent || PointsAmount <= 0)
+	{
+		return;
+	}
+
+	if (Transforms.Num() > 0)
+	{
+		Transforms.Empty();
+	}
+
+	const float Offset = SplineComponent->GetSplineLength() / static_cast<float>(PointsAmount);
+
+	for (int32 i = 0; i < PointsAmount; ++i)
+	{
+		const float Distance = Offset * i + Offset * 0.5f * !SplineComponent->IsClosedLoop();
+		FVector Location = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
+		Location += LocationOffset;
+		FRotator Rotation = SplineComponent->GetRotationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
+		FVector Scale = SplineComponent->GetScaleAtDistanceAlongSpline(Distance);
+		Transforms.Emplace(FTransform{Rotation.Quaternion(), Location, Scale});
+	}
+}
+
+void ULevelHelpersLibrary::GetRotatorFromMode(FRotator& Rotation, const ERotationMode RotationMode)
 {
 	switch (RotationMode)
 	{
