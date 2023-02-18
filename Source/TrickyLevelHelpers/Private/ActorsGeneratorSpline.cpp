@@ -51,19 +51,9 @@ void AActorsGeneratorSpline::CalculateCustomRotation(const FVector& Location, FR
 {
 	Super::CalculateCustomRotation(Location, Rotation);
 	const FRotator SplineRotation = Transforms[Locations.Find(Location)].GetRotation().Rotator();
-
-	if (RotateAlongSpline.bX)
-	{
-		Rotation.Roll = SplineRotation.Roll;
-	} 
-
-	if (RotateAlongSpline.bY)
-	{
-		Rotation.Pitch = SplineRotation.Pitch;
-	}
-
-	if (RotateAlongSpline.bZ)
-	{
-		Rotation.Yaw = SplineRotation.Yaw;
-	}
+	
+	Rotation.Roll = RotateAlongSpline.bX ? SplineRotation.Roll : Rotation.Roll;
+	Rotation.Pitch = RotateAlongSpline.bY ? SplineRotation.Pitch : Rotation.Pitch;
+	Rotation.Yaw = RotateAlongSpline.bZ ? SplineRotation.Yaw : Rotation.Yaw;
 }
+
