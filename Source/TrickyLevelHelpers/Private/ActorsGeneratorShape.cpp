@@ -44,6 +44,10 @@ void AActorsGeneratorShape::GenerateActors()
 	case EGeneratorShape::Cylinder:
 		GenerateCylinder();
 		break;
+
+	case EGeneratorShape::Sphere:
+		GenerateSphere();
+		break;
 	}
 
 #endif
@@ -202,6 +206,36 @@ void AActorsGeneratorShape::GenerateCylinder()
 		ChangeActorsTransform();
 		return;
 	}
+
+	ClearActors();
+	SpawnActors();
+
+#endif
+}
+
+void AActorsGeneratorShape::GenerateSphere()
+{
+#if WITH_EDITORONLY_DATA
+	if (Radius <= 0.f || ActorsAmount <= 0)
+	{
+		return;
+	}
+
+	ULevelHelpersLibrary::CalculateSphereLocations(Locations,
+	                                               ActorsAmount,
+	                                               Radius,
+	                                               MinLatitude,
+	                                               MaxLatitude,
+	                                               MinLongitude,
+	                                               MaxLongitude,
+	                                               LocationOffset);
+
+	if (Actors.Num() > 0 && Actors.Num() == ActorsAmount)
+	{
+		ChangeActorsTransform();
+		return;
+	}
+
 
 	ClearActors();
 	SpawnActors();

@@ -16,7 +16,8 @@ enum class EGeneratorShape : uint8
 	Cube,
 	Ring,
 	Arc,
-	Cylinder
+	Cylinder,
+	Sphere
 };
 
 UENUM()
@@ -125,4 +126,31 @@ protected:
 	FVector RingOffset{0.f, 0.f, 64.f};
 
 	void GenerateCylinder();
+
+	// Sphere
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Sphere", EditConditionHides, DisplayAfter="Radius", ClampMin="0", ClampMax="1"))
+	float MinLatitude = 0.f;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Sphere", EditConditionHides, DisplayAfter="Radius", ClampMin="0", ClampMax="1"))
+	float MaxLatitude = 1.f;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Sphere", EditConditionHides, DisplayAfter="Radius", ClampMin="0", ClampMax="1"))
+	float MinLongitude = 0.f;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Sphere", EditConditionHides, DisplayAfter="Radius", ClampMin="0", ClampMax="1"))
+	float MaxLongitude = 1.f;
+	
+	void GenerateSphere();
 };
