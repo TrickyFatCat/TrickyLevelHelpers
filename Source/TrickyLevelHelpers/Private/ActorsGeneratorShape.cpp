@@ -40,6 +40,10 @@ void AActorsGeneratorShape::GenerateActors()
 	case EGeneratorShape::Arc:
 		GenerateArc();
 		break;
+
+	case EGeneratorShape::Cylinder:
+		GenerateCylinder();
+		break;
 	}
 
 #endif
@@ -58,6 +62,7 @@ void AActorsGeneratorShape::CalculateCustomRotation(const FVector& Location, FRo
 
 	case EGeneratorShape::Ring:
 	case EGeneratorShape::Arc:
+	case EGeneratorShape::Cylinder:
 		if (CustomRotationMode == ERingCustomRotation::Manual)
 		{
 			Super::CalculateCustomRotation(Location, Rotation);
@@ -131,7 +136,6 @@ void AActorsGeneratorShape::GenerateRing()
 	}
 
 	ULevelHelpersLibrary::CalculateRingLocations(Locations, ActorsAmount, Radius, 360.f, LocationOffset);
-	FRotator Rotation;
 
 	if (Actors.Num() > 0 && Actors.Num() == ActorsAmount)
 	{
@@ -155,7 +159,7 @@ void AActorsGeneratorShape::GenerateArc()
 	}
 
 	Locations.Empty();
-	
+
 	for (int32 i = 0; i < ActorsAmount; i++)
 	{
 		const float Yaw = i * (ArcAngle / (ActorsAmount - 1)) - 0.5f * ArcAngle;
@@ -165,6 +169,42 @@ void AActorsGeneratorShape::GenerateArc()
 	}
 
 	if (Actors.Num() > 0 && Actors.Num() == ActorsAmount)
+	{
+		ChangeActorsTransform();
+		return;
+	}
+
+	ClearActors();
+	SpawnActors();
+
+#endif
+}
+
+void AActorsGeneratorShape::GenerateCylinder()
+{
+#if WITH_EDITORONLY_DATA
+
+	if (Radius <= 0.f || ActorsAmount <= 0 || RingsAmount <= 0)
+	{
+		return;
+	}
+
+	Locations.Empty();
+
+	for (int32 i = 0; i < RingsAmount; ++i)
+	{
+		TArray<FVector> RingLocations;
+		
+		ULevelHelpersLibrary::CalculateRingLocations(RingLocations,
+		                                             ActorsAmount,
+		                                             Radius,
+		                                             360.f,
+		                                             LocationOffset + RingOffset * i);
+
+		Locations.Append(RingLocations);
+	}
+
+	if (Actors.Num() > 0 && Actors.Num() == ActorsAmount * RingsAmount)
 	{
 		ChangeActorsTransform();
 		return;

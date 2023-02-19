@@ -15,7 +15,8 @@ enum class EGeneratorShape : uint8
 	Grid,
 	Cube,
 	Ring,
-	Arc
+	Arc,
+	Cylinder
 };
 
 UENUM()
@@ -99,7 +100,8 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
-		meta=(EditCondition="Shape!=EGeneratorShape::Grid && Shape!=EGeneratorShape::Cube && RotationMode==ERotationMode::Custom",
+		meta=(EditCondition=
+			"Shape!=EGeneratorShape::Grid && Shape!=EGeneratorShape::Cube && RotationMode==ERotationMode::Custom",
 			EditConditionHides,
 			DisplayAfter="CustomRotation"))
 	ERingCustomRotation CustomRotationMode = ERingCustomRotation::Out;
@@ -107,4 +109,20 @@ protected:
 	void GenerateRing();
 
 	void GenerateArc();
+
+	// Cylinder
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Cylinder", EditConditionHides, ClampMin
+			="1", DisplayAfter="ActorsAmount"))
+	int32 RingsAmount = 4;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Generator",
+		meta=(EditCondition="Shape==EGeneratorShape::Cylinder", EditConditionHides, DisplayAfter="Radius"))
+	FVector RingOffset{0.f, 0.f, 64.f};
+
+	void GenerateCylinder();
 };
