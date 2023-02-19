@@ -189,20 +189,13 @@ void AActorsGeneratorShape::GenerateCylinder()
 		return;
 	}
 
-	Locations.Empty();
-
-	for (int32 i = 0; i < RingsAmount; ++i)
-	{
-		TArray<FVector> RingLocations;
-		
-		ULevelHelpersLibrary::CalculateRingLocations(RingLocations,
-		                                             ActorsAmount,
-		                                             Radius,
-		                                             360.f,
-		                                             LocationOffset + RingOffset * i);
-
-		Locations.Append(RingLocations);
-	}
+	ULevelHelpersLibrary::CalculateCylinderLocations(Locations,
+	                                                 ActorsAmount,
+	                                                 RingsAmount,
+	                                                 Radius,
+	                                                 360.f,
+	                                                 RingOffset,
+	                                                 LocationOffset);
 
 	if (Actors.Num() > 0 && Actors.Num() == ActorsAmount * RingsAmount)
 	{

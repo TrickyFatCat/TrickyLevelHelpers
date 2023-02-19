@@ -81,6 +81,35 @@ void ULevelHelpersLibrary::CalculateRingLocations(TArray<FVector>& Locations,
 	}
 }
 
+void ULevelHelpersLibrary::CalculateCylinderLocations(TArray<FVector>& Locations,
+                                                      const int32 PointsNumber,
+                                                      const int32 RingsAmount,
+                                                      const float Radius,
+                                                      const float Angle,
+                                                      const FVector& RingOffset,
+                                                      const FVector& Centre)
+{
+	if (PointsNumber <= 0 || RingsAmount <= 0)
+	{
+		return;
+	}
+
+	Locations.Empty();
+
+	for (int32 i = 0; i < RingsAmount; ++i)
+	{
+		TArray<FVector> RingLocations;
+
+		CalculateRingLocations(RingLocations,
+		                       PointsNumber,
+		                       Radius,
+		                       Angle,
+		                       Centre + RingOffset * i);
+
+		Locations.Append(RingLocations);
+	}
+}
+
 void ULevelHelpersLibrary::CalculateSplineLocations(const USplineComponent* SplineComponent,
                                                     TArray<FVector>& Locations,
                                                     const int32 PointsAmount,
@@ -144,7 +173,7 @@ void ULevelHelpersLibrary::CalculateSplineTransforms(const USplineComponent* Spl
 			Rotation = SplineComponent->GetRotationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
 			Scale = SplineComponent->GetScaleAtDistanceAlongSpline(Distance);
 		}
-		
+
 		Location += LocationOffset;
 		Transforms.Emplace(FTransform{Rotation.Quaternion(), Location, Scale});
 	}
