@@ -75,7 +75,7 @@ void AMeshesGeneratorSpline::CalculateTransforms()
 {
 	Transforms.Empty();
 	
-	ULevelHelpersLibrary::CalculateSplineTransforms(SplineComponent, Transforms, PointsAmount, LocationOffset);
+	ULevelHelpersLibrary::CalculateSplineTransforms(SplineComponent, Transforms, PointsAmount, LocationOffset, false);
 	
 	FRotator Rotation{FRotator::ZeroRotator};
 	CalculateRotation(Rotation);

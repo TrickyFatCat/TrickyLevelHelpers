@@ -72,6 +72,14 @@ struct FActiveAxis
 	bool bZ = true;
 };
 
+UENUM()
+enum class ESplineGenerationMode
+{
+	Points,
+	Number,
+	Spacing
+};
+
 /**
  * 
  */
@@ -110,7 +118,8 @@ public:
 	static void CalculateSplineTransforms(const USplineComponent* SplineComponent,
 	                                      TArray<FTransform>& Transforms,
 	                                      const int32 PointsAmount,
-	                                      const FVector& LocationOffset);
+	                                      const FVector& LocationOffset,
+	                                      const bool bGenerateAtPoints);
 
 	UFUNCTION(BlueprintPure, Category="LevelHelpers", meta=(AutoCreateRefTerm="RotationMode"))
 	static void GetRotatorFromMode(FRotator& Rotation, const ERotationMode RotationMode);

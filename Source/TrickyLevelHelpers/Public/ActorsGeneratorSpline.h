@@ -27,16 +27,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(DisplayAfter="ActorClass"))
 	bool bUseCustomSpacing = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(DisplayAfter="ActorClass"))
+	ESplineGenerationMode GenerationMode = ESplineGenerationMode::Number;
+	
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
-		meta=(EditCondition="!bUseCustomSpacing", EditConditionHides, ClampMin="1", DisplayAfter="ActorClass"))
+		meta=(EditCondition="GenerationMode==ESplineGenerationMode::Number", EditConditionHides, ClampMin="1", DisplayAfter="ActorClass"))
 	int32 ActorsAmount = 5;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
-		meta =(EditCondition="bUseCustomSpacing", EditConditionHides, ClampMin="0", DisplayAfter="ActorClass"))
+		meta =(EditCondition="GenerationMode==ESplineGenerationMode::Spacing", EditConditionHides, ClampMin="0", DisplayAfter="ActorClass"))
 	float Spacing = 512.f;
 
 	UPROPERTY(EditAnywhere,
@@ -45,5 +48,7 @@ protected:
 		meta=(EditCondition="RotationMode==ERotationMode::Custom", EditConditionHides, DisplayAfter="CustomRotation"))
 	FActiveAxis RotateAlongSpline{false, false, true};
 
+	int32 PointsAmount = 0;
+	
 	TArray<FTransform> Transforms;
 };

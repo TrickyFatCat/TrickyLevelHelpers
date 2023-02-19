@@ -111,7 +111,8 @@ void ULevelHelpersLibrary::CalculateSplineLocations(const USplineComponent* Spli
 void ULevelHelpersLibrary::CalculateSplineTransforms(const USplineComponent* SplineComponent,
                                                      TArray<FTransform>& Transforms,
                                                      const int32 PointsAmount,
-                                                     const FVector& LocationOffset)
+                                                     const FVector& LocationOffset,
+                                                     const bool bGenerateAtPoints)
 {
 	if (!SplineComponent || PointsAmount <= 0)
 	{
@@ -124,14 +125,27 @@ void ULevelHelpersLibrary::CalculateSplineTransforms(const USplineComponent* Spl
 	}
 
 	const float Offset = SplineComponent->GetSplineLength() / static_cast<float>(PointsAmount);
+	FVector Location{FVector::ZeroVector};
+	FRotator Rotation{FRotator::ZeroRotator};
+	FVector Scale{FVector::OneVector};
 
 	for (int32 i = 0; i < PointsAmount; ++i)
 	{
-		const float Distance = Offset * i + Offset * 0.5f * !SplineComponent->IsClosedLoop();
-		FVector Location = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
+		if (bGenerateAtPoints)
+		{
+			Location = SplineComponent->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::Local);
+			Rotation = SplineComponent->GetRotationAtSplinePoint(i, ESplineCoordinateSpace::Local);
+			Scale = SplineComponent->GetScaleAtSplinePoint(i);
+		}
+		else
+		{
+			const float Distance = Offset * i + Offset * 0.5f * !SplineComponent->IsClosedLoop();
+			Location = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
+			Rotation = SplineComponent->GetRotationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
+			Scale = SplineComponent->GetScaleAtDistanceAlongSpline(Distance);
+		}
+		
 		Location += LocationOffset;
-		FRotator Rotation = SplineComponent->GetRotationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Local);
-		FVector Scale = SplineComponent->GetScaleAtDistanceAlongSpline(Distance);
 		Transforms.Emplace(FTransform{Rotation.Quaternion(), Location, Scale});
 	}
 }
