@@ -117,6 +117,17 @@ public:
 	                                       const FVector& RingOffset,
 	                                       const FVector& Centre);
 
+	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="Centre"))
+	static void CalculateSphereLocations(TArray<FVector>& Locations,
+	                                     const int32 PointsNumber,
+	                                     const float Radius,
+	                                     const float MinLatitudeDeg,
+	                                     const float MaxLatitudeDeg,
+	                                     const float MinLongitudeDeg,
+	                                     const float MaxLongitudeDeg,
+	                                     const FVector& Centre);
+
+
 	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="CubeSize, SectorSize, CubeCentre"))
 	static void CalculateSplineLocations(const USplineComponent* SplineComponent,
 	                                     TArray<FVector>& Locations,
