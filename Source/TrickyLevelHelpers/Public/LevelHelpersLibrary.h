@@ -121,8 +121,8 @@ public:
 	static void CalculateSphereLocations(TArray<FVector>& Locations,
 	                                     const int32 PointsNumber,
 	                                     const float Radius,
-	                                     const float MinLatitudeDeg,
-	                                     const float MaxLatitudeDeg,
+	                                     const float MinLatitude,
+	                                     const float MaxLatitude,
 	                                     const float MinLongitudeDeg,
 	                                     const float MaxLongitudeDeg,
 	                                     const FVector& Centre);

@@ -113,10 +113,10 @@ void ULevelHelpersLibrary::CalculateCylinderLocations(TArray<FVector>& Locations
 void ULevelHelpersLibrary::CalculateSphereLocations(TArray<FVector>& Locations,
                                                     const int32 PointsNumber,
                                                     const float Radius,
-                                                    const float MinLatitudeDeg,
-                                                    const float MaxLatitudeDeg,
-                                                    const float MinLongitudeDeg,
-                                                    const float MaxLongitudeDeg,
+                                                    const float MinLatitude,
+                                                    const float MaxLatitude,
+                                                    const float MinLongitude,
+                                                    const float MaxLongitude,
                                                     const FVector& Centre)
 {
 	if (PointsNumber <= 0)
@@ -129,28 +129,27 @@ void ULevelHelpersLibrary::CalculateSphereLocations(TArray<FVector>& Locations,
 	const float Phi = PI * (3.f - FMath::Sqrt(5.f));
 	const float Pi2 = PI * 2.f;
 
-	const float MinLatitudeRad = FMath::Clamp(FMath::DegreesToRadians(MinLatitudeDeg), 0.f, 1.f);
-	const float MaxLatitudeRad = FMath::Clamp(FMath::DegreesToRadians(MaxLatitudeDeg), 0.f, 1.f);
-
-	const float MinLongitudeRad = FMath::DegreesToRadians(MinLongitudeDeg);
-	const float MaxLongitudeRad = FMath::DegreesToRadians(MaxLongitudeDeg);
+	const float MinLongitudeAngle = MinLongitude * 360.f;
+	const float MaxLongitudeAngle = MaxLongitude * 360.f;
+	const float MinLongitudeRad = FMath::DegreesToRadians(MinLongitudeAngle);
+	const float MaxLongitudeRad = FMath::DegreesToRadians(MaxLongitudeAngle);
 
 	for (int32 i = 0; i < PointsNumber; ++i)
 	{
-		const float Z = ((i / (static_cast<float>(PointsNumber) - 1)) * (MaxLatitudeRad - MinLatitudeRad) +
-			MinLatitudeRad) * 2.f - 1.f;
-		const float RadiusZ = FMath::Sqrt(1 - Z * Z);
-		float Theta = Phi * i;
+		const float Z = ((i / (static_cast<float>(PointsNumber) - 1.f)) * (MaxLatitude - MinLatitude) +
+			MinLatitude) * 2.f - 1.f;
+		const float RadiusZ = FMath::Sqrt(1.f - Z * Z);
+		float Theta = Phi * static_cast<float>(i);
 
-		if (MinLongitudeDeg != 0.f || MaxLongitudeDeg != 360.f)
+		if (MinLongitudeAngle != 0.f || MaxLongitudeAngle != 360.f)
 		{
 			Theta = static_cast<int32>(Theta) % static_cast<int32>(Pi2);
 			Theta = Theta < 0 ? Theta + Pi2 : Theta;
 			Theta = Theta * MaxLongitudeRad / Pi2 + MinLongitudeRad;
 		}
 
-		const float X = FMath::Cos(Theta) * RadiusZ;
-		const float Y = FMath::Sin(Theta) * RadiusZ;
+		const float X = FMath::Sin(Theta) * RadiusZ;
+		const float Y = FMath::Cos(Theta) * RadiusZ;
 
 		FVector Location{X, Y, Z};
 		Location *= Radius;
