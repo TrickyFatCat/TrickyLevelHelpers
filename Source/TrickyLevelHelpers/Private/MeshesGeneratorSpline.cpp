@@ -29,10 +29,21 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 		return;
 	}
 
-	PointsAmount = bUseCustomSpacing
-		               ? FMath::Floor(SplineComponent->GetSplineLength() / Spacing)
-		               : MeshesAmount;
+	switch (GenerationMode)
+	{
+	case ESplineGenerationMode::Points:
+		PointsAmount = SplineComponent->GetNumberOfSplinePoints();
+		break;
 
+	case ESplineGenerationMode::Number:
+		PointsAmount = MeshesAmount;
+		break;
+
+	case ESplineGenerationMode::Spacing:
+		PointsAmount = FMath::Floor(SplineComponent->GetSplineLength() / Spacing);
+		break;
+	}
+	
 	if (PointsAmount <= 0)
 	{
 		return;

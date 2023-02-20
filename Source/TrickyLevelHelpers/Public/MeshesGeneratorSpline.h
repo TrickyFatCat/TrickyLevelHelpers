@@ -33,18 +33,18 @@ protected:
 	UStaticMesh* StaticMesh = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
-	bool bUseCustomSpacing = false;
+	ESplineGenerationMode GenerationMode = ESplineGenerationMode::Number;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
-		meta=(EditCondition="!bUseCustomSpacing", EditConditionHides, ClampMin="1"))
+		meta=(EditCondition="GenerationMode==ESplineGenerationMode::Number", EditConditionHides, ClampMin="1"))
 	int32 MeshesAmount = 5;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
-		meta =(EditCondition="bUseCustomSpacing", EditConditionHides, ClampMin="0"))
+		meta =(EditCondition="GenerationMode==ESplineGenerationMode::Spacing", EditConditionHides, ClampMin="0"))
 	float Spacing = 512.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
