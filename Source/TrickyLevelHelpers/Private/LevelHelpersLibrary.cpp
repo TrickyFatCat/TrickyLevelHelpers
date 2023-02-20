@@ -127,7 +127,7 @@ void ULevelHelpersLibrary::CalculateSphereLocations(TArray<FVector>& Locations,
 	Locations.Empty();
 
 	const float Phi = PI * (3.f - FMath::Sqrt(5.f));
-	const float Pi2 = PI * 2.f;
+	const float Tau = PI * 2.f;
 
 	const float MinLongitudeAngle = MinLongitude * 360.f;
 	const float MaxLongitudeAngle = MaxLongitude * 360.f;
@@ -136,16 +136,16 @@ void ULevelHelpersLibrary::CalculateSphereLocations(TArray<FVector>& Locations,
 
 	for (int32 i = 0; i < PointsNumber; ++i)
 	{
-		const float Z = ((i / (static_cast<float>(PointsNumber) - 1.f)) * (MaxLatitude - MinLatitude) +
-			MinLatitude) * 2.f - 1.f;
+		const float Z = ((i / (static_cast<float>(PointsNumber) - 1.f)) * (MaxLatitude - MinLatitude) + MinLatitude) *
+			2.f - 1.f;
 		const float RadiusZ = FMath::Sqrt(1.f - Z * Z);
 		float Theta = Phi * static_cast<float>(i);
 
 		if (MinLongitudeAngle != 0.f || MaxLongitudeAngle != 360.f)
 		{
-			Theta = static_cast<int32>(Theta) % static_cast<int32>(Pi2);
-			Theta = Theta < 0 ? Theta + Pi2 : Theta;
-			Theta = Theta * MaxLongitudeRad / Pi2 + MinLongitudeRad;
+			Theta = FMath::Fmod(Theta, Tau);
+			Theta = Theta < 0 ? Theta + Tau : Theta;
+			Theta = Theta * MaxLongitudeRad / Tau + MinLongitudeRad;
 		}
 
 		const float X = FMath::Sin(Theta) * RadiusZ;

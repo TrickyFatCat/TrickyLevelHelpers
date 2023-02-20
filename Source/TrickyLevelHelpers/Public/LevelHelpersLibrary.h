@@ -143,4 +143,5 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="LevelHelpers", meta=(AutoCreateRefTerm="RotationMode"))
 	static void GetRotatorFromMode(FRotator& Rotation, const ERotationMode RotationMode);
+
 };
