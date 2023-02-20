@@ -25,9 +25,6 @@ protected:
 	USplineComponent* SplineComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(DisplayAfter="ActorClass"))
-	bool bUseCustomSpacing = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(DisplayAfter="ActorClass"))
 	ESplineGenerationMode GenerationMode = ESplineGenerationMode::Number;
 	
 	UPROPERTY(EditAnywhere,
