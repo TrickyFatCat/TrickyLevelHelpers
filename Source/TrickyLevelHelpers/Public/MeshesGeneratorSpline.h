@@ -12,6 +12,9 @@ class UHierarchicalInstancedStaticMeshComponent;
 class UStaticMesh;
 class UMaterial;
 
+/**
+ * A helper actor which generates meshes along spline.
+ */
 UCLASS()
 class TRICKYLEVELHELPERS_API AMeshesGeneratorSpline : public AActor
 {
@@ -41,30 +44,35 @@ protected:
 		meta=(EditCondition="GenerationMode==ESplineGenerationMode::Number", EditConditionHides, ClampMin="1"))
 	int32 MeshesAmount = 5;
 
+	/**Distance between meshes.*/
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
 		meta =(EditCondition="GenerationMode==ESplineGenerationMode::Spacing", EditConditionHides, ClampMin="0"))
 	float Spacing = 512.f;
 
+	/**Location offset relative to spline.*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	FVector LocationOffset{FVector::ZeroVector};
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	ERotationMode RotationMode = ERotationMode::Manual;
 
+	/**Rotation value for all meshes.*/
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
 		meta=(EditCondition="RotationMode==ERotationMode::Custom", EditConditionHides))
 	FRotator CustomRotation{FRotator::ZeroRotator};
 
+	/**Toggles rotation along spline axis.*/
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
 		meta=(EditCondition="RotationMode==ERotationMode::Custom", EditConditionHides, DisplayAfter="CustomRotation"))
 	FActiveAxis RotateAlongSpline{false, false, true};
 
+	/**Scale value for all meshes.*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(AllowPreserveRatio))
 	FVector Scale{FVector::OneVector};
 

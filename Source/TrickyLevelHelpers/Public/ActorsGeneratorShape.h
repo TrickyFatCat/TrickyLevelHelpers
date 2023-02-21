@@ -9,7 +9,7 @@
 
 class UBillboardComponent;
 
-UENUM()
+UENUM(BlueprintType)
 enum class EGeneratorShape : uint8
 {
 	Grid,
@@ -20,7 +20,7 @@ enum class EGeneratorShape : uint8
 	Sphere
 };
 
-UENUM()
+UENUM(BlueprintType)
 enum class ERingCustomRotation : uint8
 {
 	Manual,
@@ -28,6 +28,9 @@ enum class ERingCustomRotation : uint8
 	In
 };
 
+/**
+ * A helper actor which spawns actors in construction script using precalculated locations.
+ */
 UCLASS(Blueprintable)
 class TRICKYLEVELHELPERS_API AActorsGeneratorShape : public AActorsGeneratorBase
 {
@@ -44,6 +47,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	UBillboardComponent* BillboardComponent = nullptr;
 
+	/**Determine points for locations calculations.*/
 	UPROPERTY(EditAnywhere, Category="Generator", meta=(DisplayAfter="ActorClass"))
 	EGeneratorShape Shape = EGeneratorShape::Grid;
 

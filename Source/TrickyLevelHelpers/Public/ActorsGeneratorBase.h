@@ -7,6 +7,9 @@
 #include "GameFramework/Actor.h"
 #include "ActorsGeneratorBase.generated.h"
 
+/**
+ * A base generator class. Contains basic logic.
+ */
 UCLASS(Abstract, NotBlueprintable)
 class TRICKYLEVELHELPERS_API AActorsGeneratorBase : public AActor
 {
@@ -20,24 +23,29 @@ protected:
 
 	virtual void Destroyed() override;
 
+	/**An actor class to spawn.*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	TSubclassOf<AActor> ActorClass = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Generator", AdvancedDisplay)
 	TArray<AActor*> Actors;
 
+	/**A location offset relative to the root component.*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	FVector LocationOffset{FVector::ZeroVector};
 
+	/**Rotation calculations mode.*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	ERotationMode RotationMode = ERotationMode::Manual;
 
+	/**Rotation value for all generated actors.*/
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
 		meta=(EditCondition="RotationMode==ERotationMode::Custom", EditConditionHides))
 	FRotator CustomRotation{FRotator::ZeroRotator};
 
+	/**Scale value for all generated actors.*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(AllowPreserveRatio))
 	FVector Scale{FVector::OneVector};
 

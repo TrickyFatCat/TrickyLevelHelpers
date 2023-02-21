@@ -8,6 +8,9 @@
 
 class USplineComponent;
 
+/**
+ * A helper actor which spawns actors in construction script along the spline component.
+ */
 UCLASS(Blueprintable)
 class TRICKYLEVELHELPERS_API AActorsGeneratorSpline : public AActorsGeneratorBase
 {
@@ -24,6 +27,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Components", meta=(DisplayAfter="LocationOffset"))
 	USplineComponent* SplineComponent = nullptr;
 
+	/**Determines calculation of locations along the spline.*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator", meta=(DisplayAfter="ActorClass"))
 	ESplineGenerationMode GenerationMode = ESplineGenerationMode::Number;
 	
@@ -33,12 +37,14 @@ protected:
 		meta=(EditCondition="GenerationMode==ESplineGenerationMode::Number", EditConditionHides, ClampMin="1", DisplayAfter="ActorClass"))
 	int32 ActorsAmount = 5;
 
+	/**Distance between actors.*/
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
 		meta =(EditCondition="GenerationMode==ESplineGenerationMode::Spacing", EditConditionHides, ClampMin="0", DisplayAfter="ActorClass"))
 	float Spacing = 512.f;
 
+	/**Toggles rotation along spline axis.*/
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
