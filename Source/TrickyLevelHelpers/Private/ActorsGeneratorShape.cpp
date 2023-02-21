@@ -78,6 +78,18 @@ void AActorsGeneratorShape::CalculateCustomRotation(const FVector& Location, FRo
 		Rotation = FRotator{0.f, Yaw, 0.f};
 		break;
 
+	case EGeneratorShape::Sphere:
+		if (CustomRotationMode == ERingCustomRotation::Manual)
+		{
+			Super::CalculateCustomRotation(Location, Rotation);
+			return;
+		}
+
+		Rotation = (Location - LocationOffset).ToOrientationRotator();
+		Rotation.Pitch += 180.f * (CustomRotationMode == ERingCustomRotation::In);
+		Rotation.Roll += 180.f * (CustomRotationMode == ERingCustomRotation::In);
+		break;
+
 	default:
 		Super::CalculateCustomRotation(Location, Rotation);
 		break;
