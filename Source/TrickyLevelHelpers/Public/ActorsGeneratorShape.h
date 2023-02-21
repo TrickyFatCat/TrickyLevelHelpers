@@ -52,12 +52,14 @@ protected:
 	EGeneratorShape Shape = EGeneratorShape::Grid;
 
 	// Grid
+	/**Amount of grid points.*/
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
 		meta=(EditCondition="Shape==EGeneratorShape::Grid", EditConditionHides, DisplayAfter="ActorClass"))
 	FGridSize GridSize;
 
+	/**Distance between grid points.*/
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
@@ -67,12 +69,14 @@ protected:
 	void GenerateGrid();
 
 	// Cube
+	/**Amount of cube points.*/
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
 		meta=(EditCondition="Shape==EGeneratorShape::Cube", EditConditionHides, DisplayAfter="ActorClass"))
 	FCubeSize CubeSize;
 
+	/**Distance between cube points.*/
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Generator",
