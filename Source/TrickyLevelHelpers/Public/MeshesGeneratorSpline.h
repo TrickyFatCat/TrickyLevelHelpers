@@ -24,7 +24,7 @@ public:
 	AMeshesGeneratorSpline(const FObjectInitializer& ObjectInitializer);
 
 protected:
-	virtual void OnConstruction(const FTransform& Transform) override
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Components")
 	TObjectPtr<USplineComponent> SplineComponent = nullptr;
