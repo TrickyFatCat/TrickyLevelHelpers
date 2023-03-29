@@ -24,16 +24,16 @@ public:
 	AMeshesGeneratorSpline(const FObjectInitializer& ObjectInitializer);
 
 protected:
-	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual void OnConstruction(const FTransform& Transform) override
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Components")
-	USplineComponent* SplineComponent = nullptr;
+	TObjectPtr<USplineComponent> SplineComponent = nullptr;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Components")
 	UHierarchicalInstancedStaticMeshComponent* HInstancedMeshComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generator")
-	UStaticMesh* StaticMesh = nullptr;
+	TObjectPtr<UStaticMesh> StaticMesh = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
 	ESplineGenerationMode GenerationMode = ESplineGenerationMode::Number;

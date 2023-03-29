@@ -13,7 +13,7 @@ AMeshesGeneratorSpline::AMeshesGeneratorSpline(const FObjectInitializer& ObjectI
 	SetActorTickEnabled(false);
 
 	SplineComponent = CreateDefaultSubobject<USplineComponent>("Root");
-	SetRootComponent(SplineComponent);
+	SetRootComponent(ToRawPtr(SplineComponent));
 
 	HInstancedMeshComponent = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>("HIMC");
 	HInstancedMeshComponent->SetupAttachment(GetRootComponent());

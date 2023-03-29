@@ -28,7 +28,7 @@ protected:
 	TSubclassOf<AActor> ActorClass = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Generator", AdvancedDisplay)
-	TArray<AActor*> Actors;
+	TArray<TObjectPtr<AActor>> Actors;
 
 	/**A location offset relative to the root component.*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generator")
