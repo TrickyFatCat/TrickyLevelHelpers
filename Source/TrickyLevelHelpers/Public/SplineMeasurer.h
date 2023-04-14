@@ -18,13 +18,7 @@ public:
 	ASplineMeasurer();
 
 protected:
-	virtual bool ShouldTickIfViewportsOnly() const override;
-
 	virtual void OnConstruction(const FTransform& Transform) override;
-
-	virtual void BeginPlay() override;
-
-	virtual void Tick(float DeltaSeconds) override;
 
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	TObjectPtr<USplineComponent> SplineComponent = nullptr;

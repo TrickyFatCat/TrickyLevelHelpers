@@ -10,14 +10,8 @@ using TextObjPtr = TObjectPtr<UTextRenderComponent>;
 
 ASplineMeasurer::ASplineMeasurer()
 {
-#if WITH_EDITORONLY_DATA
-	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
-#else
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
-#endif
-
 	bIsEditorOnlyActor = true;
 
 #if WITH_EDITORONLY_DATA
@@ -40,11 +34,6 @@ ASplineMeasurer::ASplineMeasurer()
 	CustomMeasurementText->SetVisibility(bShowCustomMeasurementText);
 
 #endif
-}
-
-bool ASplineMeasurer::ShouldTickIfViewportsOnly() const
-{
-	return true;
 }
 
 void ASplineMeasurer::OnConstruction(const FTransform& Transform)
@@ -73,29 +62,4 @@ void ASplineMeasurer::OnConstruction(const FTransform& Transform)
 	CustomMeasurementText->SetVisibility(bShowCustomMeasurementText);
 	
 #endif
-}
-
-void ASplineMeasurer::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void ASplineMeasurer::Tick(float DeltaSeconds)
-{
-#if WITH_EDITORONLY_DATA
-	const int32 LastSplinePoint = SplineComponent->GetNumberOfSplinePoints();
-	const int32 LastPointIndex = SplineComponent->IsClosedLoop() ? LastSplinePoint : LastSplinePoint - 1;
-
-	DrawDebugSphere(GetWorld(),
-	                SplineComponent->GetLocationAtSplinePoint(LastPointIndex, ESplineCoordinateSpace::World),
-	                64.f,
-	                32,
-	                FColor::Magenta,
-	                false,
-	                -1,
-	                0,
-	                5.f);
-#endif
-
-	Super::Tick(DeltaSeconds);
 }
