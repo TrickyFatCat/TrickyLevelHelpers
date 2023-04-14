@@ -57,7 +57,7 @@ void ASplineMeasurer::OnConstruction(const FTransform& Transform)
 
 	UpdateText(MeasurementText, LastPointIndex);
 
-	CustomPointIndex = CustomPointIndex > LastPointIndex ? LastPointIndex - 1 : CustomPointIndex;
+	CustomPointIndex = CustomPointIndex >= LastPointIndex ? LastPointIndex - 1 : CustomPointIndex;
 	UpdateText(CustomMeasurementText, CustomPointIndex);
 	CustomMeasurementText->SetVisibility(bShowCustomMeasurementText);
 	

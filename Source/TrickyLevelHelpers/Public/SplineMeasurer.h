@@ -32,6 +32,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	bool bShowCustomMeasurementText = false;
 
-	UPROPERTY(EditAnywhere, meta=(EditCondition="bShowCustomMeasurementText", ClampMin = "0"))
+	UPROPERTY(EditAnywhere, meta=(EditCondition="bShowCustomMeasurementText", ClampMin = "1"))
 	int32 CustomPointIndex = 1;
 };
