@@ -51,13 +51,13 @@ public:
 protected:
 	FDebugTextDelegateHelper DebugDrawDelegateManager;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="DebugText")
 	FString DebugText = "Debug Text";
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="DebugText")
 	FVector TextLocation{FVector::ZeroVector};
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="DebugText")
 	TMap<FString, FVector> DebugLabels;
 
 	virtual FDebugRenderSceneProxy* CreateDebugSceneProxy() override;
@@ -67,7 +67,7 @@ protected:
 	virtual  FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const override;
 
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="DebugText")
 	void SetDebugText(const TMap<FString, FVector>& LabelsData, const bool bResetLabels);
 };
 

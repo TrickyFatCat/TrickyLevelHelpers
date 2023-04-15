@@ -33,9 +33,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	TObjectPtr<UTextRenderComponent> CustomMeasurementText = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
 	bool bShowCustomMeasurementText = false;
 
-	UPROPERTY(EditAnywhere, meta=(EditCondition="bShowCustomMeasurementText", ClampMin = "1"))
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowCustomMeasurementText", ClampMin = "1"))
 	int32 CustomPointIndex = 1;
 };
