@@ -8,6 +8,7 @@
 
 class USplineComponent;
 class UTextRenderComponent;
+class UDebugTextComponent;
 
 UCLASS(Blueprintable)
 class TRICKYLEVELHELPERS_API ASplineMeasurer : public AActor
@@ -22,6 +23,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	TObjectPtr<USplineComponent> SplineComponent = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UDebugTextComponent> DebugText = nullptr;
 
 	UPROPERTY(VisibleDefaultsOnly, Category="Component")
 	TObjectPtr<UTextRenderComponent> MeasurementText = nullptr;

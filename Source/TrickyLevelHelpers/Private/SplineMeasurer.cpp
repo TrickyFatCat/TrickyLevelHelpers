@@ -3,6 +3,7 @@
 
 #include "SplineMeasurer.h"
 
+#include "DebugTextComponent.h"
 #include "Components/SplineComponent.h"
 #include "Components/TextRenderComponent.h"
 
@@ -21,6 +22,9 @@ ASplineMeasurer::ASplineMeasurer()
 	SplineComponent->EditorUnselectedSplineSegmentColor = FLinearColor::Red;
 	SplineComponent->EditorSelectedSplineSegmentColor = FLinearColor::Yellow;
 	SplineComponent->EditorTangentColor = FLinearColor::Green;
+
+	DebugText = CreateDefaultSubobject<UDebugTextComponent>("DebugText");
+	DebugText->SetupAttachment(GetRootComponent());
 
 	auto CreateText = [&](TextObjPtr& TextRender, const FName& Name) -> void
 	{
@@ -56,10 +60,22 @@ void ASplineMeasurer::OnConstruction(const FTransform& Transform)
 	};
 
 	UpdateText(MeasurementText, LastPointIndex);
+	TMap<FString, FVector> DebugLabels;
+
+	for (int32 i = 0; i <= LastPointIndex; ++i)
+	{
+		const FVector TextLocation = SplineComponent->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World);
+		const float Distance = SplineComponent->GetDistanceAlongSplineAtSplinePoint(i);
+		const FString InfoText = FString::Printf(
+			TEXT("Units: %d\nMeters: %.2f"), static_cast<int32>(Distance), Distance / 100.f);
+		DebugLabels.Add(InfoText, TextLocation);
+	}
+
+	DebugText->SetDebugText(DebugLabels, true);
 
 	CustomPointIndex = CustomPointIndex >= LastPointIndex ? LastPointIndex - 1 : CustomPointIndex;
 	UpdateText(CustomMeasurementText, CustomPointIndex);
 	CustomMeasurementText->SetVisibility(bShowCustomMeasurementText);
-	
+
 #endif
 }
