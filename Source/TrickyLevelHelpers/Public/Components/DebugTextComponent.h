@@ -51,6 +51,7 @@ struct FDebugSceneProxyData
 		}
 	};
 
+	bool bDrawInGame = false;
 	TArray<FDebugText> DebugLabels;
 };
 
@@ -86,16 +87,19 @@ public:
 	UPROPERTY(EditAnywhere, Category="DebugText")
 	bool bDrawDebug = true;
 
+	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition="bDrawDebug"))
+	bool bDrawInGame = false;
+
 protected:
 	FDebugTextDelegateHelper DebugDrawDelegateManager;
 
-	UPROPERTY(EditAnywhere, Category="DebugText")
+	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition="bDrawDebug"))
 	bool bDrawOneLabel = true;
 
-	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition = "bDrawOneLabel", EditConditionHides))
+	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition = "bDrawOneLabel && bDrawDebug", EditConditionHides))
 	FDebugLabelData DebugLabel;
 
-	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition = "!bDrawOneLabel", EditConditionHides))
+	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition = "!bDrawOneLabel && bDrawDebug", EditConditionHides))
 	TArray<FDebugLabelData> DebugLabels;
 
 	virtual FDebugRenderSceneProxy* CreateDebugSceneProxy() override;

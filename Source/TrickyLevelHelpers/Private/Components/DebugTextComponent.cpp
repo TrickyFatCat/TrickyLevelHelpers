@@ -1,6 +1,5 @@
 ﻿// MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
-
 #include "Components/DebugTextComponent.h"
 
 #include "Engine/Canvas.h"
@@ -8,10 +7,16 @@
 FDebugSceneProxy::FDebugSceneProxy(const UPrimitiveComponent* InComponent,
                                    FDebugSceneProxyData* ProxyData) : FDebugRenderSceneProxy(InComponent)
 {
+	this->ProxyData = *ProxyData;
+	
 	DrawType = EDrawType::SolidAndWireMeshes;
 	ViewFlagName = "Editor";
 
-	this->ProxyData = *ProxyData;
+	if (ProxyData->bDrawInGame && (InComponent->GetWorld() && InComponent->GetWorld()->IsGameWorld()))
+	{
+		ViewFlagName = "Game";
+	}
+
 
 	for (const auto& Text : ProxyData->DebugLabels)
 	{
@@ -71,6 +76,7 @@ UDebugTextComponent::UDebugTextComponent()
 FDebugRenderSceneProxy* UDebugTextComponent::CreateDebugSceneProxy()
 {
 	FDebugSceneProxyData ProxyData;
+	ProxyData.bDrawInGame = bDrawInGame;
 
 	auto AddLabelData = [&](const FDebugLabelData& Label)-> void
 	{
