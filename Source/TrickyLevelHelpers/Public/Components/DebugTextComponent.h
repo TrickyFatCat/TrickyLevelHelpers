@@ -82,12 +82,12 @@ class TRICKYLEVELHELPERS_API UDebugTextComponent : public UDebugDrawComponent
 
 public:
 	UDebugTextComponent();
+	
+	UPROPERTY(EditAnywhere, Category="DebugText")
+	bool bDrawDebug = true;
 
 protected:
 	FDebugTextDelegateHelper DebugDrawDelegateManager;
-
-	UPROPERTY(EditAnywhere, Category="DebugText")
-	bool bDrawDebug = true;
 
 	UPROPERTY(EditAnywhere, Category="DebugText")
 	bool bDrawOneLabel = true;
