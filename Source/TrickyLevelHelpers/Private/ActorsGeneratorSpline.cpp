@@ -4,6 +4,7 @@
 #include "ActorsGeneratorSpline.h"
 
 #include "LevelHelpersLibrary.h"
+#include "Components/DebugTextComponent.h"
 #include "Components/SplineComponent.h"
 
 AActorsGeneratorSpline::AActorsGeneratorSpline()
@@ -11,6 +12,40 @@ AActorsGeneratorSpline::AActorsGeneratorSpline()
 	SplineComponent = CreateDefaultSubobject<USplineComponent>("Spline");
 	SplineComponent->SetComponentTickEnabled(false);
 	SetRootComponent(SplineComponent);
+
+#if WITH_EDITORONLY_DATA
+
+	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
+	{
+		DebugText = CreateDefaultSubobject<UDebugTextComponent>(Name);
+		DebugText->SetupAttachment(GetRootComponent());
+		DebugText->SetDrawOneLabel(false);
+	};
+
+	CreateDebugText(DistanceDebug, "DistanceDebug");
+	CreateDebugText(SectorsDebug, "SectorsDebug");
+	
+#endif
+}
+
+void AActorsGeneratorSpline::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+
+#if WITH_EDITORONLY_DATA
+
+	DistanceDebug->bDrawDebug = bShowDistanceDebug;
+	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
+	                                                      DistanceDebug,
+	                                                      DistanceDebugColor,
+	                                                      DistanceDebugScale);
+
+	SectorsDebug->bDrawDebug = bShowSectorsDebug;
+	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
+	                                                     SectorsDebug,
+	                                                     SectorsDebugColor,
+	                                                     SectorsDebugScale);
+#endif
 }
 
 void AActorsGeneratorSpline::GenerateActors()
