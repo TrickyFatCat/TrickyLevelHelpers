@@ -1,13 +1,13 @@
 ﻿// MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
 
-#include "SplineMeasurer.h"
+#include "Rulers/SplineRuler.h"
 
 #include "Components/DebugTextComponent.h"
 #include "LevelHelpersLibrary.h"
 #include "Components/SplineComponent.h"
 
-ASplineMeasurer::ASplineMeasurer()
+ASplineRuler::ASplineRuler()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -34,7 +34,7 @@ ASplineMeasurer::ASplineMeasurer()
 #endif
 }
 
-void ASplineMeasurer::OnConstruction(const FTransform& Transform)
+void ASplineRuler::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 

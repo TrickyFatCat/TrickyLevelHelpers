@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SplineMeasurer.generated.h"
+#include "SplineRuler.generated.h"
 
 class USplineComponent;
 class UTextRenderComponent;
 class UDebugTextComponent;
 
 UCLASS(Blueprintable, HideCategories=(Activation, AssetUserData, Collision, Cooking, HLOD, Lighting, LOD, Mobile, Navigation, Physics, RayTracing, Rendering, Tags, TextureStreaming, Actor, Replication, Input, Networking, WorldPartition, DataLayers))
-class TRICKYLEVELHELPERS_API ASplineMeasurer : public AActor
+class TRICKYLEVELHELPERS_API ASplineRuler : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	ASplineMeasurer();
+	ASplineRuler();
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
