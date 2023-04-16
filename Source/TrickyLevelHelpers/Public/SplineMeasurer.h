@@ -27,15 +27,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UDebugTextComponent> DebugText = nullptr;
 
-	UPROPERTY(VisibleDefaultsOnly, Category="Component")
-	TObjectPtr<UTextRenderComponent> MeasurementText = nullptr;
-
-	UPROPERTY(VisibleDefaultsOnly, Category="Components")
-	TObjectPtr<UTextRenderComponent> CustomMeasurementText = nullptr;
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
+	FLinearColor TextColor{FColor::Red};
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
-	bool bShowCustomMeasurementText = false;
-
-	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowCustomMeasurementText", ClampMin = "1"))
-	int32 CustomPointIndex = 1;
+	float TextScale = 1.f;
 };

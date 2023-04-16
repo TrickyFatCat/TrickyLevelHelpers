@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SplineComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "LevelHelpersLibrary.generated.h"
 
 class USplineComponent;
+class UDebugTextComponent;
 
 USTRUCT(BlueprintType)
 struct FGridSize
@@ -152,4 +152,9 @@ public:
 	UFUNCTION(BlueprintPure, Category="LevelHelpers", meta=(AutoCreateRefTerm="RotationMode"))
 	static void GetRotatorFromMode(FRotator& Rotation, const ERotationMode RotationMode);
 
+	UFUNCTION(BlueprintCallable, Category="LevelHelpers")
+	static void SetSplineDebugLabels(const USplineComponent* SplineComponent,
+	                                 UDebugTextComponent* DebugTextComponent,
+	                                 const FLinearColor& TextColor,
+	                                 const float TextScale = 1.f);
 };

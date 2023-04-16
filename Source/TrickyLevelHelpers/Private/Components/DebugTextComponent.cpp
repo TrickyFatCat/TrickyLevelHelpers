@@ -1,7 +1,7 @@
 ﻿// MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
 
-#include "DebugTextComponent.h"
+#include "Components/DebugTextComponent.h"
 
 #include "Engine/Canvas.h"
 
