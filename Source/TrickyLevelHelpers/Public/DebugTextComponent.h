@@ -6,6 +6,32 @@
 #include "Debug/DebugDrawComponent.h"
 #include "DebugTextComponent.generated.h"
 
+USTRUCT(BlueprintType)
+struct FDebugLabelData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText")
+	FString Text = "DebugText";
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText")
+	bool bUseCustomLocation = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText",
+		meta=(EditCondition="!bUseCustomLocation", EditConditionHides))
+	FVector Offset{FVector::Zero()};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText",
+		meta=(EditCondition="bUseCustomLocation", EditConditionHides))
+	FVector Location{FVector::ZeroVector};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText")
+	FLinearColor Color{FColor::Magenta};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText")
+	float TextScale = 1.f;
+};
+
 struct FDebugSceneProxyData
 {
 	struct FDebugText
@@ -13,13 +39,14 @@ struct FDebugSceneProxyData
 		FString Text;
 		FVector Location;
 		FColor Color;
+		float Scale;
 
 		FDebugText()
 		{
 		}
 
-		FDebugText(const FString& InText, const FVector& InLocation, const FColor& InColor)
-			: Text(InText), Location(InLocation), Color(InColor)
+		FDebugText(const FDebugLabelData& Label, const FVector& InLocation)
+			: Text(Label.Text), Location(InLocation), Color(Label.Color.ToFColor(false)), Scale(Label.TextScale)
 		{
 		}
 	};
@@ -47,28 +74,6 @@ public:
 	TArray<FDebugSceneProxyData::FDebugText> DebugLabels;
 };
 
-USTRUCT(BlueprintType)
-struct FDebugLabelData
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText")
-	FString Text = "DebugText";
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText")
-	bool bUseCustomLocation = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText",
-		meta=(EditCondition="!bUseCustomLocation", EditConditionHides))
-	FVector Offset{FVector::Zero()};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText",
-		meta=(EditCondition="bUseCustomLocation", EditConditionHides))
-	FVector Location{FVector::ZeroVector};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText")
-	FLinearColor Color{FColor::Magenta};
-};
 
 UCLASS(ClassGroup=(TrickyLevelHelpers), meta=(BlueprintSpawnableComponent))
 class TRICKYLEVELHELPERS_API UDebugTextComponent : public UDebugDrawComponent

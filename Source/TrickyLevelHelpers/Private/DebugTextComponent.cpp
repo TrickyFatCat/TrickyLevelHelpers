@@ -18,7 +18,7 @@ FDebugSceneProxy::FDebugSceneProxy(const UPrimitiveComponent* InComponent,
 		this->Texts.Add({
 			Text.Text,
 			Text.Location,
-			Text.Color
+			Text.Color,
 		});
 	}
 }
@@ -44,7 +44,13 @@ void FDebugTextDelegateHelper::DrawDebugLabels(UCanvas* Canvas, APlayerControlle
 		if (View->ViewFrustum.IntersectSphere(DebugText->Location, 1.0f))
 		{
 			const FVector ScreenLoc = Canvas->Project(DebugText->Location);
-			Canvas->DrawText(Font, DebugText->Text, ScreenLoc.X, ScreenLoc.Y, 1, 1, FontRenderInfo);
+			Canvas->DrawText(Font,
+			                 DebugText->Text,
+			                 ScreenLoc.X,
+			                 ScreenLoc.Y,
+			                 DebugText->Scale,
+			                 DebugText->Scale,
+			                 FontRenderInfo);
 		}
 	}
 
@@ -70,7 +76,7 @@ FDebugRenderSceneProxy* UDebugTextComponent::CreateDebugSceneProxy()
 	auto AddLabelData = [&](const FDebugLabelData& Label)-> void
 	{
 		FVector Location = Label.bUseCustomLocation ? Label.Location : GetComponentLocation() + Label.Offset;
-		ProxyData.DebugLabels.Add({Label.Text, Location, Label.Color.ToFColor(false)});
+		ProxyData.DebugLabels.Add({Label, Location});
 	};
 
 	if (bDrawOneLabel)
