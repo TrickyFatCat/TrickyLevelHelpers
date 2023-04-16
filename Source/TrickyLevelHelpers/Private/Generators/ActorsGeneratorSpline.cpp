@@ -1,7 +1,7 @@
 // MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
 
-#include "ActorsGeneratorSpline.h"
+#include "Generators/ActorsGeneratorSpline.h"
 
 #include "LevelHelpersLibrary.h"
 #include "Components/DebugTextComponent.h"

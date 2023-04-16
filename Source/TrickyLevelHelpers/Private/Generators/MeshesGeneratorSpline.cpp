@@ -1,7 +1,7 @@
 // MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
 
-#include "MeshesGeneratorSpline.h"
+#include "Generators/MeshesGeneratorSpline.h"
 
 #include "LevelHelpersLibrary.h"
 #include "Components/DebugTextComponent.h"

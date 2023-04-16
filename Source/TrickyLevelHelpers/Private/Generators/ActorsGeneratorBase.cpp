@@ -1,7 +1,7 @@
 // MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
 
-#include "ActorsGeneratorBase.h"
+#include "Generators/ActorsGeneratorBase.h"
 #include "Engine/World.h"
 
 AActorsGeneratorBase::AActorsGeneratorBase()

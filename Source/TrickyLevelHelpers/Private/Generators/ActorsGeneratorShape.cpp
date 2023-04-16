@@ -1,7 +1,7 @@
 // MIT License Copyright. Created by Artyom "Tricky Fat Cat" Volkov
 
 
-#include "ActorsGeneratorShape.h"
+#include "Generators/ActorsGeneratorShape.h"
 
 #include "Components/BillboardComponent.h"
 #include "Kismet/KismetMathLibrary.h"
