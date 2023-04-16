@@ -66,7 +66,6 @@ void FDebugTextDelegateHelper::SetupFromProxy(const FDebugSceneProxy* InScenePro
 UDebugTextComponent::UDebugTextComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-	MinDrawDistance = 1000;
 }
 
 FDebugRenderSceneProxy* UDebugTextComponent::CreateDebugSceneProxy()
