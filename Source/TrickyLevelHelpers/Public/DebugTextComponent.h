@@ -10,13 +10,20 @@ struct FDebugSceneProxyData
 {
 	struct FDebugText
 	{
-		FVector Location;
 		FString Text;
+		FVector Location;
+		FColor Color;
 
-		FDebugText() {}
-		FDebugText(const FVector& InLocation, const FString& InText) : Location(InLocation), Text(InText){}
+		FDebugText()
+		{
+		}
+
+		FDebugText(const FString& InText, const FVector& InLocation, const FColor& InColor)
+			: Text(InText), Location(InLocation), Color(InColor)
+		{
+		}
 	};
-	
+
 	TArray<FDebugText> DebugLabels;
 };
 
@@ -35,12 +42,35 @@ public:
 
 	void SetupFromProxy(const FDebugSceneProxy* InSceneProxy);
 
-	bool bResetLabels = false;
+	bool bDrawDebug = true;
 
 	TArray<FDebugSceneProxyData::FDebugText> DebugLabels;
 };
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+USTRUCT(BlueprintType)
+struct FDebugLabelData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText")
+	FString Text = "DebugText";
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText")
+	bool bUseCustomLocation = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText",
+		meta=(EditCondition="!bUseCustomLocation", EditConditionHides))
+	FVector Offset{FVector::Zero()};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText",
+		meta=(EditCondition="bUseCustomLocation", EditConditionHides))
+	FVector Location{FVector::ZeroVector};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText")
+	FLinearColor Color{FColor::Magenta};
+};
+
+UCLASS(ClassGroup=(TrickyLevelHelpers), meta=(BlueprintSpawnableComponent))
 class TRICKYLEVELHELPERS_API UDebugTextComponent : public UDebugDrawComponent
 {
 	GENERATED_BODY()
@@ -52,22 +82,29 @@ protected:
 	FDebugTextDelegateHelper DebugDrawDelegateManager;
 
 	UPROPERTY(EditAnywhere, Category="DebugText")
-	FString DebugText = "Debug Text";
-	
-	UPROPERTY(EditAnywhere, Category="DebugText")
-	FVector TextLocation{FVector::ZeroVector};
+	bool bDrawDebug = true;
 
 	UPROPERTY(EditAnywhere, Category="DebugText")
-	TMap<FString, FVector> DebugLabels;
+	bool bDrawOneLabel = true;
+
+	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition = "bDrawOneLabel", EditConditionHides))
+	FDebugLabelData DebugLabel;
+
+	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition = "!bDrawOneLabel", EditConditionHides))
+	TArray<FDebugLabelData> DebugLabels;
 
 	virtual FDebugRenderSceneProxy* CreateDebugSceneProxy() override;
-	
+
 	virtual FDebugDrawDelegateHelper& GetDebugDrawDelegateHelper() override { return DebugDrawDelegateManager; }
-	
-	virtual  FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const override;
+
+	virtual FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const override;
 
 public:
 	UFUNCTION(BlueprintCallable, Category="DebugText")
-	void SetDebugText(const TMap<FString, FVector>& LabelsData, const bool bResetLabels);
-};
+	void SetDebugLabel(const FDebugLabelData& LabelData);
 
+	UFUNCTION(BlueprintCallable, Category="DebugText")
+	void SetDebugLabels(const TArray<FDebugLabelData>& LabelsData);
+
+	void SetDrawOneLabel(const bool Value) { bDrawOneLabel = Value; }
+};
