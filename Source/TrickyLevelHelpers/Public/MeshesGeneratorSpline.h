@@ -11,6 +11,7 @@ class USplineComponent;
 class UHierarchicalInstancedStaticMeshComponent;
 class UStaticMesh;
 class UMaterial;
+class UDebugTextComponent;
 
 /**
  * A helper actor which generates meshes along spline.
@@ -87,4 +88,47 @@ protected:
 	void ChangeTransform();
 
 	void AddInstances();
+
+private:
+#if WITH_EDITORONLY_DATA
+	UPROPERTY()
+	TObjectPtr<UDebugTextComponent> DistanceDebug = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UDebugTextComponent> SectorsDebug = nullptr;
+
+	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
+	bool bShowDebugInGame = false;
+
+	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
+	bool bShowDistanceDebug = false;
+
+	UPROPERTY(EditAnywhere,
+		Category="Generator",
+		AdvancedDisplay,
+		meta=(EditCondition="bShowDistanceDebug", EditConditionHides))
+	FLinearColor DistanceDebugColor{FColor::Magenta};
+
+	UPROPERTY(EditAnywhere,
+		Category="Generator",
+		AdvancedDisplay,
+		meta=(EditCondition="bShowDistanceDebug", EditConditionHides))
+	float DistanceDebugScale = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
+	bool bShowSectorsDebug = false;
+
+	UPROPERTY(EditAnywhere,
+		Category="Generator",
+		AdvancedDisplay,
+		meta=(EditCondition="bShowSectorsDebug", EditConditionHides))
+	FLinearColor SectorsDebugColor{FColor::Cyan};
+
+	UPROPERTY(EditAnywhere,
+		Category="Generator",
+		AdvancedDisplay,
+		meta=(EditCondition="bShowSectorsDebug", EditConditionHides))
+	float SectorsDebugScale = 1.0f;
+
+#endif
 };

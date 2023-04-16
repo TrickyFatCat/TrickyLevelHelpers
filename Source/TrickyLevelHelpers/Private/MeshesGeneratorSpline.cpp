@@ -4,6 +4,7 @@
 #include "MeshesGeneratorSpline.h"
 
 #include "LevelHelpersLibrary.h"
+#include "Components/DebugTextComponent.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
 #include "Components/SplineComponent.h"
 
@@ -17,6 +18,20 @@ AMeshesGeneratorSpline::AMeshesGeneratorSpline(const FObjectInitializer& ObjectI
 
 	HInstancedMeshComponent = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>("HIMC");
 	HInstancedMeshComponent->SetupAttachment(GetRootComponent());
+
+#if WITH_EDITORONLY_DATA
+
+	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
+	{
+		DebugText = CreateDefaultSubobject<UDebugTextComponent>(Name);
+		DebugText->SetupAttachment(GetRootComponent());
+		DebugText->SetDrawOneLabel(false);
+	};
+
+	CreateDebugText(DistanceDebug, "DistanceDebug");
+	CreateDebugText(SectorsDebug, "SectorsDebug");
+
+#endif
 }
 
 void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
@@ -24,6 +39,21 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 #if WITH_EDITORONLY_DATA
+
+	DistanceDebug->bDrawInGame = bShowDebugInGame;
+	DistanceDebug->bDrawDebug = bShowDistanceDebug;
+	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
+	                                                      DistanceDebug,
+	                                                      DistanceDebugColor,
+	                                                      DistanceDebugScale);
+
+	SectorsDebug->bDrawInGame = bShowDebugInGame;
+	SectorsDebug->bDrawDebug = bShowSectorsDebug;
+	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
+	                                                     SectorsDebug,
+	                                                     SectorsDebugColor,
+	                                                     SectorsDebugScale);
+
 	if (!StaticMesh)
 	{
 		return;
@@ -43,12 +73,12 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 		PointsAmount = FMath::Floor(SplineComponent->GetSplineLength() / Spacing);
 		break;
 	}
-	
+
 	if (PointsAmount <= 0)
 	{
 		return;
 	}
-	
+
 	HInstancedMeshComponent->SetStaticMesh(StaticMesh);
 
 	CalculateTransforms();
@@ -61,6 +91,7 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 
 	HInstancedMeshComponent->ClearInstances();
 	AddInstances();
+
 
 #endif
 }
@@ -85,12 +116,16 @@ void AMeshesGeneratorSpline::CalculateRotation(FRotator& Rotation) const
 void AMeshesGeneratorSpline::CalculateTransforms()
 {
 	Transforms.Empty();
-	
-	ULevelHelpersLibrary::CalculateSplineTransforms(SplineComponent, Transforms, PointsAmount, LocationOffset, false);
-	
+
+	ULevelHelpersLibrary::CalculateSplineTransforms(SplineComponent,
+	                                                Transforms,
+	                                                PointsAmount,
+	                                                LocationOffset,
+	                                                GenerationMode == ESplineGenerationMode::Points);
+
 	FRotator Rotation{FRotator::ZeroRotator};
 	CalculateRotation(Rotation);
-	
+
 	for (int32 i = 0; i < Transforms.Num(); ++i)
 	{
 		Transforms[i].SetScale3D(Scale);
