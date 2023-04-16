@@ -41,7 +41,7 @@ void ASplineMeasurer::OnConstruction(const FTransform& Transform)
 #if WITH_EDITORONLY_DATA
 
 	bIsEditorOnlyActor = !bDrawInGame;
-	
+
 	DistanceDebugText->bDrawInGame = bDrawInGame;
 	DistanceDebugText->bDrawDebug = bShowDistance;
 	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,

@@ -69,6 +69,9 @@ private:
 	TObjectPtr<UDebugTextComponent> SectorsDebug = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
+	bool bShowDebugInGame = false;
+
+	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
 	bool bShowDistanceDebug = false;
 
 	UPROPERTY(EditAnywhere,

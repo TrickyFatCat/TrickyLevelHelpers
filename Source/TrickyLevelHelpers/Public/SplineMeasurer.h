@@ -10,7 +10,7 @@ class USplineComponent;
 class UTextRenderComponent;
 class UDebugTextComponent;
 
-UCLASS(Blueprintable, HideCategories=(Activation, AssetUserData, Collision, Cooking, HLOD, Lighting, LOD, Mobile, Navigation, Physics, RayTracing, Rendering, Tags, TextureStreaming))
+UCLASS(Blueprintable, HideCategories=(Activation, AssetUserData, Collision, Cooking, HLOD, Lighting, LOD, Mobile, Navigation, Physics, RayTracing, Rendering, Tags, TextureStreaming, Actor, Replication, Input, Networking, WorldPartition, DataLayers))
 class TRICKYLEVELHELPERS_API ASplineMeasurer : public AActor
 {
 	GENERATED_BODY()

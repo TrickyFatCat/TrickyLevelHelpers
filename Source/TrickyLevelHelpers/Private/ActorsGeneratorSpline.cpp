@@ -34,12 +34,14 @@ void AActorsGeneratorSpline::OnConstruction(const FTransform& Transform)
 
 #if WITH_EDITORONLY_DATA
 
+	DistanceDebug->bDrawInGame = bShowDebugInGame;
 	DistanceDebug->bDrawDebug = bShowDistanceDebug;
 	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
 	                                                      DistanceDebug,
 	                                                      DistanceDebugColor,
 	                                                      DistanceDebugScale);
 
+	SectorsDebug->bDrawInGame = bShowDebugInGame;
 	SectorsDebug->bDrawDebug = bShowSectorsDebug;
 	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
 	                                                     SectorsDebug,
