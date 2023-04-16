@@ -152,9 +152,15 @@ public:
 	UFUNCTION(BlueprintPure, Category="LevelHelpers", meta=(AutoCreateRefTerm="RotationMode"))
 	static void GetRotatorFromMode(FRotator& Rotation, const ERotationMode RotationMode);
 
-	UFUNCTION(BlueprintCallable, Category="LevelHelpers")
-	static void SetSplineDebugLabels(const USplineComponent* SplineComponent,
+	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="TextColor"))
+	static void UpdateSplinePointsDebugDistance(const USplineComponent* SplineComponent,
 	                                 UDebugTextComponent* DebugTextComponent,
 	                                 const FLinearColor& TextColor,
-	                                 const float TextScale = 1.f);
+	                                 const float TextScale);
+	
+	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="TextColor"))
+	static void UpdateSplineSectorsDebugLength(const USplineComponent* SplineComponent,
+	                                 UDebugTextComponent* DebugTextComponent,
+	                                 const FLinearColor& TextColor,
+	                                 const float TextScale);
 };

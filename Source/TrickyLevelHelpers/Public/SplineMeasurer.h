@@ -25,11 +25,26 @@ protected:
 	TObjectPtr<USplineComponent> SplineComponent = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> DebugText = nullptr;
+	TObjectPtr<UDebugTextComponent> DistanceDebugText = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UDebugTextComponent> SectorDebugText = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
-	FLinearColor TextColor{FColor::Red};
+	bool bShowDistance = true;
+
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowDistance", EditConditionHides))
+	FLinearColor DistanceTextColor{FColor::Red};
+
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowDistance", EditConditionHides))
+	float DistanceTextScale = 1.15f;
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
-	float TextScale = 1.f;
+	bool bShowSectors = false;
+	
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowSectors", EditConditionHides))
+	FLinearColor SectorsTextColor{FColor::Yellow};
+
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowSectors", EditConditionHides))
+	float SectorsTextScale = 1.f;
 };

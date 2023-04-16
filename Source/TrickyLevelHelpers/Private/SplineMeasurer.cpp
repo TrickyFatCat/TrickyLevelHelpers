@@ -24,9 +24,16 @@ ASplineMeasurer::ASplineMeasurer()
 	SplineComponent->EditorSelectedSplineSegmentColor = FLinearColor::Yellow;
 	SplineComponent->EditorTangentColor = FLinearColor::Green;
 
-	DebugText = CreateDefaultSubobject<UDebugTextComponent>("DebugText");
-	DebugText->SetupAttachment(GetRootComponent());
-	DebugText->SetDrawOneLabel(false);
+	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
+	{
+		DebugText = CreateDefaultSubobject<UDebugTextComponent>(Name);
+		DebugText->SetupAttachment(GetRootComponent());
+		DebugText->SetDrawOneLabel(false);
+	};
+
+	CreateDebugText(DistanceDebugText, "DistanceDebug");
+	CreateDebugText(SectorDebugText, "SectorsDebug");
+
 #endif
 }
 
@@ -36,6 +43,17 @@ void ASplineMeasurer::OnConstruction(const FTransform& Transform)
 
 #if WITH_EDITORONLY_DATA
 
-	ULevelHelpersLibrary::SetSplineDebugLabels(SplineComponent, DebugText, TextColor, TextScale);
+	DistanceDebugText->bDrawDebug = bShowDistance;
+	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
+	                                                      DistanceDebugText,
+	                                                      DistanceTextColor,
+	                                                      DistanceTextScale);
+
+	SectorDebugText->bDrawDebug = bShowSectors;
+	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
+	                                                     SectorDebugText,
+	                                                     SectorsTextColor,
+	                                                     SectorsTextScale);
+
 #endif
 }
