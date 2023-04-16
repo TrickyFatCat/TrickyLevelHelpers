@@ -6,9 +6,6 @@
 #include "Components/DebugTextComponent.h"
 #include "LevelHelpersLibrary.h"
 #include "Components/SplineComponent.h"
-#include "Components/TextRenderComponent.h"
-
-using TextObjPtr = TObjectPtr<UTextRenderComponent>;
 
 ASplineMeasurer::ASplineMeasurer()
 {
