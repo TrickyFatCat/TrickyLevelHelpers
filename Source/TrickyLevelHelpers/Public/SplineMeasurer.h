@@ -10,7 +10,7 @@ class USplineComponent;
 class UTextRenderComponent;
 class UDebugTextComponent;
 
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, HideCategories=(Activation, AssetUserData, Collision, Cooking, HLOD, Lighting, LOD, Mobile, Navigation, Physics, RayTracing, Rendering, Tags, TextureStreaming))
 class TRICKYLEVELHELPERS_API ASplineMeasurer : public AActor
 {
 	GENERATED_BODY()
@@ -29,6 +29,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UDebugTextComponent> SectorDebugText = nullptr;
+
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
+	bool bDrawInGame = false;
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
 	bool bShowDistance = true;
