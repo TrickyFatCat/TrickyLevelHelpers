@@ -3,6 +3,9 @@
 
 #include "LevelHelpersLibrary.h"
 
+#include "Components/DebugTextComponent.h"
+#include "Components/SplineComponent.h"
+
 void ULevelHelpersLibrary::CalculateGridLocations(TArray<FVector>& Locations,
                                                   const FGridSize& GridSize,
                                                   const FVector2D& SectorSize,
@@ -255,4 +258,42 @@ void ULevelHelpersLibrary::GetRotatorFromMode(FRotator& Rotation, const ERotatio
 		Rotation = FVector::RightVector.Rotation();
 		break;
 	}
+}
+
+void ULevelHelpersLibrary::SetSplineDebugLabels(const USplineComponent* SplineComponent,
+                                                UDebugTextComponent* DebugTextComponent,
+                                                const FLinearColor& TextColor,
+                                                const float TextScale)
+{
+	if (!IsValid(SplineComponent) || !IsValid(DebugTextComponent))
+	{
+		return;
+	}
+	
+	const int32 LastSplinePoint = SplineComponent->GetNumberOfSplinePoints();
+	const int32 LastPointIndex = SplineComponent->IsClosedLoop() ? LastSplinePoint : LastSplinePoint - 1;
+	TArray<FDebugLabelData> DebugLabels;
+	
+	FDebugLabelData DebugLabelData;
+	DebugLabelData.bUseCustomLocation = true;
+	DebugLabelData.Color = TextColor;
+	DebugLabelData.TextScale = TextScale;
+
+	for (int32 i = 0; i <= LastPointIndex; ++i)
+	{
+		if (SplineComponent->IsClosedLoop() && i == 0)
+		{
+			continue;
+		}
+
+		const FVector TextLocation = SplineComponent->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World);
+		const float Distance = SplineComponent->GetDistanceAlongSplineAtSplinePoint(i);
+		const FString Text = FString::Printf(
+			TEXT("Units: %d\nMeters: %.2f"), static_cast<int32>(Distance), Distance / 100.f);
+		DebugLabelData.Text = Text;
+		DebugLabelData.Location = TextLocation;
+		DebugLabels.Add(DebugLabelData);
+	}
+
+	DebugTextComponent->SetDebugLabels(DebugLabels);
 }
