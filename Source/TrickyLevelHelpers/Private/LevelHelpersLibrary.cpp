@@ -339,7 +339,7 @@ void ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(const USplineComponent
 
 		const float Length = FMath::Abs(GetDistanceAtPoint(i + 1) - Distance);
 		Distance = SplineComponent->GetDistanceAlongSplineAtSplineInputKey(static_cast<float>(i) + 0.5f);
-		const float TravelTime = Speed <= 0.f ? 0.f : Length / TravelTime;
+		const float TravelTime = Speed <= 0.f ? 0.f : Length / Speed;
 		const FString TravelData = bShowTravelTime ?  FString::Printf(TEXT("\nTravel Time: %.2f"), TravelTime) : "";
 		const FVector TextLocation = SplineComponent->GetLocationAtDistanceAlongSpline(
 			Distance, ESplineCoordinateSpace::World);
