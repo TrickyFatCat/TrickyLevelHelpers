@@ -7,6 +7,7 @@
 #include "LineRuler.generated.h"
 
 class UBillboardComponent;
+class UDebugTextComponent;
 
 UCLASS()
 class TRICKYLEVELHELPERS_API ALineRuler : public AActor
@@ -27,8 +28,17 @@ private:
 	UPROPERTY()
 	TObjectPtr<UBillboardComponent> Root = nullptr;
 
+	UPROPERTY()
+	TObjectPtr<UDebugTextComponent> DebugTextX = nullptr;
+	
+	UPROPERTY()
+	TObjectPtr<UDebugTextComponent> DebugTextY = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UDebugTextComponent> DebugTextZ = nullptr;
+	
 	UPROPERTY(EditAnywhere, Category="LineRuler")
-	FVector Distance{100.0};
+	FVector Length{100.0};
 
 	UPROPERTY(EditAnywhere, Category="LineRuler")
 	float LineThickness = 2.f;
@@ -36,13 +46,18 @@ private:
 	UPROPERTY(EditAnywhere, Category="LineRuler")
 	bool bDrawMarks = false;
 
-	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bDrawMarks"))
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bDrawMarks", EditConditionHides))
 	FVector MarksDistance{100.0};
 
-	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bDrawMarks"))
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bDrawMarks", EditConditionHides))
 	float MarksScale = 50.f;
 
-	void DrawLine(const double Length, const FVector& Axis, const FColor& Color) const;
+	UPROPERTY(EditAnywhere, Category="LineRuler")
+	FVector TravelSpeed{1000.0};
+
+	void DrawLine(const double LineLength, const FVector& Axis, const FColor& Color) const;
 	
-	void DrawMarks(const double Length, double MarkDistance, const FVector& Axis, const FColor& Color) const;
+	void DrawMarks(const double LineLength, double MarkDistance, const FVector& Axis, const FColor& Color) const;
+
+	void DrawDebugText(UDebugTextComponent* DebugText, const double LineLength, const FVector& Axis, const FColor& Color);
 };
