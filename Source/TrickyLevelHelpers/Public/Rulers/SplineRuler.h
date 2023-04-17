@@ -34,10 +34,7 @@ protected:
 	bool bDrawInGame = false;
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
-	bool bShowTravelTime = true;
-
-	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowTravelTime", EditConditionHides))
-	float Speed = 1000;
+	FLinearColor SplineColor = FColor::Magenta;
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
 	bool bShowDistance = true;
@@ -56,4 +53,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowSectors", EditConditionHides))
 	float SectorsTextScale = 1.f;
+	
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
+	bool bShowTravelTime = true;
+
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowTravelTime", EditConditionHides))
+	float Speed = 1000;
 };

@@ -17,7 +17,7 @@ ASplineRuler::ASplineRuler()
 
 	SplineComponent = CreateDefaultSubobject<USplineComponent>("Spline");
 	SetRootComponent(ToRawPtr(SplineComponent));
-	SplineComponent->EditorUnselectedSplineSegmentColor = FLinearColor::Red;
+	SplineComponent->EditorUnselectedSplineSegmentColor = SplineColor;
 	SplineComponent->EditorSelectedSplineSegmentColor = FLinearColor::Yellow;
 	SplineComponent->EditorTangentColor = FLinearColor::Green;
 
@@ -40,6 +40,7 @@ void ASplineRuler::OnConstruction(const FTransform& Transform)
 
 #if WITH_EDITORONLY_DATA
 
+	SplineComponent->SetUnselectedSplineSegmentColor(SplineColor);
 	bIsEditorOnlyActor = !bDrawInGame;
 
 	DistanceDebugText->bDrawInGame = bDrawInGame;
