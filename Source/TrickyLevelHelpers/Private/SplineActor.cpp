@@ -5,6 +5,7 @@
 
 #include "Components/DebugTextComponent.h"
 #include "Components/SplineComponent.h"
+#include "LevelHelpersLibrary.h"
 
 ASplineActor::ASplineActor()
 {
@@ -25,5 +26,31 @@ ASplineActor::ASplineActor()
 	CreateDebugText(DistanceDebug, "DistanceDebug");
 	CreateDebugText(SectorsDebug, "SectorsDebug");
 
+#endif
+}
+
+void ASplineActor::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	
+#if WITH_EDITORONLY_DATA
+
+	DistanceDebug->bDrawInGame = bShowDebugInGame;
+	DistanceDebug->bDrawDebug = bShowDistanceDebug;
+	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
+	                                                      DistanceDebug,
+	                                                      DistanceDebugColor,
+	                                                      DistanceDebugScale,
+	                                                      bShowTravelTimeDebug,
+	                                                      TravelSpeed);
+
+	SectorsDebug->bDrawInGame = bShowDebugInGame;
+	SectorsDebug->bDrawDebug = bShowSectorsDebug;
+	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
+	                                                     SectorsDebug,
+	                                                     SectorsDebugColor,
+	                                                     SectorsDebugScale,
+	                                                     bShowTravelTimeDebug,
+	                                                     TravelSpeed);
 #endif
 }

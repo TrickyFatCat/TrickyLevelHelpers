@@ -156,11 +156,15 @@ public:
 	static void UpdateSplinePointsDebugDistance(const USplineComponent* SplineComponent,
 	                                 UDebugTextComponent* DebugTextComponent,
 	                                 const FLinearColor& TextColor,
-	                                 const float TextScale);
+	                                 const float TextScale,
+	                                 const bool bShowTravelTime,
+	                                 const float Speed);
 	
 	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="TextColor"))
 	static void UpdateSplineSectorsDebugLength(const USplineComponent* SplineComponent,
 	                                 UDebugTextComponent* DebugTextComponent,
 	                                 const FLinearColor& TextColor,
-	                                 const float TextScale);
+	                                 const float TextScale,
+	                                 const bool bShowTravelTime,
+	                                 const float Speed);
 };

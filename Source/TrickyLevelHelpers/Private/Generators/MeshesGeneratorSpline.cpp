@@ -45,14 +45,18 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
 	                                                      DistanceDebug,
 	                                                      DistanceDebugColor,
-	                                                      DistanceDebugScale);
+	                                                      DistanceDebugScale,
+	                                                      bShowTravelTimeDebug,
+	                                                      TravelSpeed);
 
 	SectorsDebug->bDrawInGame = bShowDebugInGame;
 	SectorsDebug->bDrawDebug = bShowSectorsDebug;
 	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
 	                                                     SectorsDebug,
 	                                                     SectorsDebugColor,
-	                                                     SectorsDebugScale);
+	                                                     SectorsDebugScale,
+	                                                     bShowTravelTimeDebug,
+	                                                     TravelSpeed);
 
 	if (!StaticMesh)
 	{

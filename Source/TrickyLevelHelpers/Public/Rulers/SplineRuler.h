@@ -34,6 +34,12 @@ protected:
 	bool bDrawInGame = false;
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
+	bool bShowTravelTime = true;
+
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowTravelTime", EditConditionHides))
+	float Speed = 1000;
+
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
 	bool bShowDistance = true;
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowDistance", EditConditionHides))

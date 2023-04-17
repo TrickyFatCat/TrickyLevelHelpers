@@ -18,6 +18,8 @@ public:
 	ASplineActor();
 
 protected:
+	virtual void OnConstruction(const FTransform& Transform) override;
+	
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	TObjectPtr<USplineComponent> SplineComponent = nullptr;
 
@@ -63,5 +65,13 @@ private:
 		meta=(EditCondition="bShowSectorsDebug", EditConditionHides))
 	float SectorsDebugScale = 1.0f;
 
+	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
+	bool bShowTravelTimeDebug = false;
+
+	UPROPERTY(EditAnywhere,
+		Category="Generator",
+		AdvancedDisplay,
+		meta=(EditCondition="bShowTravelTimeDebug", EditConditionHides))
+	float TravelSpeed = 1000.f;
 #endif
 };

@@ -263,7 +263,9 @@ void ULevelHelpersLibrary::GetRotatorFromMode(FRotator& Rotation, const ERotatio
 void ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(const USplineComponent* SplineComponent,
                                                            UDebugTextComponent* DebugTextComponent,
                                                            const FLinearColor& TextColor,
-                                                           const float TextScale)
+                                                           const float TextScale,
+                                                           const bool bShowTravelTime,
+                                                           const float Speed)
 {
 	if (!IsValid(SplineComponent) || !IsValid(DebugTextComponent))
 	{
@@ -288,8 +290,10 @@ void ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(const USplineComponen
 
 		const FVector TextLocation = SplineComponent->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World);
 		const float Distance = SplineComponent->GetDistanceAlongSplineAtSplinePoint(i);
+		const float TravelTime = Speed <= 0.f ? 0.f : Distance / Speed;
+		const FString TravelData = bShowTravelTime ? FString::Printf(TEXT("\nTravel Time: %.2f"), TravelTime) : "";
 		FString Text = FString::Printf(
-			TEXT("Units: %d\nMeters: %.2f"), static_cast<int32>(Distance), Distance / 100.f);
+			TEXT("Units: %d\nMeters: %.2f%s"), static_cast<int32>(Distance), Distance / 100.f, *TravelData);
 		DebugLabelData.Text = Text;
 		DebugLabelData.Location = TextLocation;
 		DebugLabels.Add(DebugLabelData);
@@ -301,7 +305,9 @@ void ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(const USplineComponen
 void ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(const USplineComponent* SplineComponent,
                                                           UDebugTextComponent* DebugTextComponent,
                                                           const FLinearColor& TextColor,
-                                                          const float TextScale)
+                                                          const float TextScale,
+                                                          const bool bShowTravelTime,
+                                                          const float Speed)
 {
 	if (!IsValid(SplineComponent) || !IsValid(DebugTextComponent))
 	{
@@ -333,6 +339,8 @@ void ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(const USplineComponent
 
 		const float Length = FMath::Abs(GetDistanceAtPoint(i + 1) - Distance);
 		Distance = SplineComponent->GetDistanceAlongSplineAtSplineInputKey(static_cast<float>(i) + 0.5f);
+		const float TravelTime = Speed <= 0.f ? 0.f : Length / TravelTime;
+		const FString TravelData = bShowTravelTime ?  FString::Printf(TEXT("\nTravel Time: %.2f"), TravelTime) : "";
 		const FVector TextLocation = SplineComponent->GetLocationAtDistanceAlongSpline(
 			Distance, ESplineCoordinateSpace::World);
 		FString Text = FString::Printf(

@@ -47,14 +47,18 @@ void ASplineRuler::OnConstruction(const FTransform& Transform)
 	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
 	                                                      DistanceDebugText,
 	                                                      DistanceTextColor,
-	                                                      DistanceTextScale);
+	                                                      DistanceTextScale,
+	                                                      bShowTravelTime,
+	                                                      Speed);
 
 	SectorDebugText->bDrawInGame = bDrawInGame;
 	SectorDebugText->bDrawDebug = bShowSectors;
 	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
 	                                                     SectorDebugText,
 	                                                     SectorsTextColor,
-	                                                     SectorsTextScale);
+	                                                     SectorsTextScale,
+	                                                     bShowTravelTime,
+	                                                     Speed);
 
 #endif
 }

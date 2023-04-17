@@ -88,7 +88,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
 	bool bShowSectorsDebug = false;
-	
+
 	UPROPERTY(EditAnywhere,
 		Category="Generator",
 		AdvancedDisplay,
@@ -101,5 +101,13 @@ private:
 		meta=(EditCondition="bShowSectorsDebug", EditConditionHides))
 	float SectorsDebugScale = 1.0f;
 
+	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
+	bool bShowTravelTimeDebug = false;
+
+	UPROPERTY(EditAnywhere,
+		Category="Generator",
+		AdvancedDisplay,
+		meta=(EditCondition="bShowTravelTimeDebug", EditConditionHides))
+	float TravelSpeed = 1000.f;
 #endif
 };

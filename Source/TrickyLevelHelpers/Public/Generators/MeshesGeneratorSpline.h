@@ -101,8 +101,11 @@ private:
 	bool bShowDebugInGame = false;
 
 	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
-	bool bShowDistanceDebug = false;
+	bool bShowTravelTimeDebug = false;
 
+	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
+	bool bShowDistanceDebug = false;
+	
 	UPROPERTY(EditAnywhere,
 		Category="Generator",
 		AdvancedDisplay,
@@ -130,5 +133,11 @@ private:
 		meta=(EditCondition="bShowSectorsDebug", EditConditionHides))
 	float SectorsDebugScale = 1.0f;
 
+	UPROPERTY(EditAnywhere,
+		Category="Generator",
+		AdvancedDisplay,
+		meta=(EditCondition="bShowTravelTimeDebug", EditConditionHides))
+	float TravelSpeed = 1000.f;
+	
 #endif
 };
