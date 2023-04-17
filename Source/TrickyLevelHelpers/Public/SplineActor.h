@@ -69,7 +69,7 @@ private:
 	bool bShowTravelTimeDebug = false;
 
 	UPROPERTY(EditAnywhere,
-		Category="Generator",
+		Category="SplineActor",
 		AdvancedDisplay,
 		meta=(EditCondition="bShowTravelTimeDebug", EditConditionHides))
 	float TravelSpeed = 1000.f;
