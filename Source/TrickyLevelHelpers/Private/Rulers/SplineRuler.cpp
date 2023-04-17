@@ -21,6 +21,11 @@ ASplineRuler::ASplineRuler()
 	SplineComponent->EditorSelectedSplineSegmentColor = FLinearColor::Yellow;
 	SplineComponent->EditorTangentColor = FLinearColor::Green;
 
+	for (int32 i = 0; i < 2; ++i)
+	{
+		SplineComponent->SetSplinePointType(i, ESplinePointType::Linear, true);
+	}
+
 	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
 	{
 		DebugText = CreateDefaultSubobject<UDebugTextComponent>(Name);
