@@ -46,6 +46,7 @@ void ASplineRuler::OnConstruction(const FTransform& Transform)
 #if WITH_EDITORONLY_DATA
 
 	SplineComponent->SetUnselectedSplineSegmentColor(SplineColor);
+	SplineComponent->SetClosedLoop(bIsLooped);
 	bIsEditorOnlyActor = !bDrawInGame;
 
 	DistanceDebugText->bDrawInGame = bDrawInGame;

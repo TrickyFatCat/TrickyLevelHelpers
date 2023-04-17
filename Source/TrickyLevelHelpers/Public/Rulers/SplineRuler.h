@@ -35,6 +35,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
 	FLinearColor SplineColor = FColor::Magenta;
+	
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
+	bool bIsLooped = false;
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
 	bool bShowDistance = true;
