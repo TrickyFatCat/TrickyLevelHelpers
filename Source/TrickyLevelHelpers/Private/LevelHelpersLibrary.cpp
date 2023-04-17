@@ -344,7 +344,7 @@ void ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(const USplineComponent
 		const FVector TextLocation = SplineComponent->GetLocationAtDistanceAlongSpline(
 			Distance, ESplineCoordinateSpace::World);
 		FString Text = FString::Printf(
-			TEXT("Sector Length\nUnits: %d\nMeters: %.2f"), static_cast<int32>(Length), Length / 100.f);
+			TEXT("Sector Length\nUnits: %d\nMeters: %.2f%s"), static_cast<int32>(Length), Length / 100.f, *TravelData);
 		DebugLabelData.Text = Text;
 		DebugLabelData.Location = TextLocation;
 		DebugLabels.Add(DebugLabelData);
