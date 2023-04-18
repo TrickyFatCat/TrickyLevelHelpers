@@ -49,11 +49,10 @@ void ASplineRuler::OnConstruction(const FTransform& Transform)
 #if WITH_EDITORONLY_DATA
 
 	bIsEditorOnlyActor = !bDrawInGame;
-	
+
 	SplineComponent->SetUnselectedSplineSegmentColor(SplineColor);
 	SplineComponent->SetClosedLoop(bIsLooped);
 	SplineComponent->bIsEditorOnly = !bDrawInGame;
-	SplineComponent->bDrawDebug = bDrawInGame;
 
 	DistanceDebugText->bIsEditorOnly = !bDrawInGame;
 	DistanceDebugText->bDrawInGame = bDrawInGame;
@@ -85,6 +84,7 @@ void ASplineRuler::BeginPlay()
 #if WITH_EDITORONLY_DATA
 	if (bDrawInGame)
 	{
+		SplineComponent->bDrawDebug = bDrawInGame;
 		const FString Command = "show Splines";
 		UKismetSystemLibrary::ExecuteConsoleCommand(this, Command);
 	}
