@@ -21,6 +21,8 @@ public:
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
+	virtual void BeginPlay() override;
+
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	TObjectPtr<USplineComponent> SplineComponent = nullptr;
 
