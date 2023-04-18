@@ -9,8 +9,8 @@
 
 ALineRuler::ALineRuler()
 {
-	Root = CreateDefaultSubobject<UBillboardComponent>("Root");
-	SetRootComponent(ToRawPtr(Root));
+	Billboard = CreateDefaultSubobject<UBillboardComponent>("Root");
+	SetRootComponent(ToRawPtr(Billboard));
 
 #if WITH_EDITORONLY_DATA
 	PrimaryActorTick.bCanEverTick = true;
@@ -31,7 +31,10 @@ ALineRuler::ALineRuler()
 	};
 
 	static FConstructorStatics ConstructorStatics;
-	Root->SetSprite(ConstructorStatics.SpriteTexture.Object);
+	Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
+	Billboard->bUseInEditorScaling = false;
+	Billboard->bIsScreenSizeScaled = true;
+	Billboard->ScreenSize = 0.001;
 
 	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
 	{
@@ -79,6 +82,7 @@ void ALineRuler::OnConstruction(const FTransform& Transform)
 	DebugNoteData.Text = NoteText;
 	DebugNoteData.bUseCustomLocation = false;
 	DebugNoteData.Color = NoteColor;
+	DebugNoteData.TextScale = 1.15f;
 	DebugTextNote->SetDebugLabel(DebugNoteData);
 #endif
 }
@@ -116,7 +120,7 @@ void ALineRuler::DrawLine(const FLineRulerAxisData& AxisData, const FVector& Axi
 	              false,
 	              -1,
 	              0,
-	              2.f);
+	              3.f);
 }
 
 void ALineRuler::DrawMarks(const FLineRulerAxisData& AxisData, const FVector& Axis) const

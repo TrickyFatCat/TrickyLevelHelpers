@@ -53,7 +53,7 @@ protected:
 
 private:
 	UPROPERTY()
-	TObjectPtr<UBillboardComponent> Root = nullptr;
+	TObjectPtr<UBillboardComponent> Billboard = nullptr;
 
 	UPROPERTY()
 	TObjectPtr<UDebugTextComponent> DebugTextX = nullptr;
