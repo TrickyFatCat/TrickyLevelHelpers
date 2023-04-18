@@ -36,7 +36,7 @@ struct FLineRulerAxisData
 	float MarksDistance = 100.f;
 };
 
-UCLASS()
+UCLASS(Blueprintable, HideCategories=(AssetUserData, Collision, Cooking, HLOD, Lighting, LOD, Mobile, Navigation, Physics, RayTracing, Rendering, Tags, TextureStreaming, Actor, Replication, Input, Networking, WorldPartition, DataLayers) )
 class TRICKYLEVELHELPERS_API ALineRuler : public AActor
 {
 	GENERATED_BODY()
@@ -84,6 +84,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowNote"))
 	FLinearColor NoteColor = FColor::White;
+
+	UPROPERTY(EditAnywhere, Category="LineRuler")
+	bool bShowInGame = false;
 	
 	void DrawLine(const FLineRulerAxisData& AxisData, const FVector& Axis) const;
 	

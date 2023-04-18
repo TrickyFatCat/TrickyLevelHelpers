@@ -9,10 +9,10 @@
 
 ALineRuler::ALineRuler()
 {
-	Billboard = CreateDefaultSubobject<UBillboardComponent>("Root");
-	SetRootComponent(ToRawPtr(Billboard));
-
 #if WITH_EDITORONLY_DATA
+	Billboard = CreateDefaultSubobject<UBillboardComponent>("Billboard");
+	SetRootComponent(ToRawPtr(Billboard));
+	
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
@@ -72,6 +72,7 @@ void ALineRuler::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 #if WITH_EDITORONLY_DATA
+	bIsEditorOnlyActor = !bShowInGame;
 
 	DrawDebugText(DebugTextX, X, GetActorForwardVector());
 	DrawDebugText(DebugTextY, Y, GetActorRightVector());
@@ -131,7 +132,6 @@ void ALineRuler::DrawMarks(const FLineRulerAxisData& AxisData, const FVector& Ax
 	}
 
 	const int32 Amount = FMath::FloorToInt32(FMath::Abs(AxisData.Length) / AxisData.MarksDistance);
-
 
 	for (int32 i = 0; i < Amount; ++i)
 	{
