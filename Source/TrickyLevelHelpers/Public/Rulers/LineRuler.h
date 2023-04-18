@@ -64,6 +64,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UDebugTextComponent> DebugTextZ = nullptr;
 
+	UPROPERTY()
+	TObjectPtr<UDebugTextComponent> DebugTextNote = nullptr;
+
 	UPROPERTY(EditAnywhere, Category="LineRuler")
 	FLineRulerAxisData X;
 	
@@ -72,6 +75,15 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category="LineRuler")
 	FLineRulerAxisData Z;
+
+	UPROPERTY(EditAnywhere, Category="LineRuler")
+	bool bShowNote = false;
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowNote"))
+	FString NoteText = "Create Note";
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowNote"))
+	FLinearColor NoteColor = FColor::White;
 	
 	void DrawLine(const FLineRulerAxisData& AxisData, const FVector& Axis) const;
 	

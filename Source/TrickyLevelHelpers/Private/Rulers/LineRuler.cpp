@@ -37,12 +37,16 @@ ALineRuler::ALineRuler()
 	{
 		DebugText = CreateDefaultSubobject<UDebugTextComponent>(Name);
 		DebugText->SetupAttachment(GetRootComponent());
+		DebugText->SetDrawInGame(true);
 		DebugText->SetDrawOneLabel(false);
 	};
 
 	CreateDebugText(DebugTextX, "DebugTextX");
 	CreateDebugText(DebugTextY, "DebugTextY");
 	CreateDebugText(DebugTextZ, "DebugTextZ");
+	CreateDebugText(DebugTextNote, "DebugTextNote");
+
+	DebugTextNote->SetDrawOneLabel(true);
 
 	X.Color = FColor{230, 57, 0};
 	Y.Color = FColor{65, 188, 65};
@@ -69,6 +73,13 @@ void ALineRuler::OnConstruction(const FTransform& Transform)
 	DrawDebugText(DebugTextX, X, GetActorForwardVector());
 	DrawDebugText(DebugTextY, Y, GetActorRightVector());
 	DrawDebugText(DebugTextZ, Z, GetActorUpVector());
+
+	DebugTextNote->SetDrawDebug(bShowNote);
+	FDebugLabelData DebugNoteData;
+	DebugNoteData.Text = NoteText;
+	DebugNoteData.bUseCustomLocation = false;
+	DebugNoteData.Color = NoteColor;
+	DebugTextNote->SetDebugLabel(DebugNoteData);
 #endif
 }
 
