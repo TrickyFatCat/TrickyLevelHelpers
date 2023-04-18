@@ -27,10 +27,10 @@ protected:
 	TObjectPtr<USplineComponent> SplineComponent = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> DistanceDebugText = nullptr;
+	TObjectPtr<UDebugTextComponent> DistanceDebug = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> SectorDebugText = nullptr;
+	TObjectPtr<UDebugTextComponent> SectorsDebug = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
 	bool bDrawInGame = false;

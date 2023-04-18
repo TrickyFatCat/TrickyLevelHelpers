@@ -71,6 +71,7 @@ void FDebugTextDelegateHelper::SetupFromProxy(const FDebugSceneProxy* InScenePro
 UDebugTextComponent::UDebugTextComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+	bIsEditorOnly = true;
 }
 
 FDebugRenderSceneProxy* UDebugTextComponent::CreateDebugSceneProxy()
@@ -121,12 +122,31 @@ FBoxSphereBounds UDebugTextComponent::CalcBounds(const FTransform& LocalToWorld)
 void UDebugTextComponent::SetDebugLabel(const FDebugLabelData& LabelData)
 {
 	DebugLabel = LabelData;
-	this->MarkRenderStateDirty();
+	MarkRenderStateDirty();
 }
 
 void UDebugTextComponent::SetDebugLabels(const TArray<FDebugLabelData>& LabelsData)
 {
 	DebugLabels.Empty();
 	DebugLabels = LabelsData;
-	this->MarkRenderStateDirty();
+	MarkRenderStateDirty();
+}
+
+void UDebugTextComponent::SetDrawOneLabel(const bool Value)
+{
+	bDrawOneLabel = Value;
+	MarkRenderStateDirty();
+}
+
+void UDebugTextComponent::SetDrawDebug(const bool Value)
+{
+	bDrawDebug = Value;
+	MarkRenderStateDirty();
+}
+
+void UDebugTextComponent::SetDrawInGame(const bool Value)
+{
+	bDrawInGame = Value;
+	bIsEditorOnly = !bDrawInGame;
+	MarkRenderStateDirty();
 }

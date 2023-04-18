@@ -83,24 +83,26 @@ class TRICKYLEVELHELPERS_API UDebugTextComponent : public UDebugDrawComponent
 
 public:
 	UDebugTextComponent();
-	
-	UPROPERTY(EditAnywhere, Category="DebugText")
-	bool bDrawDebug = true;
-
-	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition="bDrawDebug"))
-	bool bDrawInGame = false;
 
 protected:
 	FDebugTextDelegateHelper DebugDrawDelegateManager;
 
+	UPROPERTY(EditAnywhere, Category="DebugText")
+	bool bDrawDebug = true;
+
 	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition="bDrawDebug"))
 	bool bDrawOneLabel = true;
 
-	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition = "bDrawOneLabel && bDrawDebug", EditConditionHides))
+	UPROPERTY(EditAnywhere, Category="DebugText",
+		meta=(EditCondition = "bDrawOneLabel && bDrawDebug", EditConditionHides))
 	FDebugLabelData DebugLabel;
 
-	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition = "!bDrawOneLabel && bDrawDebug", EditConditionHides))
+	UPROPERTY(EditAnywhere, Category="DebugText",
+		meta=(EditCondition = "!bDrawOneLabel && bDrawDebug", EditConditionHides))
 	TArray<FDebugLabelData> DebugLabels;
+
+	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition="bDrawDebug"))
+	bool bDrawInGame = false;
 
 	virtual FDebugRenderSceneProxy* CreateDebugSceneProxy() override;
 
@@ -115,5 +117,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category="DebugText")
 	void SetDebugLabels(const TArray<FDebugLabelData>& LabelsData);
 
-	void SetDrawOneLabel(const bool Value) { bDrawOneLabel = Value; }
+	UFUNCTION(BlueprintCallable, Category="DebugText")
+	void SetDrawOneLabel(const bool Value);
+
+	UFUNCTION(BlueprintCallable, Category="DebugText")
+	void SetDrawDebug(const bool Value);
+	
+	UFUNCTION(BlueprintCallable, Category="DebugText")
+	void SetDrawInGame(const bool Value);
 };

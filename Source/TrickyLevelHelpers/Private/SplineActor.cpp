@@ -15,7 +15,7 @@ ASplineActor::ASplineActor()
 	SetRootComponent(ToRawPtr(SplineComponent));
 
 #if WITH_EDITORONLY_DATA
-	
+
 	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
 	{
 		DebugText = CreateDefaultSubobject<UDebugTextComponent>(Name);
@@ -32,11 +32,11 @@ ASplineActor::ASplineActor()
 void ASplineActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-	
+
 #if WITH_EDITORONLY_DATA
 
-	DistanceDebug->bDrawInGame = bShowDebugInGame;
-	DistanceDebug->bDrawDebug = bShowDistanceDebug;
+	DistanceDebug->SetDrawInGame(bShowDebugInGame);
+	DistanceDebug->SetDrawDebug(bShowDistanceDebug);
 	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
 	                                                      DistanceDebug,
 	                                                      DistanceDebugColor,
@@ -44,8 +44,8 @@ void ASplineActor::OnConstruction(const FTransform& Transform)
 	                                                      bShowTravelTimeDebug,
 	                                                      TravelSpeed);
 
-	SectorsDebug->bDrawInGame = bShowDebugInGame;
-	SectorsDebug->bDrawDebug = bShowSectorsDebug;
+	SectorsDebug->SetDrawInGame(bShowDebugInGame);
+	SectorsDebug->SetDrawDebug(bShowSectorsDebug);
 	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
 	                                                     SectorsDebug,
 	                                                     SectorsDebugColor,

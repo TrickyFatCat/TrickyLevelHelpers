@@ -36,8 +36,8 @@ ASplineRuler::ASplineRuler()
 		DebugText->bIsEditorOnly = true;
 	};
 
-	CreateDebugText(DistanceDebugText, "DistanceDebug");
-	CreateDebugText(SectorDebugText, "SectorsDebug");
+	CreateDebugText(DistanceDebug, "DistanceDebug");
+	CreateDebugText(SectorsDebug, "SectorsDebug");
 
 #endif
 }
@@ -54,21 +54,19 @@ void ASplineRuler::OnConstruction(const FTransform& Transform)
 	SplineComponent->SetClosedLoop(bIsLooped);
 	SplineComponent->bIsEditorOnly = !bDrawInGame;
 
-	DistanceDebugText->bIsEditorOnly = !bDrawInGame;
-	DistanceDebugText->bDrawInGame = bDrawInGame;
-	DistanceDebugText->bDrawDebug = bShowDistance;
+	DistanceDebug->SetDrawInGame(bDrawInGame);
+	DistanceDebug->SetDrawDebug(bShowDistance);
 	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
-	                                                      DistanceDebugText,
+	                                                      DistanceDebug,
 	                                                      DistanceTextColor,
 	                                                      DistanceTextScale,
 	                                                      bShowTravelTime,
 	                                                      Speed);
 
-	SectorDebugText->bIsEditorOnly = !bDrawInGame;
-	SectorDebugText->bDrawInGame = bDrawInGame;
-	SectorDebugText->bDrawDebug = bShowSectors;
+	SectorsDebug->SetDrawInGame(bDrawInGame);
+	SectorsDebug->SetDrawDebug(bShowSectors);
 	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
-	                                                     SectorDebugText,
+	                                                     SectorsDebug,
 	                                                     SectorsTextColor,
 	                                                     SectorsTextScale,
 	                                                     bShowTravelTime,

@@ -40,8 +40,8 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 
 #if WITH_EDITORONLY_DATA
 
-	DistanceDebug->bDrawInGame = bShowDebugInGame;
-	DistanceDebug->bDrawDebug = bShowDistanceDebug;
+	DistanceDebug->SetDrawInGame(bShowDebugInGame);
+	DistanceDebug->SetDrawDebug(bShowDistanceDebug);
 	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
 	                                                      DistanceDebug,
 	                                                      DistanceDebugColor,
@@ -49,8 +49,8 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 	                                                      bShowTravelTimeDebug,
 	                                                      TravelSpeed);
 
-	SectorsDebug->bDrawInGame = bShowDebugInGame;
-	SectorsDebug->bDrawDebug = bShowSectorsDebug;
+	SectorsDebug->SetDrawInGame(bShowDebugInGame);
+	SectorsDebug->SetDrawDebug(bShowSectorsDebug);
 	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
 	                                                     SectorsDebug,
 	                                                     SectorsDebugColor,
