@@ -9,6 +9,33 @@
 class UBillboardComponent;
 class UDebugTextComponent;
 
+USTRUCT(BlueprintType, meta=(HiddenByDefault))
+struct FLineRulerAxisData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
+	bool bDrawAxis = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
+	float Length = 100.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
+	bool bShowTravelTime = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData", meta=(EditCondition="bShowTravelTime"))
+	float TravelSpeed = 1000.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
+	FColor Color = FColor::Magenta;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
+	bool bDrawMarks = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData", meta=(EditCondition="bDrawMarks"))
+	float MarksDistance = 100.f;
+};
+
 UCLASS()
 class TRICKYLEVELHELPERS_API ALineRuler : public AActor
 {
@@ -36,28 +63,19 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UDebugTextComponent> DebugTextZ = nullptr;
+
+	UPROPERTY(EditAnywhere, Category="LineRuler")
+	FLineRulerAxisData X;
 	
 	UPROPERTY(EditAnywhere, Category="LineRuler")
-	FVector Length{100.0};
-
-	UPROPERTY(EditAnywhere, Category="LineRuler")
-	float LineThickness = 2.f;
-
-	UPROPERTY(EditAnywhere, Category="LineRuler")
-	bool bDrawMarks = false;
-
-	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bDrawMarks", EditConditionHides))
-	FVector MarksDistance{100.0};
-
-	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bDrawMarks", EditConditionHides))
-	float MarksScale = 50.f;
-
-	UPROPERTY(EditAnywhere, Category="LineRuler")
-	FVector TravelSpeed{1000.0};
-
-	void DrawLine(const double LineLength, const FVector& Axis, const FColor& Color) const;
+	FLineRulerAxisData Y;
 	
-	void DrawMarks(const double LineLength, double MarkDistance, const FVector& Axis, const FColor& Color) const;
+	UPROPERTY(EditAnywhere, Category="LineRuler")
+	FLineRulerAxisData Z;
+	
+	void DrawLine(const FLineRulerAxisData& AxisData, const FVector& Axis) const;
+	
+	void DrawMarks(const FLineRulerAxisData& AxisData, const FVector& Axis) const;
 
-	void DrawDebugText(UDebugTextComponent* DebugText, const double LineLength, const FVector& Axis, const FColor& Color);
+	void DrawDebugText(UDebugTextComponent* DebugText, const FLineRulerAxisData& AxisData, const FVector& Axis) const;
 };

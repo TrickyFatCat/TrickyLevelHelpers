@@ -43,6 +43,10 @@ ALineRuler::ALineRuler()
 	CreateDebugText(DebugTextX, "DebugTextX");
 	CreateDebugText(DebugTextY, "DebugTextY");
 	CreateDebugText(DebugTextZ, "DebugTextZ");
+
+	X.Color = FColor{230, 57, 0};
+	Y.Color = FColor{65, 188, 65};
+	Z.Color = FColor{0, 149, 230};
 #else
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -62,6 +66,9 @@ void ALineRuler::OnConstruction(const FTransform& Transform)
 
 #if WITH_EDITORONLY_DATA
 
+	DrawDebugText(DebugTextX, X, GetActorForwardVector());
+	DrawDebugText(DebugTextY, Y, GetActorRightVector());
+	DrawDebugText(DebugTextZ, Z, GetActorUpVector());
 #endif
 }
 
@@ -70,81 +77,70 @@ void ALineRuler::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 #if WITH_EDITORONLY_DATA
-	DrawLine(Length.X, GetActorForwardVector(), FColor::Red);
-	DrawLine(Length.Y, GetActorRightVector(), FColor::Green);
-	DrawLine(Length.Z, GetActorUpVector(), FColor{65, 105, 255});
 
-	if (bDrawMarks)
-	{
-		DrawMarks(Length.X, MarksDistance.X, GetActorForwardVector(), FColor::Red);
-		DrawMarks(Length.Y, MarksDistance.Y, GetActorRightVector(), FColor::Green);
-		DrawMarks(Length.Z, MarksDistance.Z, GetActorUpVector(), FColor{65, 105, 255});
-	}
+	DrawLine(X, GetActorForwardVector());
+	DrawLine(Y, GetActorRightVector());
+	DrawLine(Z, GetActorUpVector());
 
-	DrawDebugText(DebugTextX, Length.X, GetActorForwardVector(), FColor::Red);
-	DrawDebugText(DebugTextY, Length.Y, GetActorRightVector(), FColor::Green);
-	DrawDebugText(DebugTextZ, Length.Z, GetActorUpVector(), FColor{137, 207, 240});
-
+	DrawMarks(X, GetActorForwardVector());
+	DrawMarks(Y, GetActorRightVector());
+	DrawMarks(Z, GetActorUpVector());
 #endif
 }
 
-void ALineRuler::DrawLine(const double LineLength, const FVector& Axis, const FColor& Color) const
+void ALineRuler::DrawLine(const FLineRulerAxisData& AxisData, const FVector& Axis) const
 {
-	if (LineLength == 0.f)
+	if (!AxisData.bDrawAxis || AxisData.Length == 0.f)
 	{
 		return;
 	}
 
 	const FVector LineStart = GetActorLocation();
-	const FVector LineEnd = LineStart + Axis * LineLength;
+	const FVector LineEnd = LineStart + Axis * AxisData.Length;
 
 	DrawDebugLine(GetWorld(),
 	              LineStart,
 	              LineEnd,
-	              Color,
+	              AxisData.Color,
 	              false,
 	              -1,
 	              0,
-	              LineThickness);
+	              2.f);
 }
 
-void ALineRuler::DrawMarks(const double LineLength,
-                           const double MarkDistance,
-                           const FVector& Axis,
-                           const FColor& Color) const
+void ALineRuler::DrawMarks(const FLineRulerAxisData& AxisData, const FVector& Axis) const
 {
-	if (LineLength == 0.0 || MarkDistance == 0.0)
+	if (!AxisData.bDrawAxis || !AxisData.bDrawMarks || AxisData.Length == 0.0 || AxisData.MarksDistance == 0.0)
 	{
 		return;
 	}
 
-	const int32 Amount = FMath::FloorToInt32(FMath::Abs(LineLength) / MarkDistance);
+	const int32 Amount = FMath::FloorToInt32(FMath::Abs(AxisData.Length) / AxisData.MarksDistance);
 
 
 	for (int32 i = 0; i < Amount; ++i)
 	{
-		const FVector Location = GetActorLocation() + Axis * MarkDistance * (i + 1) * FMath::Sign(LineLength);
+		const FVector Location = GetActorLocation() + Axis * AxisData.MarksDistance * (i + 1) * FMath::Sign(
+			AxisData.Length);
 		DrawDebugCrosshairs(GetWorld(),
 		                    Location,
 		                    GetActorRotation(),
-		                    MarksScale,
-		                    Color);
+		                    50.f,
+		                    AxisData.Color);
 	}
 }
 
-void ALineRuler::DrawDebugText(UDebugTextComponent* DebugText,
-                               const double LineLength,
-                               const FVector& Axis,
-                               const FColor& Color)
+void ALineRuler::DrawDebugText(UDebugTextComponent* DebugText, const FLineRulerAxisData& AxisData,
+                               const FVector& Axis) const
 {
 	if (!IsValid(DebugText))
 	{
 		return;
 	}
 
-	DebugText->bDrawDebug = LineLength != 0.0;
+	DebugText->SetDrawDebug(AxisData.bDrawAxis);
 
-	if (!DebugText->bDrawDebug)
+	if (!AxisData.bDrawAxis)
 	{
 		return;
 	}
@@ -153,15 +149,18 @@ void ALineRuler::DrawDebugText(UDebugTextComponent* DebugText,
 
 	FDebugLabelData DebugLabelData;
 	DebugLabelData.bUseCustomLocation = true;
-	DebugLabelData.Color = Color;
+	DebugLabelData.Color = AxisData.Color;
 	DebugLabelData.TextScale = 1.15;
 
-	FVector TextLocation = GetActorLocation() + Axis * Length;
+	FVector TextLocation = GetActorLocation() + Axis * AxisData.Length;
 	TextLocation.Z += 50.0;
 	DebugLabelData.Location = TextLocation;
 
+	const float TravelTime = AxisData.TravelSpeed <= 0.f ? 0.f : FMath::Abs(AxisData.Length / AxisData.TravelSpeed);
+	const FString TravelData = AxisData.bShowTravelTime ? FString::Printf(TEXT("\nTravelTime: %.2f"), TravelTime) : "";
+
 	const FString LengthData = FString::Printf(
-		TEXT("Units: %d\nMeters: %.2f"), static_cast<int32>(LineLength), LineLength / 100.0);
+		TEXT("Units: %d\nMeters: %.2f%s"), static_cast<int32>(AxisData.Length), AxisData.Length / 100.0, *TravelData);
 	DebugLabelData.Text = LengthData;
 
 	DebugLabels.Add(DebugLabelData);
