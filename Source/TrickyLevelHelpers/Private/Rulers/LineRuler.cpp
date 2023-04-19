@@ -9,9 +9,12 @@
 
 ALineRuler::ALineRuler()
 {
+	Root = CreateDefaultSubobject<USceneComponent>("Root");
+	SetRootComponent(Root);
+	
 #if WITH_EDITORONLY_DATA
-	Billboard = CreateDefaultSubobject<UBillboardComponent>("Billboard");
-	SetRootComponent(ToRawPtr(Billboard));
+	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
+	Billboard->SetupAttachment(GetRootComponent());
 	
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -38,7 +41,7 @@ ALineRuler::ALineRuler()
 
 	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
 	{
-		DebugText = CreateDefaultSubobject<UDebugTextComponent>(Name);
+		DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>(Name);
 		DebugText->SetupAttachment(GetRootComponent());
 		DebugText->SetDrawInGame(true);
 		DebugText->SetDrawOneLabel(false);

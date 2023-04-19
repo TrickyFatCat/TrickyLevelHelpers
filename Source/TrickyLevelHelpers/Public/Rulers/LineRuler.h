@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "LineRuler.generated.h"
 
+class USceneComponent;
 class UBillboardComponent;
 class UDebugTextComponent;
 
@@ -53,11 +54,14 @@ protected:
 
 private:
 	UPROPERTY()
+	TObjectPtr<USceneComponent> Root = nullptr;
+	
+	UPROPERTY()
 	TObjectPtr<UBillboardComponent> Billboard = nullptr;
 
 	UPROPERTY()
 	TObjectPtr<UDebugTextComponent> DebugTextX = nullptr;
-	
+
 	UPROPERTY()
 	TObjectPtr<UDebugTextComponent> DebugTextY = nullptr;
 
@@ -77,10 +81,10 @@ private:
 	FLineRulerAxisData Z;
 
 	UPROPERTY(EditAnywhere, Category="LineRuler")
-	bool bShowNote = false;
-
+	bool bShowNote = true;
+	
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowNote"))
-	FString NoteText = "Create Note";
+	FString NoteText = "Line Ruler";
 
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowNote"))
 	FLinearColor NoteColor = FColor::White;
