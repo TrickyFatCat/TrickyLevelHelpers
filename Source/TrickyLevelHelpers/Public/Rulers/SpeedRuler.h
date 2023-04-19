@@ -45,20 +45,8 @@ private:
 	UPROPERTY(EditAnywhere, Category="SpeedRuler")
 	FColor Color = FColor::Magenta;
 
-	UPROPERTY(EditAnywhere, Category="SpeedRuler")
-	bool bDrawMarks = true;
-
-	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(EditCondition="bDrawMarks"))
-	float MarksDistance = 100.f;
-
-	UPROPERTY(EditAnywhere, Category="SpeedRuler")
-	bool bShowNote = false;
-
 	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(EditCondition="bShowNote"))
-	FString NoteText = "Create Note";
-
-	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(EditCondition="bShowNote"))
-	FLinearColor NoteColor = FColor::White;
+	FString NoteText = "Speed Ruler";
 
 	UPROPERTY(EditAnywhere, Category="SpeedRuler")
 	bool bShowInGame = false;

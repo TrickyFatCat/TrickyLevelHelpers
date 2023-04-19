@@ -64,35 +64,30 @@ bool ASpeedRuler::ShouldTickIfViewportsOnly() const
 void ASpeedRuler::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-	
+
 #if WITH_EDITORONLY_DATA
 	bIsEditorOnlyActor = !bShowInGame;
-	
-	TravelDistance = TravelSpeed * TravelTime;
+
 
 	TArray<FDebugLabelData> DebugLabels;
 
 	FDebugLabelData DebugLabelData;
-	DebugLabelData.bUseCustomLocation = true;
 	DebugLabelData.Color = Color;
 	DebugLabelData.TextScale = 1.15;
 
 	FVector TextLocation = GetActorLocation() + GetActorForwardVector() * TravelDistance;
 	TextLocation.Z += 50.0;
 	DebugLabelData.Location = TextLocation;
+	const FString HeaderText = FString::Printf(TEXT("%s\n---------\n"), *NoteText);
 	const FString LengthData = FString::Printf(
-		TEXT("Units: %d\nMeters: %.2f\nTime: %.2f\nSpeed: %.2f m/s"), static_cast<int32>(TravelDistance), TravelDistance / 100.0, TravelTime, TravelSpeed / 100.0);
+		TEXT("%sUnits: %d\nMeters: %.2f\nTime: %.2f\nSpeed: %.2f m/s"), *HeaderText,
+		static_cast<int32>(TravelDistance),
+		TravelDistance / 100.0,
+		TravelTime, TravelSpeed / 100.0);
 	DebugLabelData.Text = LengthData;
 	DebugLabels.Add(DebugLabelData);
 	DebugText->SetDebugLabels(DebugLabels);
-	
-	DebugTextNote->SetDrawDebug(bShowNote);
-	FDebugLabelData DebugNoteData;
-	DebugNoteData.Text = NoteText;
-	DebugNoteData.bUseCustomLocation = false;
-	DebugNoteData.Color = NoteColor;
-	DebugNoteData.TextScale = 1.15f;
-	DebugTextNote->SetDebugLabel(DebugNoteData);
+
 #endif
 }
 
@@ -101,6 +96,8 @@ void ASpeedRuler::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 #if WITH_EDITORONLY_DATA
+	TravelDistance = TravelSpeed * TravelTime;
+
 	const FVector LineStart = GetActorLocation();
 	const FVector LineEnd = LineStart + GetActorForwardVector() * TravelDistance;
 
@@ -112,5 +109,17 @@ void ASpeedRuler::Tick(float DeltaTime)
 	              -1,
 	              0,
 	              3.f);
+
+	DrawCircle(GetWorld(),
+	           LineStart,
+	           GetActorForwardVector(),
+	           GetActorRightVector(),
+	           Color,
+	           TravelDistance,
+	           32,
+	           false,
+	           -1,
+	           0,
+	           3.f);
 #endif
 }
