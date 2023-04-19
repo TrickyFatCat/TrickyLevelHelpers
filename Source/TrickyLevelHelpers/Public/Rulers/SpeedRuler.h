@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "SpeedRuler.generated.h"
 
+class USceneComponent;
 class UBillboardComponent;
 class UDebugTextComponent;
 
@@ -26,13 +27,12 @@ protected:
 
 private:
 	UPROPERTY()
+	TObjectPtr<USceneComponent> Root = nullptr;
+	UPROPERTY()
 	TObjectPtr<UBillboardComponent> Billboard = nullptr;
 
 	UPROPERTY()
 	TObjectPtr<UDebugTextComponent> DebugText = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> DebugTextNote = nullptr;
 
 	float TravelDistance = 0.f;
 
@@ -45,8 +45,11 @@ private:
 	UPROPERTY(EditAnywhere, Category="SpeedRuler")
 	FColor Color = FColor::Magenta;
 
-	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(EditCondition="bShowNote"))
+	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(MultiLine))
 	FString NoteText = "Speed Ruler";
+
+	UPROPERTY(EditAnywhere, Category="SpeedRuler")
+	bool bShowCircle = true;
 
 	UPROPERTY(EditAnywhere, Category="SpeedRuler")
 	bool bShowInGame = false;

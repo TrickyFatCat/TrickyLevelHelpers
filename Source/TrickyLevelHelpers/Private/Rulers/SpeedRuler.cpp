@@ -9,9 +9,12 @@
 
 ASpeedRuler::ASpeedRuler()
 {
+	Root = CreateDefaultSubobject<USceneComponent>("Root");
+	SetRootComponent(Root);
+
 #if WITH_EDITORONLY_DATA
-	Billboard = CreateDefaultSubobject<UBillboardComponent>("Billboard");
-	SetRootComponent(ToRawPtr(Billboard));
+	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
+	Billboard->SetupAttachment(GetRootComponent());
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -36,18 +39,10 @@ ASpeedRuler::ASpeedRuler()
 	Billboard->bIsScreenSizeScaled = true;
 	Billboard->ScreenSize = 0.001;
 
-	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
-	{
-		DebugText = CreateDefaultSubobject<UDebugTextComponent>(Name);
-		DebugText->SetupAttachment(GetRootComponent());
-		DebugText->SetDrawInGame(true);
-		DebugText->SetDrawOneLabel(false);
-	};
-
-	CreateDebugText(DebugText, "DebugText");
-	CreateDebugText(DebugTextNote, "DebugTextNote");
-
-	DebugTextNote->SetDrawOneLabel(true);
+	DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("DebugText");
+	DebugText->SetupAttachment(GetRootComponent());
+	DebugText->SetDrawInGame(true);
+	DebugText->SetDrawOneLabel(false);
 #else
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -110,16 +105,19 @@ void ASpeedRuler::Tick(float DeltaTime)
 	              0,
 	              3.f);
 
-	DrawCircle(GetWorld(),
-	           LineStart,
-	           GetActorForwardVector(),
-	           GetActorRightVector(),
-	           Color,
-	           TravelDistance,
-	           32,
-	           false,
-	           -1,
-	           0,
-	           3.f);
+	if (bShowCircle)
+	{
+		DrawCircle(GetWorld(),
+		           LineStart,
+		           GetActorForwardVector(),
+		           GetActorRightVector(),
+		           Color,
+		           TravelDistance,
+		           32,
+		           false,
+		           -1,
+		           0,
+		           3.f);
+	}
 #endif
 }
