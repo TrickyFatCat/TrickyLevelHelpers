@@ -18,7 +18,7 @@ ASplineActor::ASplineActor()
 
 	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
 	{
-		DebugText = CreateDefaultSubobject<UDebugTextComponent>(Name);
+		DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>(Name);
 		DebugText->SetupAttachment(GetRootComponent());
 		DebugText->SetDrawOneLabel(false);
 	};
