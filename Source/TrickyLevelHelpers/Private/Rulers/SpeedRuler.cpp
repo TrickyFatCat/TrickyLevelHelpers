@@ -62,10 +62,9 @@ void ASpeedRuler::OnConstruction(const FTransform& Transform)
 
 #if WITH_EDITORONLY_DATA
 	bIsEditorOnlyActor = !bShowInGame;
-
-
+	TravelDistance = TravelSpeed * TravelTime;
+	
 	TArray<FDebugLabelData> DebugLabels;
-
 	FDebugLabelData DebugLabelData;
 	DebugLabelData.Color = Color;
 	DebugLabelData.TextScale = 1.15;
