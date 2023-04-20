@@ -10,7 +10,7 @@ class USceneComponent;
 class UBillboardComponent;
 class UDebugTextComponent;
 
-UCLASS()
+UCLASS(Blueprintable, HideCategories=(Actor, HLOD, Replication, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers, Networking))
 class TRICKYLEVELHELPERS_API ASpeedRuler : public AActor
 {
 	GENERATED_BODY()

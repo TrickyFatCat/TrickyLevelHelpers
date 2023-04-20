@@ -42,7 +42,6 @@ ASpeedRuler::ASpeedRuler()
 	DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("DebugText");
 	DebugText->SetupAttachment(GetRootComponent());
 	DebugText->SetDrawInGame(true);
-	DebugText->SetDrawOneLabel(false);
 #else
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -64,14 +63,10 @@ void ASpeedRuler::OnConstruction(const FTransform& Transform)
 	bIsEditorOnlyActor = !bShowInGame;
 	TravelDistance = TravelSpeed * TravelTime;
 	
-	TArray<FDebugLabelData> DebugLabels;
 	FDebugLabelData DebugLabelData;
 	DebugLabelData.Color = Color;
 	DebugLabelData.TextScale = 1.15;
 
-	FVector TextLocation = GetActorLocation() + GetActorForwardVector() * TravelDistance;
-	TextLocation.Z += 50.0;
-	DebugLabelData.Location = TextLocation;
 	const FString HeaderText = FString::Printf(TEXT("%s\n---------\n"), *NoteText);
 	const FString LengthData = FString::Printf(
 		TEXT("%sUnits: %d\nMeters: %.2f\nTime: %.2f\nSpeed: %.2f m/s"), *HeaderText,
@@ -79,8 +74,7 @@ void ASpeedRuler::OnConstruction(const FTransform& Transform)
 		TravelDistance / 100.0,
 		TravelTime, TravelSpeed / 100.0);
 	DebugLabelData.Text = LengthData;
-	DebugLabels.Add(DebugLabelData);
-	DebugText->SetDebugLabels(DebugLabels);
+	DebugText->SetDebugLabel(DebugLabelData);
 
 #endif
 }
