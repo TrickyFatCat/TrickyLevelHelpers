@@ -98,9 +98,6 @@ private:
 	TObjectPtr<UDebugTextComponent> SectorsDebug = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
-	bool bShowDebugInGame = false;
-
-	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
 	bool bShowTravelTimeDebug = false;
 
 	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
@@ -111,12 +108,6 @@ private:
 		AdvancedDisplay,
 		meta=(EditCondition="bShowDistanceDebug", EditConditionHides))
 	FLinearColor DistanceDebugColor{FColor::Magenta};
-
-	UPROPERTY(EditAnywhere,
-		Category="Generator",
-		AdvancedDisplay,
-		meta=(EditCondition="bShowDistanceDebug", EditConditionHides))
-	float DistanceDebugScale = 1.0f;
 
 	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
 	bool bShowSectorsDebug = false;
@@ -130,14 +121,10 @@ private:
 	UPROPERTY(EditAnywhere,
 		Category="Generator",
 		AdvancedDisplay,
-		meta=(EditCondition="bShowSectorsDebug", EditConditionHides))
-	float SectorsDebugScale = 1.0f;
-
-	UPROPERTY(EditAnywhere,
-		Category="Generator",
-		AdvancedDisplay,
 		meta=(EditCondition="bShowTravelTimeDebug", EditConditionHides))
 	float TravelSpeed = 1000.f;
 	
+	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
+	bool bShowDebugInGame = false;
 #endif
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/SplineComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "LevelHelpersLibrary.generated.h"
 
@@ -156,15 +157,17 @@ public:
 	static void UpdateSplinePointsDebugDistance(const USplineComponent* SplineComponent,
 	                                 UDebugTextComponent* DebugTextComponent,
 	                                 const FLinearColor& TextColor,
-	                                 const float TextScale,
-	                                 const bool bShowTravelTime,
-	                                 const float Speed);
+	                                 const float TextScale = 1.15f,
+	                                 const bool bShowTravelTime = false,
+	                                 const float Speed = 1000.f);
 	
 	UFUNCTION(BlueprintCallable, Category="LevelHelpers", meta=(AutoCreateRefTerm="TextColor"))
 	static void UpdateSplineSectorsDebugLength(const USplineComponent* SplineComponent,
 	                                 UDebugTextComponent* DebugTextComponent,
 	                                 const FLinearColor& TextColor,
-	                                 const float TextScale,
-	                                 const bool bShowTravelTime,
-	                                 const float Speed);
+	                                 const float TextScale = 1.0f,
+	                                 const bool bShowTravelTime = false,
+	                                 const float Speed = 1000.f);
+
+	static void DrawSplineSectors(const USplineComponent* SplineComponent);	
 };

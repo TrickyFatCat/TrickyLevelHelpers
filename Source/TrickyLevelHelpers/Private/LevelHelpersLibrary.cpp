@@ -3,6 +3,7 @@
 
 #include "LevelHelpersLibrary.h"
 
+#include "SAdvancedTransformInputBox.h"
 #include "Components/DebugTextComponent.h"
 #include "Components/SplineComponent.h"
 
@@ -281,19 +282,18 @@ void ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(const USplineComponen
 	DebugLabelData.Color = TextColor;
 	DebugLabelData.TextScale = TextScale;
 
-	for (int32 i = 0; i <= LastPointIndex; ++i)
+	for (int32 i = 1; i <= LastPointIndex; ++i)
 	{
-		if (i == 0)
-		{
-			continue;
-		}
-
 		const FVector TextLocation = SplineComponent->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World);
 		const float Distance = SplineComponent->GetDistanceAlongSplineAtSplinePoint(i);
 		const float TravelTime = Speed <= 0.f ? 0.f : Distance / Speed;
-		const FString TravelData = bShowTravelTime ? FString::Printf(TEXT("\nTravel Time: %.2f"), TravelTime) : "";
+		const FString TravelData = bShowTravelTime
+			                           ? FString::Printf(
+				                           TEXT("\nSpeed: %.2f m/s\nTravel Time: %.2f"), Speed / 100.f, TravelTime)
+			                           : "";
 		FString Text = FString::Printf(
-			TEXT("Units: %d\nMeters: %.2f%s"), static_cast<int32>(Distance), Distance / 100.f, *TravelData);
+			TEXT("Point %d\nUnits: %d\nMeters: %.2f%s"), i, static_cast<int32>(Distance), Distance / 100.f,
+			*TravelData);
 		DebugLabelData.Text = Text;
 		DebugLabelData.Location = TextLocation;
 		DebugLabels.Add(DebugLabelData);
@@ -328,23 +328,20 @@ void ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(const USplineComponent
 		return SplineComponent->GetDistanceAlongSplineAtSplinePoint(PointIndex);
 	};
 
-	for (int32 i = 0; i <= LastPointIndex; ++i)
+	for (int32 i = 0; i < LastPointIndex; ++i)
 	{
 		float Distance = GetDistanceAtPoint(i);
-
-		if (i >= LastPointIndex)
-		{
-			continue;
-		}
-
 		const float Length = FMath::Abs(GetDistanceAtPoint(i + 1) - Distance);
 		Distance = SplineComponent->GetDistanceAlongSplineAtSplineInputKey(static_cast<float>(i) + 0.5f);
 		const float TravelTime = Speed <= 0.f ? 0.f : Length / Speed;
-		const FString TravelData = bShowTravelTime ?  FString::Printf(TEXT("\nTravel Time: %.2f"), TravelTime) : "";
+		const FString TravelData = bShowTravelTime
+			                           ? FString::Printf(
+				                           TEXT("\nSpeed: %.2f m/s\nTravel Time: %.2f"), Speed / 100.f, TravelTime)
+			                           : "";
 		const FVector TextLocation = SplineComponent->GetLocationAtDistanceAlongSpline(
 			Distance, ESplineCoordinateSpace::World);
 		FString Text = FString::Printf(
-			TEXT("Sector Length\nUnits: %d\nMeters: %.2f%s"), static_cast<int32>(Length), Length / 100.f, *TravelData);
+			TEXT("Sector %d\nUnits: %d\nMeters: %.2f%s"), i, static_cast<int32>(Length), Length / 100.f, *TravelData);
 		DebugLabelData.Text = Text;
 		DebugLabelData.Location = TextLocation;
 		DebugLabels.Add(DebugLabelData);
@@ -352,3 +349,31 @@ void ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(const USplineComponent
 
 	DebugTextComponent->SetDebugLabels(DebugLabels);
 }
+
+void ULevelHelpersLibrary::DrawSplineSectors(const USplineComponent* SplineComponent)
+{
+	if (!IsValid(SplineComponent))
+	{
+		return;
+	}
+
+	const int32 LastSplinePoint = SplineComponent->GetNumberOfSplinePoints();
+	const int32 LastPointIndex = SplineComponent->IsClosedLoop() ? LastSplinePoint : LastSplinePoint - 1;
+	const FColor Color = SplineComponent->EditorUnselectedSplineSegmentColor.ToFColor(true);
+
+	for (int32 i = 0; i < LastPointIndex; ++i)
+	{
+		const FVector Location = SplineComponent->GetLocationAtSplineInputKey(i + 0.5f, ESplineCoordinateSpace::World);
+		const FRotator Rotation = SplineComponent->GetRotationAtSplineInputKey(i + 0.5f, ESplineCoordinateSpace::World);
+
+		DrawDebugCrosshairs(SplineComponent->GetWorld(),
+			Location,
+			Rotation,
+			40.f,
+			Color,
+			false,
+			-1,
+			0);
+	}
+}
+

@@ -45,7 +45,7 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
 	                                                      DistanceDebug,
 	                                                      DistanceDebugColor,
-	                                                      DistanceDebugScale,
+	                                                      1.15f,
 	                                                      bShowTravelTimeDebug,
 	                                                      TravelSpeed);
 
@@ -54,7 +54,7 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
 	                                                     SectorsDebug,
 	                                                     SectorsDebugColor,
-	                                                     SectorsDebugScale,
+	                                                     1.0f,
 	                                                     bShowTravelTimeDebug,
 	                                                     TravelSpeed);
 

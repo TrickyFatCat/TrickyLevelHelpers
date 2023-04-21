@@ -10,12 +10,11 @@
 
 ASplineRuler::ASplineRuler()
 {
-	PrimaryActorTick.bCanEverTick = false;
-	PrimaryActorTick.bStartWithTickEnabled = false;
 	bIsEditorOnlyActor = true;
 
 #if WITH_EDITORONLY_DATA
-
+	PrimaryActorTick.bCanEverTick = true;
+	
 	SplineComponent = CreateDefaultSubobject<USplineComponent>("Spline");
 	SetRootComponent(ToRawPtr(SplineComponent));
 	SplineComponent->EditorUnselectedSplineSegmentColor = SplineColor;
@@ -38,7 +37,26 @@ ASplineRuler::ASplineRuler()
 
 	CreateDebugText(DistanceDebug, "DistanceDebug");
 	CreateDebugText(SectorsDebug, "SectorsDebug");
+#else
+	PrimaryActorTick.bCanEverTick = false;
+#endif
+}
 
+bool ASplineRuler::ShouldTickIfViewportsOnly() const
+{
+#if WITH_EDITORONLY_DATA
+	return true;
+#else
+	return Super::ShouldTickIfViewportsOnly();
+#endif
+}
+
+void ASplineRuler::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+#if WITH_EDITORONLY_DATA
+	ULevelHelpersLibrary::DrawSplineSectors(SplineComponent);
 #endif
 }
 
@@ -59,7 +77,7 @@ void ASplineRuler::OnConstruction(const FTransform& Transform)
 	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
 	                                                      DistanceDebug,
 	                                                      DistanceTextColor,
-	                                                      DistanceTextScale,
+	                                                      1.15f,
 	                                                      bShowTravelTime,
 	                                                      Speed);
 
@@ -68,7 +86,7 @@ void ASplineRuler::OnConstruction(const FTransform& Transform)
 	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
 	                                                     SectorsDebug,
 	                                                     SectorsTextColor,
-	                                                     SectorsTextScale,
+	                                                     1.0f,
 	                                                     bShowTravelTime,
 	                                                     Speed);
 
