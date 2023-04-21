@@ -74,7 +74,7 @@ void ARadiusRuler::OnConstruction(const FTransform& Transform)
 	Location.X = Radius * FMath::Cos(Theta) + Centre.X;
 	Location.Y = Radius * FMath::Sin(Theta) + Centre.Y;
 	DebugLabelData.Location = Location;
-	
+
 	const FString HeaderText = FString::Printf(TEXT("%s\n---------\n"), *NoteText);
 	const FString LengthData = FString::Printf(
 		TEXT("%sUnits: %d\nMeters: %.2f"), *HeaderText,
@@ -103,7 +103,7 @@ void ARadiusRuler::Tick(float DeltaTime)
 		           false,
 		           -1,
 		           0,
-		           3.f);
+		           Thickness);
 		break;
 
 	case ERadiusRulerShape::Sphere:
@@ -115,7 +115,7 @@ void ARadiusRuler::Tick(float DeltaTime)
 		                false,
 		                -1,
 		                0,
-		                3.f);
+		                Thickness);
 		break;
 
 	case ERadiusRulerShape::Cylinder:
@@ -128,7 +128,7 @@ void ARadiusRuler::Tick(float DeltaTime)
 		                  false,
 		                  -1,
 		                  0,
-		                  3.f);
+		                  Thickness);
 		break;
 	}
 #endif

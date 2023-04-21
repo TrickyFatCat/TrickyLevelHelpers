@@ -22,13 +22,13 @@ struct FLineRulerAxisData
 	float Length = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
+	FColor Color = FColor::Magenta;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
 	bool bShowTravelTime = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData", meta=(EditCondition="bShowTravelTime"))
 	float TravelSpeed = 1000.f;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
-	FColor Color = FColor::Magenta;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
 	bool bDrawMarks = true;
@@ -80,10 +80,10 @@ private:
 	UPROPERTY(EditAnywhere, Category="LineRuler")
 	FLineRulerAxisData Z;
 
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(ClampMin="0"))
+	float Thickness = 5.f;
+
 	UPROPERTY(EditAnywhere, Category="LineRuler")
-	bool bShowNote = true;
-	
-	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowNote"))
 	FString NoteText = "Line Ruler";
 
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowNote"))

@@ -11,11 +11,11 @@ ALineRuler::ALineRuler()
 {
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	SetRootComponent(Root);
-	
+
 #if WITH_EDITORONLY_DATA
 	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
 	Billboard->SetupAttachment(GetRootComponent());
-	
+
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
@@ -81,7 +81,6 @@ void ALineRuler::OnConstruction(const FTransform& Transform)
 	DrawDebugText(DebugTextY, Y, GetActorRightVector());
 	DrawDebugText(DebugTextZ, Z, GetActorUpVector());
 
-	DebugTextNote->SetDrawDebug(bShowNote);
 	FDebugLabelData DebugNoteData;
 	DebugNoteData.Text = NoteText;
 	DebugNoteData.bUseCustomLocation = false;
@@ -117,14 +116,15 @@ void ALineRuler::DrawLine(const FLineRulerAxisData& AxisData, const FVector& Axi
 	const FVector LineStart = GetActorLocation();
 	const FVector LineEnd = LineStart + Axis * AxisData.Length;
 
-	DrawDebugLine(GetWorld(),
-	              LineStart,
-	              LineEnd,
-	              AxisData.Color,
-	              false,
-	              -1,
-	              0,
-	              3.f);
+	DrawDebugDirectionalArrow(GetWorld(),
+	                          LineStart,
+	                          LineEnd,
+	                          40,
+	                          AxisData.Color,
+	                          false,
+	                          -1,
+	                          0,
+	                          Thickness);
 }
 
 void ALineRuler::DrawMarks(const FLineRulerAxisData& AxisData, const FVector& Axis) const

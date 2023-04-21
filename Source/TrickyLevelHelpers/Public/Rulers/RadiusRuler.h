@@ -49,6 +49,9 @@ private:
 	UPROPERTY(EditAnywhere, Category="RadiusRuler")
 	FColor Color = FColor::Magenta;
 
+	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(ClampMin="0"))
+	float Thickness = 5.f;
+	
 	UPROPERTY(EditAnywhere, Category="RadiusRuler")
 	ERadiusRulerShape Shape = ERadiusRulerShape::Sphere;
 

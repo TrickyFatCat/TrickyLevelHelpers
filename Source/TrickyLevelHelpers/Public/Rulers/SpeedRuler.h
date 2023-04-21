@@ -44,6 +44,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="SpeedRuler")
 	FColor Color = FColor::Magenta;
+	
+	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(ClampMin="0"))
+	float Thickness = 5.f;
 
 	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(MultiLine))
 	FString NoteText = "Speed Ruler";

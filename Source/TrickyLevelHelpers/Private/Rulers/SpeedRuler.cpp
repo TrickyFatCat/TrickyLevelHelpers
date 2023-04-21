@@ -96,7 +96,7 @@ void ASpeedRuler::Tick(float DeltaTime)
 	              false,
 	              -1,
 	              0,
-	              3.f);
+	              Thickness);
 
 	if (bShowCircle)
 	{
@@ -110,7 +110,7 @@ void ASpeedRuler::Tick(float DeltaTime)
 		           false,
 		           -1,
 		           0,
-		           3.f);
+		           Thickness);
 	}
 #endif
 }
