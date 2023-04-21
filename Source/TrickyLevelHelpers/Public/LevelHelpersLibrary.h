@@ -169,5 +169,4 @@ public:
 	                                 const bool bShowTravelTime = false,
 	                                 const float Speed = 1000.f);
 
-	static void DrawSplineSectors(const USplineComponent* SplineComponent);	
 };

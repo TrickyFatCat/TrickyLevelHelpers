@@ -56,7 +56,24 @@ void ASplineRuler::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 #if WITH_EDITORONLY_DATA
-	ULevelHelpersLibrary::DrawSplineSectors(SplineComponent);
+	const int32 LastSplinePoint = SplineComponent->GetNumberOfSplinePoints();
+	const int32 LastPointIndex = SplineComponent->IsClosedLoop() ? LastSplinePoint : LastSplinePoint - 1;
+	const FColor Color = SplineColor.ToFColor(true);
+
+	for (int32 i = 0; i < LastPointIndex; ++i)
+	{
+		const FVector Location = SplineComponent->GetLocationAtSplineInputKey(i + 0.5f, ESplineCoordinateSpace::World);
+		const FRotator Rotation = SplineComponent->GetRotationAtSplineInputKey(i + 0.5f, ESplineCoordinateSpace::World);
+
+		DrawDebugCrosshairs(SplineComponent->GetWorld(),
+		                    Location,
+		                    Rotation,
+		                    40.f,
+		                    Color,
+		                    false,
+		                    -1,
+		                    0);
+	}
 #endif
 }
 
