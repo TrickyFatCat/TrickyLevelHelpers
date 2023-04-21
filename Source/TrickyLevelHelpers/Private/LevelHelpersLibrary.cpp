@@ -3,7 +3,6 @@
 
 #include "LevelHelpersLibrary.h"
 
-#include "SAdvancedTransformInputBox.h"
 #include "Components/DebugTextComponent.h"
 #include "Components/SplineComponent.h"
 
