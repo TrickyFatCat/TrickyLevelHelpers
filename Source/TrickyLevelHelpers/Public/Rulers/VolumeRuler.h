@@ -18,13 +18,14 @@ class TRICKYLEVELHELPERS_API AVolumeRuler : public AActor
 public:
 	AVolumeRuler();
 
-private:
+protected:
 	virtual bool ShouldTickIfViewportsOnly() const override;
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 	
 	virtual void Tick(float DeltaTime) override;
 
+private:
 	UPROPERTY()
 	TObjectPtr<USceneComponent> Root = nullptr;
 
@@ -32,7 +33,7 @@ private:
 	TObjectPtr<UBillboardComponent> Billboard = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> DebugTextComponent = nullptr;
+	TObjectPtr<UDebugTextComponent> DebugText= nullptr;
 
 	UPROPERTY(EditAnywhere, Category="VolumeRuler", meta=(AllowPreserveRatio))
 	FVector Size{100.f};
@@ -51,4 +52,10 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="VolumeRuler")
 	bool bDrawSolidBox = false;
+
+	UPROPERTY(EditAnywhere, Category="VolumeRuler", meta=(MultiLine))
+	FString NoteText = "Volume Ruler";
+
+	UPROPERTY(EditAnywhere, Category="VolumeRuler")
+	bool bShowInGame = false;
 };
