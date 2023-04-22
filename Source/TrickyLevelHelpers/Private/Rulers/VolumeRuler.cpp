@@ -38,6 +38,7 @@ AVolumeRuler::AVolumeRuler()
 	Billboard->bUseInEditorScaling = false;
 	Billboard->bIsScreenSizeScaled = true;
 	Billboard->ScreenSize = 0.001;
+	Color.A = 255 * 0.15;
 
 #else
 	PrimaryActorTick.bCanEverTick = false;
@@ -57,8 +58,9 @@ void AVolumeRuler::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 #if WITH_EDITORONLY_DATA
+	Color.A = 255 * 0.15;
 	Extent = Size * 0.5;
-	Center = GetActorLocation() + Extent;
+	Center = bCenterOrigin ? GetActorLocation() : GetActorLocation() + Extent;
 #endif
 }
 
@@ -82,7 +84,7 @@ void AVolumeRuler::Tick(float DeltaTime)
 		DrawDebugSolidBox(GetWorld(),
 		                  Center,
 		                  Extent - 0.1,
-		                  GetActorRotation().Quaternion(),
+		                  FRotator::ZeroRotator.Quaternion(),
 		                  Color,
 		                  false,
 		                  -1,

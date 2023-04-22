@@ -37,15 +37,17 @@ private:
 	UPROPERTY(EditAnywhere, Category="VolumeRuler", meta=(AllowPreserveRatio))
 	FVector Size{100.f};
 
+	UPROPERTY(EditAnywhere, Category="VolumeRuler")
+	bool bCenterOrigin = true;
+
 	FVector Extent = Size * 0.5;
 
 	FVector Center{FVector::Zero()};
 
-	UPROPERTY(EditAnywhere, Category="VolumeRuler")
-	FColor Color{255, 0, 0, 50};
+	UPROPERTY(EditAnywhere, Category="VolumeRuler", meta=(HideAlphaChannel))
+	FColor Color{255, 0, 0};
 
-	UPROPERTY(EditAnywhere, Category="VolumeRuler", meta=(ClampMin="1"))
-	float Thickness = 5.f;
+	float Thickness = 3.f;
 
 	UPROPERTY(EditAnywhere, Category="VolumeRuler")
 	bool bDrawSolidBox = false;
