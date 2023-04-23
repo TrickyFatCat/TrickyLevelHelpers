@@ -35,9 +35,7 @@ ALineRuler::ALineRuler()
 
 	static FConstructorStatics ConstructorStatics;
 	Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
-	Billboard->bUseInEditorScaling = false;
-	Billboard->bIsScreenSizeScaled = true;
-	Billboard->ScreenSize = 0.001;
+	SpriteScale = 0.5;
 
 	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
 	{

@@ -36,7 +36,7 @@ AVolumeRuler::AVolumeRuler()
 
 	static FConstructorStatics ConstructorStatics;
 	Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
-	SpriteScale = 0.25;
+	SpriteScale = 0.5;
 
 	DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("DebugText");
 	DebugText->SetupAttachment(GetRootComponent());
