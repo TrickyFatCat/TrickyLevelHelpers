@@ -26,6 +26,7 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 
+private:
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	TObjectPtr<USplineComponent> SplineComponent = nullptr;
 
@@ -38,19 +39,19 @@ protected:
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(InlineEditConditionToggle))
 	bool bShowDistance = true;
 
-	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowDistance"))
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowDistance", HideAlphaChannel))
 	FLinearColor DistanceColor{FColor::Red};
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(InlineEditConditionToggle))
 	bool bShowSectors = false;
 	
-	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowSectors"))
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowSectors", HideAlphaChannel))
 	FLinearColor SectorsColor{FColor::Yellow};
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(InlineEditConditionToggle))
 	bool bShowTravelTime = true;
 
-	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowTravelTime"))
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowTravelTime", ClampMin="1"))
 	float Speed = 1000;
 	
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer")
