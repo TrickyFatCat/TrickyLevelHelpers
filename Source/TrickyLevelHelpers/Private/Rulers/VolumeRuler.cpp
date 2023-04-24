@@ -9,43 +9,49 @@
 
 AVolumeRuler::AVolumeRuler()
 {
+	bIsEditorOnlyActor = true;
+
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	SetRootComponent(Root);
 
 #if WITH_EDITORONLY_DATA
 	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
 
 	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
-	Billboard->SetupAttachment(GetRootComponent());
 
-	struct FConstructorStatics
+	if (Billboard)
 	{
-		ConstructorHelpers::FObjectFinder<UTexture2D> SpriteTexture;
-		FName ID_Misc;
-		FText NAME_Misc;
+		Billboard->SetupAttachment(GetRootComponent());
 
-		FConstructorStatics()
-			: SpriteTexture(TEXT("/Engine/EditorResources/S_Note"))
-			  , ID_Misc(TEXT("Misc"))
-			  , NAME_Misc(NSLOCTEXT("SpriteCategory", "Misc", "Misc"))
+		struct FConstructorStatics
 		{
-		}
-	};
+			ConstructorHelpers::FObjectFinder<UTexture2D> SpriteTexture;
+			FName ID_Misc;
+			FText NAME_Misc;
 
-	static FConstructorStatics ConstructorStatics;
-	Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
-	SpriteScale = 0.5;
+			FConstructorStatics()
+				: SpriteTexture(TEXT("/Engine/EditorResources/S_Note"))
+				  , ID_Misc(TEXT("Misc"))
+				  , NAME_Misc(NSLOCTEXT("SpriteCategory", "Misc", "Misc"))
+			{
+			}
+		};
+
+		static FConstructorStatics ConstructorStatics;
+		Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
+		SpriteScale = 0.5;
+	}
 
 	DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("DebugText");
-	DebugText->SetupAttachment(GetRootComponent());
-	DebugText->SetDrawInGame(false);
-	DebugText->SetDrawOneLabel(true);
+
+	if (DebugText)
+	{
+		DebugText->SetupAttachment(GetRootComponent());
+		DebugText->SetDrawOneLabel(true);
+	}
 #else
 	PrimaryActorTick.bCanEverTick = false;
-	PrimaryActorTick.bStartWithTickEnabled = false;
 #endif
-	bIsEditorOnlyActor = true;
 }
 
 bool AVolumeRuler::ShouldTickIfViewportsOnly() const
@@ -58,28 +64,34 @@ void AVolumeRuler::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 #if WITH_EDITORONLY_DATA
+	
 	bIsEditorOnlyActor = !bShowInGame;
-	DebugText->SetDrawInGame(bShowInGame);
-
-	Color.A = 255 * 0.15;
-	Extent = Size * 0.5;
 	Center = bCenterOrigin ? GetActorLocation() : GetActorLocation() + Extent;
+	
+	if (DebugText)
+	{
+		DebugText->SetDrawInGame(bShowInGame);
 
-	FDebugLabelData DebugLabelData;
-	FColor TextColor = Color;
-	TextColor.A = 255;
-	DebugLabelData.Color = TextColor;
-	DebugLabelData.TextScale = 1.15;
-	DebugLabelData.bUseCustomLocation = true;
-	DebugLabelData.Location = GetActorLocation();
+		Color.A = 255 * 0.15;
+		Extent = Size * 0.5;
+		Center = bCenterOrigin ? GetActorLocation() : GetActorLocation() + Extent;
 
-	const FString DimentionsText = FString::Printf(TEXT("%s\n%s\n%s"),
-	                                          *GetDimension(Size.X, "X"),
-	                                          *GetDimension(Size.Y, "Y"),
-	                                          *GetDimension(Size.Z, "Z"));
-	const FString LengthData = FString::Printf(TEXT("%s\n---------\n%s"), *NoteText, *DimentionsText);
-	DebugLabelData.Text = LengthData;
-	DebugText->SetDebugLabel(DebugLabelData);
+		FDebugLabelData DebugLabelData;
+		FColor TextColor = Color;
+		TextColor.A = 255;
+		DebugLabelData.Color = TextColor;
+		DebugLabelData.TextScale = 1.15;
+		DebugLabelData.bUseCustomLocation = true;
+		DebugLabelData.Location = GetActorLocation();
+
+		const FString DimentionsText = FString::Printf(TEXT("%s\n%s\n%s"),
+		                                               *GetDimension(Size.X, "X"),
+		                                               *GetDimension(Size.Y, "Y"),
+		                                               *GetDimension(Size.Z, "Z"));
+		const FString LengthData = FString::Printf(TEXT("%s\n---------\n%s"), *NoteText, *DimentionsText);
+		DebugLabelData.Text = LengthData;
+		DebugText->SetDebugLabel(DebugLabelData);
+	}
 
 #endif
 }
@@ -90,7 +102,6 @@ void AVolumeRuler::Tick(float DeltaTime)
 
 #if WITH_EDITORONLY_DATA
 
-	Center = bCenterOrigin ? GetActorLocation() : GetActorLocation() + Extent;
 
 	DrawDebugBox(GetWorld(),
 	             Center,

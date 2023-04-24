@@ -22,7 +22,7 @@ protected:
 	virtual bool ShouldTickIfViewportsOnly() const override;
 
 	virtual void OnConstruction(const FTransform& Transform) override;
-	
+
 	virtual void Tick(float DeltaTime) override;
 
 private:
@@ -33,28 +33,28 @@ private:
 	TObjectPtr<UBillboardComponent> Billboard = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> DebugText= nullptr;
+	TObjectPtr<UDebugTextComponent> DebugText = nullptr;
+
+	UPROPERTY(EditAnywhere, Category="VolumeRuler", meta=(MultiLine))
+	FString NoteText = "Volume Ruler";
 
 	UPROPERTY(EditAnywhere, Category="VolumeRuler", meta=(AllowPreserveRatio))
 	FVector Size{100.f};
 
 	UPROPERTY(EditAnywhere, Category="VolumeRuler")
-	bool bCenterOrigin = true;
+	bool bCenterOrigin = false;
 
 	FVector Extent = Size * 0.5;
 
 	FVector Center{FVector::Zero()};
 
+	UPROPERTY(EditAnywhere, Category="VolumeRuler")
+	bool bDrawSolidBox = false;
+
 	UPROPERTY(EditAnywhere, Category="VolumeRuler", meta=(HideAlphaChannel))
 	FColor Color{255, 0, 0};
 
 	float Thickness = 3.f;
-
-	UPROPERTY(EditAnywhere, Category="VolumeRuler")
-	bool bDrawSolidBox = false;
-
-	UPROPERTY(EditAnywhere, Category="VolumeRuler", meta=(MultiLine))
-	FString NoteText = "Volume Ruler";
 
 	UPROPERTY(EditAnywhere, Category="VolumeRuler")
 	bool bShowInGame = false;
