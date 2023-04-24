@@ -9,44 +9,49 @@
 
 ARadiusRuler::ARadiusRuler()
 {
+	bIsEditorOnlyActor = true;
+
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	SetRootComponent(Root);
 
 #if WITH_EDITORONLY_DATA
-	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
-	Billboard->SetupAttachment(GetRootComponent());
-
 	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
 
-	struct FConstructorStatics
+	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
+
+	if (Billboard)
 	{
-		ConstructorHelpers::FObjectFinder<UTexture2D> SpriteTexture;
-		FName ID_Misc;
-		FText NAME_Misc;
+		Billboard->SetupAttachment(GetRootComponent());
 
-		FConstructorStatics()
-			: SpriteTexture(TEXT("/Engine/EditorResources/S_Note"))
-			  , ID_Misc(TEXT("Misc"))
-			  , NAME_Misc(NSLOCTEXT("SpriteCategory", "Misc", "Misc"))
+		struct FConstructorStatics
 		{
-		}
-	};
+			ConstructorHelpers::FObjectFinder<UTexture2D> SpriteTexture;
+			FName ID_Misc;
+			FText NAME_Misc;
 
-	static FConstructorStatics ConstructorStatics;
-	Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
-	SpriteScale = 0.5;
+			FConstructorStatics()
+				: SpriteTexture(TEXT("/Engine/EditorResources/S_Note"))
+				  , ID_Misc(TEXT("Misc"))
+				  , NAME_Misc(NSLOCTEXT("SpriteCategory", "Misc", "Misc"))
+			{
+			}
+		};
+
+		static FConstructorStatics ConstructorStatics;
+		Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
+		SpriteScale = 0.5;
+	}
 
 	DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("Name");
-	DebugText->SetupAttachment(GetRootComponent());
-	DebugText->SetDrawInGame(false);
-	DebugText->SetDrawOneLabel(true);
+
+	if (DebugText)
+	{
+		DebugText->SetupAttachment(GetRootComponent());
+		DebugText->SetDrawOneLabel(true);
+	}
 #else
 	PrimaryActorTick.bCanEverTick = false;
-	PrimaryActorTick.bStartWithTickEnabled = false;
 #endif
-
-	bIsEditorOnlyActor = true;
 }
 
 bool ARadiusRuler::ShouldTickIfViewportsOnly() const
@@ -59,27 +64,28 @@ void ARadiusRuler::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 #if WITH_EDITORONLY_DATA
 	bIsEditorOnlyActor = !bShowInGame;
-	DebugText->SetDrawInGame(bShowInGame);
 
-	FDebugLabelData DebugLabelData;
-	DebugLabelData.Color = Color;
-	DebugLabelData.TextScale = 1.15;
-	DebugLabelData.bUseCustomLocation = true;
+	if (DebugText)
+	{
+		DebugText->SetDrawInGame(bShowInGame);
+		DebugText->SetRelativeLocation(GetActorForwardVector() * Radius);
 
-	const float Theta = FMath::DegreesToRadians(TextAngleOffset);
-	const FVector Centre = GetActorLocation();
-	FVector Location = Centre;
-	Location.X = Radius * FMath::Cos(Theta) + Centre.X;
-	Location.Y = Radius * FMath::Sin(Theta) + Centre.Y;
-	DebugLabelData.Location = Location;
-
-	const FString HeaderText = FString::Printf(TEXT("%s\n---------\n"), *NoteText);
-	const FString LengthData = FString::Printf(
-		TEXT("%sUnits: %d\nMeters: %.2f"), *HeaderText,
-		static_cast<int32>(Radius),
-		Radius / 100.f);
-	DebugLabelData.Text = LengthData;
-	DebugText->SetDebugLabel(DebugLabelData);
+		FDebugLabelData DebugLabelData;
+		DebugLabelData.Color = Color;
+		DebugLabelData.TextScale = 1.15;
+		const FString HeightText = Shape != ERadiusRulerShape::Cylinder
+			                           ? ""
+			                           : FString::Printf(TEXT("Height : %d | %.2f m"),
+			                                             static_cast<int32>(Height),
+			                                             Height / 100.0);
+		const FString Text = FString::Printf(TEXT("%s\n---------\nRadius : %d | %.2f m\n%s"),
+		                                     *NoteText,
+		                                     static_cast<int32>(Radius),
+		                                     Radius / 100.f,
+		                                     *HeightText);
+		DebugLabelData.Text = Text;
+		DebugText->SetDebugLabel(DebugLabelData);
+	}
 #endif
 }
 

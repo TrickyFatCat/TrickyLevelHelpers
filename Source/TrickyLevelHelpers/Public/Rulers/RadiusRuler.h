@@ -43,29 +43,25 @@ private:
 	UPROPERTY()
 	TObjectPtr<UDebugTextComponent> DebugText = nullptr;
 
+	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(MultiLine))
+	FString NoteText = "Radius Ruler";
+
 	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(ClampMin="0"))
 	float Radius = 100.f;
 
 	UPROPERTY(EditAnywhere, Category="RadiusRuler")
-	FColor Color = FColor::Magenta;
-
-	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(ClampMin="0"))
-	float Thickness = 5.f;
-	
-	UPROPERTY(EditAnywhere, Category="RadiusRuler")
 	ERadiusRulerShape Shape = ERadiusRulerShape::Sphere;
-
+	
 	UPROPERTY(EditAnywhere,
 		Category="RadiusRuler",
 		meta=(EditCondition="Shape==ERadiusRulerShape::Cylinder", EditConditionHides, ClampMin="0"))
 	float Height = 500.f;
-
-	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(MultiLine))
-	FString NoteText = "Radius Ruler";
-
-	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(ClampMin="0", ClampMax="360"))
-	float TextAngleOffset = 0.f;
+	
+	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(HideAlphaChannel))
+	FColor Color = FColor::Magenta;
 
 	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(AllowPrivateAccess))
 	bool bShowInGame = false;
+
+	const float Thickness = 4.0f;
 };
