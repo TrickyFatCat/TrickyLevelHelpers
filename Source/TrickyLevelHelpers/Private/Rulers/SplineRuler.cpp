@@ -82,7 +82,6 @@ void ASplineRuler::OnConstruction(const FTransform& Transform)
 
 	SplineComponent->SetUnselectedSplineSegmentColor(SplineColor);
 	SplineComponent->SetClosedLoop(bIsLooped);
-	SplineComponent->bIsEditorOnly = !bDrawInGame;
 
 	if (PointsDebug)
 	{

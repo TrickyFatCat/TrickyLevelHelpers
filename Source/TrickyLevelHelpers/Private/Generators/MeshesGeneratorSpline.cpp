@@ -21,15 +21,21 @@ AMeshesGeneratorSpline::AMeshesGeneratorSpline(const FObjectInitializer& ObjectI
 
 #if WITH_EDITORONLY_DATA
 
-	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
-	{
-		DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>(Name);
-		DebugText->SetupAttachment(GetRootComponent());
-		DebugText->SetDrawOneLabel(false);
-	};
+	PointsDebug = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("PointsDebug");
 
-	CreateDebugText(DistanceDebug, "DistanceDebug");
-	CreateDebugText(SectorsDebug, "SectorsDebug");
+	if (PointsDebug)
+	{
+		PointsDebug->SetupAttachment(GetRootComponent());
+		PointsDebug->SetDrawOneLabel(false);
+	}
+
+	SectorsDebug = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("SectorsDebug");
+
+	if (SectorsDebug)
+	{
+		SectorsDebug->SetupAttachment(GetRootComponent());
+		SectorsDebug->SetDrawOneLabel(false);
+	}
 
 #endif
 }
@@ -40,23 +46,29 @@ void AMeshesGeneratorSpline::OnConstruction(const FTransform& Transform)
 
 #if WITH_EDITORONLY_DATA
 
-	DistanceDebug->SetDrawInGame(bShowDebugInGame);
-	DistanceDebug->SetDrawDebug(bShowDistanceDebug);
-	ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
-	                                                      DistanceDebug,
-	                                                      DistanceDebugColor,
-	                                                      1.15f,
-	                                                      bShowTravelTimeDebug,
-	                                                      TravelSpeed);
+	if (PointsDebug)
+	{
+		PointsDebug->SetDrawInGame(bShowDebugInGame);
+		PointsDebug->SetDrawDebug(bShowPointsDebug);
+		ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(SplineComponent,
+		                                                      PointsDebug,
+		                                                      PointsDebugColor,
+		                                                      1.15f,
+		                                                      bShowTravelTime,
+		                                                      TravelSpeed);
+	}
 
-	SectorsDebug->SetDrawInGame(bShowDebugInGame);
-	SectorsDebug->SetDrawDebug(bShowSectorsDebug);
-	ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
-	                                                     SectorsDebug,
-	                                                     SectorsDebugColor,
-	                                                     1.0f,
-	                                                     bShowTravelTimeDebug,
-	                                                     TravelSpeed);
+	if (SectorsDebug)
+	{
+		SectorsDebug->SetDrawInGame(bShowDebugInGame);
+		SectorsDebug->SetDrawDebug(bShowSectorsDebug);
+		ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(SplineComponent,
+		                                                     SectorsDebug,
+		                                                     SectorsDebugColor,
+		                                                     1.0f,
+		                                                     bShowTravelTime,
+		                                                     TravelSpeed);
+	}
 
 	if (!StaticMesh)
 	{

@@ -19,46 +19,46 @@ public:
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
-	
+
 	UPROPERTY(VisibleDefaultsOnly, Category="Components")
 	TObjectPtr<USplineComponent> SplineComponent = nullptr;
 
 private:
 #if WITH_EDITORONLY_DATA
-	
+
 	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> DistanceDebug = nullptr;
+	TObjectPtr<UDebugTextComponent> PointsDebug = nullptr;
 
 	UPROPERTY()
 	TObjectPtr<UDebugTextComponent> SectorsDebug = nullptr;
 
-	UPROPERTY(EditAnywhere, Category="SplineActor", AdvancedDisplay)
-	bool bShowDistanceDebug = false;
+	UPROPERTY(EditAnywhere, Category="SplineActor", AdvancedDisplay, meta=(InlineEditConditionToggle))
+	bool bShowPointsDebug = false;
 
 	UPROPERTY(EditAnywhere,
 		Category="SplineActor",
 		AdvancedDisplay,
-		meta=(EditCondition="bShowDistanceDebug", EditConditionHides))
-	FLinearColor DistanceDebugColor{FColor::Magenta};
+		meta=(EditCondition="bShowPointsDebug", HideAlphaChannel))
+	FLinearColor PointsDebugColor{FColor::Magenta};
 
-	UPROPERTY(EditAnywhere, Category="SplineActor", AdvancedDisplay)
+	UPROPERTY(EditAnywhere, Category="SplineActor", AdvancedDisplay, meta=(InlineEditConditionToggle))
 	bool bShowSectorsDebug = false;
-	
+
 	UPROPERTY(EditAnywhere,
 		Category="SplineActor",
 		AdvancedDisplay,
-		meta=(EditCondition="bShowSectorsDebug", EditConditionHides))
+		meta=(EditCondition="bShowSectorsDebug", HideAlphaChannel))
 	FLinearColor SectorsDebugColor{FColor::Cyan};
 
-	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay)
-	bool bShowTravelTimeDebug = false;
+	UPROPERTY(EditAnywhere, Category="Generator", AdvancedDisplay, meta=(InlineEditConditionToggle))
+	bool bShowTravelTime = false;
 
 	UPROPERTY(EditAnywhere,
 		Category="SplineActor",
 		AdvancedDisplay,
-		meta=(EditCondition="bShowTravelTimeDebug", EditConditionHides))
+		meta=(EditCondition="bShowTravelTime", ClampMin="1"))
 	float TravelSpeed = 1000.f;
-	
+
 	UPROPERTY(EditAnywhere, Category="SplineActor", AdvancedDisplay)
 	bool bShowDebugInGame = false;
 #endif
