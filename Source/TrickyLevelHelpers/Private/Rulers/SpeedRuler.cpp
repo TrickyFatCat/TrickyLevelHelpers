@@ -9,43 +9,47 @@
 
 ASpeedRuler::ASpeedRuler()
 {
+	bIsEditorOnlyActor = true;
+
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	SetRootComponent(Root);
 
 #if WITH_EDITORONLY_DATA
-	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
-	Billboard->SetupAttachment(GetRootComponent());
-
 	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
 
-	struct FConstructorStatics
+	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
+
+	if (Billboard)
 	{
-		ConstructorHelpers::FObjectFinder<UTexture2D> SpriteTexture;
-		FName ID_Misc;
-		FText NAME_Misc;
+		Billboard->SetupAttachment(GetRootComponent());
 
-		FConstructorStatics()
-			: SpriteTexture(TEXT("/Engine/EditorResources/S_Note"))
-			  , ID_Misc(TEXT("Misc"))
-			  , NAME_Misc(NSLOCTEXT("SpriteCategory", "Misc", "Misc"))
+		struct FConstructorStatics
 		{
-		}
-	};
+			ConstructorHelpers::FObjectFinder<UTexture2D> SpriteTexture;
+			FName ID_Misc;
+			FText NAME_Misc;
 
-	static FConstructorStatics ConstructorStatics;
-	Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
-	SpriteScale = 0.5;
+			FConstructorStatics()
+				: SpriteTexture(TEXT("/Engine/EditorResources/S_Note"))
+				  , ID_Misc(TEXT("Misc"))
+				  , NAME_Misc(NSLOCTEXT("SpriteCategory", "Misc", "Misc"))
+			{
+			}
+		};
 
+		static FConstructorStatics ConstructorStatics;
+		Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
+		SpriteScale = 0.5;
+	}
 	DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("DebugText");
-	DebugText->SetupAttachment(GetRootComponent());
-	DebugText->SetDrawInGame(true);
+
+	if (DebugText)
+	{
+		DebugText->SetupAttachment(GetRootComponent());
+	}
 #else
 	PrimaryActorTick.bCanEverTick = false;
-	PrimaryActorTick.bStartWithTickEnabled = false;
 #endif
-
-	bIsEditorOnlyActor = true;
 }
 
 bool ASpeedRuler::ShouldTickIfViewportsOnly() const
@@ -59,21 +63,25 @@ void ASpeedRuler::OnConstruction(const FTransform& Transform)
 
 #if WITH_EDITORONLY_DATA
 	bIsEditorOnlyActor = !bShowInGame;
-	TravelDistance = TravelSpeed * TravelTime;
-	
-	FDebugLabelData DebugLabelData;
-	DebugLabelData.Color = Color;
-	DebugLabelData.TextScale = 1.15;
+	Distance = Speed * Time;
 
-	const FString HeaderText = FString::Printf(TEXT("%s\n---------\n"), *NoteText);
-	const FString LengthData = FString::Printf(
-		TEXT("%sUnits: %d\nMeters: %.2f\nTime: %.2f\nSpeed: %.2f m/s"), *HeaderText,
-		static_cast<int32>(TravelDistance),
-		TravelDistance / 100.0,
-		TravelTime, TravelSpeed / 100.0);
-	DebugLabelData.Text = LengthData;
-	DebugText->SetDebugLabel(DebugLabelData);
+	if (DebugText)
+	{
+		FDebugLabelData DebugLabelData;
+		DebugLabelData.Color = Color;
+		DebugLabelData.TextScale = 1.15;
 
+		const FString DistanceText = FString::Printf(TEXT("Distance : %d | %.2f m"),
+		                                             static_cast<int32>(Distance),
+		                                             Distance / 100.0);
+
+		const FString Text = FString::Printf(TEXT("%s\n---------\n%s\nSpeed : %.2f m/s\nTime : %.2f sec"), *NoteText,
+		                                     *DistanceText,
+		                                     Speed / 100.0,
+		                                     Time);
+		DebugLabelData.Text = Text;
+		DebugText->SetDebugLabel(DebugLabelData);
+	}
 #endif
 }
 
@@ -82,10 +90,10 @@ void ASpeedRuler::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 #if WITH_EDITORONLY_DATA
-	TravelDistance = TravelSpeed * TravelTime;
+	Distance = Speed * Time;
 
 	const FVector LineStart = GetActorLocation();
-	const FVector LineEnd = LineStart + GetActorForwardVector() * TravelDistance;
+	const FVector LineEnd = LineStart + GetActorForwardVector() * Distance;
 
 	DrawDebugLine(GetWorld(),
 	              LineStart,
@@ -103,7 +111,7 @@ void ASpeedRuler::Tick(float DeltaTime)
 		           GetActorForwardVector(),
 		           GetActorRightVector(),
 		           Color,
-		           TravelDistance,
+		           Distance,
 		           32,
 		           false,
 		           -1,
