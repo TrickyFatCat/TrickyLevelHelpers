@@ -57,10 +57,16 @@ private:
 		meta=(EditCondition="Shape==ERadiusRulerShape::Cylinder", EditConditionHides, ClampMin="0"))
 	float Height = 500.f;
 	
+	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(InlineEditConditionToggle))
+	bool bShowTravelTime = false;
+	
+	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(EditCondition="bShowTravelTime", ClampMin="1"))
+	float Speed = 1000.f;
+	
 	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(HideAlphaChannel))
 	FColor Color = FColor::Magenta;
 
-	UPROPERTY(EditAnywhere, Category="RadiusRuler", meta=(AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, Category="RadiusRuler")
 	bool bShowInGame = false;
 
 	const float Thickness = 4.0f;

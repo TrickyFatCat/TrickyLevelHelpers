@@ -78,11 +78,17 @@ void ARadiusRuler::OnConstruction(const FTransform& Transform)
 			                           : FString::Printf(TEXT("Height : %d | %.2f m"),
 			                                             static_cast<int32>(Height),
 			                                             Height / 100.0);
-		const FString Text = FString::Printf(TEXT("%s\n---------\nRadius : %d | %.2f m\n%s"),
+
+		const float Time = Speed <= 0.f ? 0.0 : Radius / Speed;
+		const FString TravelText = !bShowTravelTime
+			                           ? ""
+			                           : FString::Printf(TEXT("Speed : %.2f m/s\nTime: %.2f sec"), Speed / 100.f, Time);
+		const FString Text = FString::Printf(TEXT("%s\n---------\nRadius : %d | %.2f m\n%s\n%s"),
 		                                     *NoteText,
 		                                     static_cast<int32>(Radius),
 		                                     Radius / 100.f,
-		                                     *HeightText);
+		                                     *HeightText,
+		                                     *TravelText);
 		DebugLabelData.Text = Text;
 		DebugText->SetDebugLabel(DebugLabelData);
 	}
