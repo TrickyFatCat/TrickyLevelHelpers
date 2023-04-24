@@ -9,14 +9,13 @@
 
 AVolumeRuler::AVolumeRuler()
 {
-	
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	SetRootComponent(Root);
 
 #if WITH_EDITORONLY_DATA
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
-	
+
 	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
 	Billboard->SetupAttachment(GetRootComponent());
 
@@ -61,7 +60,7 @@ void AVolumeRuler::OnConstruction(const FTransform& Transform)
 #if WITH_EDITORONLY_DATA
 	bIsEditorOnlyActor = !bShowInGame;
 	DebugText->SetDrawInGame(bShowInGame);
-	
+
 	Color.A = 255 * 0.15;
 	Extent = Size * 0.5;
 	Center = bCenterOrigin ? GetActorLocation() : GetActorLocation() + Extent;
@@ -74,18 +73,11 @@ void AVolumeRuler::OnConstruction(const FTransform& Transform)
 	DebugLabelData.bUseCustomLocation = true;
 	DebugLabelData.Location = GetActorLocation();
 
-	const FString HeaderText = FString::Printf(TEXT("%s\n---------\n"), *NoteText);
-	const FString UnitsText = FString::Printf(
-		TEXT("Units: X = %d | Y = %d | Z = %d"),
-		static_cast<int32>(Size.X),
-		static_cast<int32>(Size.Y),
-		static_cast<int32>(Size.Z));
-	const FString MetersText = FString::Printf(
-    		TEXT("Meters: X = %.2f | Y = %.2f | Z = %.2f"),
-    		Size.X / 100.0,
-    		Size.Y / 100.0,
-    		Size.Z / 100.0);
-	const FString LengthData = FString::Printf(TEXT("%s\n%s\n%s"), *HeaderText, *UnitsText, *MetersText);
+	const FString DimentionsText = FString::Printf(TEXT("%s\n%s\n%s"),
+	                                          *GetDimension(Size.X, "X"),
+	                                          *GetDimension(Size.Y, "Y"),
+	                                          *GetDimension(Size.Z, "Z"));
+	const FString LengthData = FString::Printf(TEXT("%s\n---------\n%s"), *NoteText, *DimentionsText);
 	DebugLabelData.Text = LengthData;
 	DebugText->SetDebugLabel(DebugLabelData);
 
@@ -99,7 +91,7 @@ void AVolumeRuler::Tick(float DeltaTime)
 #if WITH_EDITORONLY_DATA
 
 	Center = bCenterOrigin ? GetActorLocation() : GetActorLocation() + Extent;
-	
+
 	DrawDebugBox(GetWorld(),
 	             Center,
 	             Extent,
@@ -122,4 +114,9 @@ void AVolumeRuler::Tick(float DeltaTime)
 		                  0);
 	}
 #endif
+}
+
+FString AVolumeRuler::GetDimension(const double Length, const FString& AxisName)
+{
+	return FString::Printf(TEXT("%s : %d | %.2f m"), *AxisName, static_cast<int32>(Length), Length / 100.0);
 }

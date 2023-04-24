@@ -58,4 +58,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="VolumeRuler")
 	bool bShowInGame = false;
+
+	static FString GetDimension(const double Length, const FString& AxisName);
 };
