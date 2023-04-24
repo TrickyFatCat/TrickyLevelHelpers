@@ -84,11 +84,11 @@ void AVolumeRuler::OnConstruction(const FTransform& Transform)
 		DebugLabelData.bUseCustomLocation = true;
 		DebugLabelData.Location = GetActorLocation();
 
-		const FString DimentionsText = FString::Printf(TEXT("%s\n%s\n%s"),
+		const FString DimensionsText = FString::Printf(TEXT("%s\n%s\n%s"),
 		                                               *GetDimension(Size.X, "X"),
 		                                               *GetDimension(Size.Y, "Y"),
 		                                               *GetDimension(Size.Z, "Z"));
-		const FString LengthData = FString::Printf(TEXT("%s\n---------\n%s"), *NoteText, *DimentionsText);
+		const FString LengthData = FString::Printf(TEXT("%s\n---------\n%s"), *NoteText, *DimensionsText);
 		DebugLabelData.Text = LengthData;
 		DebugText->SetDebugLabel(DebugLabelData);
 	}
@@ -102,6 +102,7 @@ void AVolumeRuler::Tick(float DeltaTime)
 
 #if WITH_EDITORONLY_DATA
 
+	Center = bCenterOrigin ? GetActorLocation() : GetActorLocation() + Extent;
 
 	DrawDebugBox(GetWorld(),
 	             Center,
