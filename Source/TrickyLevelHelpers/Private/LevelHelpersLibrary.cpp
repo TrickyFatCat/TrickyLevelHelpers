@@ -281,17 +281,20 @@ void ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(const USplineComponen
 	DebugLabelData.Color = TextColor;
 	DebugLabelData.TextScale = TextScale;
 
-	for (int32 i = 1; i <= LastPointIndex; ++i)
+	for (int32 i = 0; i <= LastPointIndex; ++i)
 	{
 		const FVector TextLocation = SplineComponent->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World);
+
 		const float Distance = SplineComponent->GetDistanceAlongSplineAtSplinePoint(i);
 
-		FString Text = FString::Printf(
-			TEXT("Point %d\n---------\nDistance: %d | %.2f m\n%s"),
-			i,
-			static_cast<int32>(Distance),
-			Distance / 100.f,
-			*PrintTravelData(bShowTravelTime, Distance, Speed));
+		const FString PointZeroText = SplineComponent->IsClosedLoop() ? "" : "Point 0\n---------\n";
+		FString Text = i == 0
+			               ? PointZeroText
+			               : FString::Printf(TEXT("Point %d\n---------\nDistance: %d | %.2f m\n%s"),
+			                                 i,
+			                                 static_cast<int32>(Distance),
+			                                 Distance / 100.f,
+			                                 *PrintTravelData(bShowTravelTime, Distance, Speed));
 
 		DebugLabelData.Text = Text;
 		DebugLabelData.Location = TextLocation;
@@ -335,10 +338,10 @@ void ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(const USplineComponent
 		const FVector TextLocation = SplineComponent->GetLocationAtDistanceAlongSpline(
 			Distance, ESplineCoordinateSpace::World);
 		FString Text = FString::Printf(TEXT("Sector %d\n---------\nLength: %d | %.2f m\n%s"),
-			i,
-			static_cast<int32>(Length),
-			Length / 100.f,
-			*PrintTravelData(bShowTravelTime, Length, Speed));
+		                               i,
+		                               static_cast<int32>(Length),
+		                               Length / 100.f,
+		                               *PrintTravelData(bShowTravelTime, Length, Speed));
 		DebugLabelData.Text = Text;
 		DebugLabelData.Location = TextLocation;
 		DebugLabels.Add(DebugLabelData);
