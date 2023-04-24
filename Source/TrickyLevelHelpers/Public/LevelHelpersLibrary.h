@@ -169,4 +169,7 @@ public:
 	                                 const bool bShowTravelTime = false,
 	                                 const float Speed = 1000.f);
 
+private:
+	static FString PrintTravelData(const bool bIsEnabled, const float Distance, const float Speed);
+
 };

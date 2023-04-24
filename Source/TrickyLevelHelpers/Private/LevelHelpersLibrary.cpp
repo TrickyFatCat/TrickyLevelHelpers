@@ -285,14 +285,14 @@ void ULevelHelpersLibrary::UpdateSplinePointsDebugDistance(const USplineComponen
 	{
 		const FVector TextLocation = SplineComponent->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World);
 		const float Distance = SplineComponent->GetDistanceAlongSplineAtSplinePoint(i);
-		const float TravelTime = Speed <= 0.f ? 0.f : Distance / Speed;
-		const FString TravelData = bShowTravelTime
-			                           ? FString::Printf(
-				                           TEXT("\nSpeed: %.2f m/s\nTravel Time: %.2f"), Speed / 100.f, TravelTime)
-			                           : "";
+
 		FString Text = FString::Printf(
-			TEXT("Point %d\nUnits: %d\nMeters: %.2f%s"), i, static_cast<int32>(Distance), Distance / 100.f,
-			*TravelData);
+			TEXT("Point %d\n---------\nDistance: %d | %.2f m\n%s"),
+			i,
+			static_cast<int32>(Distance),
+			Distance / 100.f,
+			*PrintTravelData(bShowTravelTime, Distance, Speed));
+
 		DebugLabelData.Text = Text;
 		DebugLabelData.Location = TextLocation;
 		DebugLabels.Add(DebugLabelData);
@@ -332,19 +332,30 @@ void ULevelHelpersLibrary::UpdateSplineSectorsDebugLength(const USplineComponent
 		float Distance = GetDistanceAtPoint(i);
 		const float Length = FMath::Abs(GetDistanceAtPoint(i + 1) - Distance);
 		Distance = SplineComponent->GetDistanceAlongSplineAtSplineInputKey(static_cast<float>(i) + 0.5f);
-		const float TravelTime = Speed <= 0.f ? 0.f : Length / Speed;
-		const FString TravelData = bShowTravelTime
-			                           ? FString::Printf(
-				                           TEXT("\nSpeed: %.2f m/s\nTravel Time: %.2f"), Speed / 100.f, TravelTime)
-			                           : "";
 		const FVector TextLocation = SplineComponent->GetLocationAtDistanceAlongSpline(
 			Distance, ESplineCoordinateSpace::World);
-		FString Text = FString::Printf(
-			TEXT("Sector %d\nUnits: %d\nMeters: %.2f%s"), i, static_cast<int32>(Length), Length / 100.f, *TravelData);
+		FString Text = FString::Printf(TEXT("Sector %d\n---------\nLength: %d | %.2f m\n%s"),
+			i,
+			static_cast<int32>(Length),
+			Length / 100.f,
+			*PrintTravelData(bShowTravelTime, Length, Speed));
 		DebugLabelData.Text = Text;
 		DebugLabelData.Location = TextLocation;
 		DebugLabels.Add(DebugLabelData);
 	}
 
 	DebugTextComponent->SetDebugLabels(DebugLabels);
+}
+
+FString ULevelHelpersLibrary::PrintTravelData(const bool bIsEnabled, const float Distance, const float Speed)
+{
+	FString Result = "";
+
+	if (bIsEnabled)
+	{
+		const float Time = Speed <= 0.f ? 0.f : Distance / Speed;
+		Result = FString::Printf(TEXT("Speed: %.2f m/s\nTime: %.2f sec"), Speed / 100.f, Time);
+	}
+
+	return Result;
 }
