@@ -9,58 +9,48 @@
 
 ALineRuler::ALineRuler()
 {
+	bIsEditorOnlyActor = true;
+
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	SetRootComponent(Root);
 
 #if WITH_EDITORONLY_DATA
-	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
-	Billboard->SetupAttachment(GetRootComponent());
-
 	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
 
-	struct FConstructorStatics
+	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>("Billboard");
+
+	if (Billboard)
 	{
-		ConstructorHelpers::FObjectFinder<UTexture2D> SpriteTexture;
-		FName ID_Misc;
-		FText NAME_Misc;
+		Billboard->SetupAttachment(GetRootComponent());
 
-		FConstructorStatics()
-			: SpriteTexture(TEXT("/Engine/EditorResources/S_Note"))
-			  , ID_Misc(TEXT("Misc"))
-			  , NAME_Misc(NSLOCTEXT("SpriteCategory", "Misc", "Misc"))
+		struct FConstructorStatics
 		{
-		}
-	};
+			ConstructorHelpers::FObjectFinder<UTexture2D> SpriteTexture;
+			FName ID_Misc;
+			FText NAME_Misc;
 
-	static FConstructorStatics ConstructorStatics;
-	Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
-	SpriteScale = 0.5;
+			FConstructorStatics()
+				: SpriteTexture(TEXT("/Engine/EditorResources/S_Note"))
+				  , ID_Misc(TEXT("Misc"))
+				  , NAME_Misc(NSLOCTEXT("SpriteCategory", "Misc", "Misc"))
+			{
+			}
+		};
 
-	auto CreateDebugText = [&](TObjectPtr<UDebugTextComponent>& DebugText, const FName& Name) -> void
+		static FConstructorStatics ConstructorStatics;
+		Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
+		SpriteScale = 0.5;
+	}
+
+	DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("DebugText");
+
+	if (DebugText)
 	{
-		DebugText = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>(Name);
 		DebugText->SetupAttachment(GetRootComponent());
-		DebugText->SetDrawInGame(true);
-		DebugText->SetDrawOneLabel(false);
-	};
-
-	CreateDebugText(DebugTextX, "DebugTextX");
-	CreateDebugText(DebugTextY, "DebugTextY");
-	CreateDebugText(DebugTextZ, "DebugTextZ");
-	CreateDebugText(DebugTextNote, "DebugTextNote");
-
-	DebugTextNote->SetDrawOneLabel(true);
-
-	X.Color = FColor{230, 57, 0};
-	Y.Color = FColor{65, 188, 65};
-	Z.Color = FColor{0, 149, 230};
+	}
 #else
 	PrimaryActorTick.bCanEverTick = false;
-	PrimaryActorTick.bStartWithTickEnabled = false;
 #endif
-
-	bIsEditorOnlyActor = true;
 }
 
 bool ALineRuler::ShouldTickIfViewportsOnly() const
@@ -75,16 +65,30 @@ void ALineRuler::OnConstruction(const FTransform& Transform)
 #if WITH_EDITORONLY_DATA
 	bIsEditorOnlyActor = !bShowInGame;
 
-	DrawDebugText(DebugTextX, X, GetActorForwardVector());
-	DrawDebugText(DebugTextY, Y, GetActorRightVector());
-	DrawDebugText(DebugTextZ, Z, GetActorUpVector());
+	if (DebugText)
+	{
+		DebugText->SetDrawInGame(bShowInGame);
 
-	FDebugLabelData DebugNoteData;
-	DebugNoteData.Text = NoteText;
-	DebugNoteData.bUseCustomLocation = false;
-	DebugNoteData.Color = NoteColor;
-	DebugNoteData.TextScale = 1.15f;
-	DebugTextNote->SetDebugLabel(DebugNoteData);
+		FDebugLabelData DebugLabelData;
+		DebugLabelData.Color = TextColor;
+		DebugLabelData.TextScale = 1.15;
+
+		const FString LengthText = FString::Printf(TEXT("Length\n%s\n%s\n%s"),
+		                                           *PrintAxisDebug(bShowX, Length.X, "X"),
+		                                           *PrintAxisDebug(bShowY, Length.Y, "Y"),
+		                                           *PrintAxisDebug(bShowZ, Length.Z, "Z"));
+
+		const FString TravelText = !bShowTravelTime
+			                           ? ""
+			                           : FString::Printf(TEXT("---------\nTravel\n%s\n%s\n%s"),
+			                                             *PrintTravelDebug(bShowX, Length.X, Speed, "X"),
+			                                             *PrintTravelDebug(bShowY, Length.Y, Speed, "Y"),
+			                                             *PrintTravelDebug(bShowZ, Length.Z, Speed, "Z"));
+
+		const FString Text = FString::Printf(TEXT("%s\n---------\n%s\n%s"), *NoteText, *LengthText, *TravelText);
+		DebugLabelData.Text = Text;
+		DebugText->SetDebugLabel(DebugLabelData);
+	}
 #endif
 }
 
@@ -94,91 +98,79 @@ void ALineRuler::Tick(float DeltaTime)
 
 #if WITH_EDITORONLY_DATA
 
-	DrawLine(X, GetActorForwardVector());
-	DrawLine(Y, GetActorRightVector());
-	DrawLine(Z, GetActorUpVector());
-
-	DrawMarks(X, GetActorForwardVector());
-	DrawMarks(Y, GetActorRightVector());
-	DrawMarks(Z, GetActorUpVector());
+	DrawLine(bShowX, Length.X, MarksSpacing.X, GetActorForwardVector(), ColorX);
+	DrawLine(bShowY, Length.Y, MarksSpacing.Y, GetActorRightVector(), ColorY);
+	DrawLine(bShowZ, Length.Z, MarksSpacing.Z, GetActorUpVector(), ColorZ);
 #endif
 }
 
-void ALineRuler::DrawLine(const FLineRulerAxisData& AxisData, const FVector& Axis) const
+void ALineRuler::DrawLine(const bool bShow,
+                          const double Distance,
+                          const double Spacing,
+                          const FVector& Axis,
+                          const FColor& Color) const
 {
-	if (!AxisData.bDrawAxis || AxisData.Length == 0.f)
+	if (!bShow)
 	{
 		return;
 	}
 
 	const FVector LineStart = GetActorLocation();
-	const FVector LineEnd = LineStart + Axis * AxisData.Length;
+	const FVector LineEnd = LineStart + Axis * Distance;
 
-	DrawDebugDirectionalArrow(GetWorld(),
-	                          LineStart,
-	                          LineEnd,
-	                          40,
-	                          AxisData.Color,
-	                          false,
-	                          -1,
-	                          0,
-	                          Thickness);
-}
+	DrawDebugLine(GetWorld(),
+	              LineStart,
+	              LineEnd,
+	              Color,
+	              false,
+	              -1,
+	              0,
+	              Thickness);
 
-void ALineRuler::DrawMarks(const FLineRulerAxisData& AxisData, const FVector& Axis) const
-{
-	if (!AxisData.bDrawAxis || !AxisData.bDrawMarks || AxisData.Length == 0.0 || AxisData.MarksDistance == 0.0)
+	const int32 Amount = Spacing <= 0.0 ? 0 : FMath::Abs(Distance) / Spacing;
+
+	for (int32 i = 1; i <= Amount; ++i)
 	{
-		return;
-	}
-
-	const int32 Amount = FMath::FloorToInt32(FMath::Abs(AxisData.Length) / AxisData.MarksDistance);
-
-	for (int32 i = 0; i < Amount; ++i)
-	{
-		const FVector Location = GetActorLocation() + Axis * AxisData.MarksDistance * (i + 1) * FMath::Sign(
-			AxisData.Length);
+		const FVector Location = LineStart + Axis * Spacing * i * FMath::Sign(Distance);
 		DrawDebugCrosshairs(GetWorld(),
 		                    Location,
 		                    GetActorRotation(),
 		                    50.f,
-		                    AxisData.Color);
+		                    Color);
 	}
 }
 
-void ALineRuler::DrawDebugText(UDebugTextComponent* DebugText, const FLineRulerAxisData& AxisData,
-                               const FVector& Axis) const
+FString ALineRuler::PrintAxisDebug(const bool bShow, const double Length, const FString& AxisName)
 {
-	if (!IsValid(DebugText))
+	FString Result = "";
+
+	if (bShow)
 	{
-		return;
+		Result = FString::Printf(TEXT("%s : %d | %.2f m"),
+		                         *AxisName,
+		                         static_cast<int32>(FMath::Abs(Length)),
+		                         FMath::Abs(Length) / 100.f);
 	}
 
-	DebugText->SetDrawDebug(AxisData.bDrawAxis);
+	return Result;
+}
 
-	if (!AxisData.bDrawAxis)
+FString ALineRuler::PrintTravelDebug(const bool bShow,
+                                     const double Length,
+                                     const double Speed,
+                                     const FString& AxisName)
+{
+	FString Result = "";
+
+	if (bShow)
 	{
-		return;
+		const float Time = Speed <= 0.0 ? 0.0 : FMath::Abs(Length) / Speed;
+
+		Result = FString::Printf(TEXT("%s : %.2f m/s | %.2f sec"),
+		                         *AxisName,
+		                         Speed / 100.0,
+		                         Time);
 	}
 
-	TArray<FDebugLabelData> DebugLabels;
-
-	FDebugLabelData DebugLabelData;
-	DebugLabelData.bUseCustomLocation = true;
-	DebugLabelData.Color = AxisData.Color;
-	DebugLabelData.TextScale = 1.15;
-
-	FVector TextLocation = GetActorLocation() + Axis * AxisData.Length;
-	TextLocation.Z += 50.0;
-	DebugLabelData.Location = TextLocation;
-
-	const float TravelTime = AxisData.TravelSpeed <= 0.f ? 0.f : FMath::Abs(AxisData.Length / AxisData.TravelSpeed);
-	const FString TravelData = AxisData.bShowTravelTime ? FString::Printf(TEXT("\nTravelTime: %.2f"), TravelTime) : "";
-
-	const FString LengthData = FString::Printf(
-		TEXT("Units: %d\nMeters: %.2f%s"), static_cast<int32>(AxisData.Length), AxisData.Length / 100.0, *TravelData);
-	DebugLabelData.Text = LengthData;
-
-	DebugLabels.Add(DebugLabelData);
-	DebugText->SetDebugLabels(DebugLabels);
+	return Result;
 }

@@ -10,34 +10,7 @@ class USceneComponent;
 class UBillboardComponent;
 class UDebugTextComponent;
 
-USTRUCT(BlueprintType, meta=(HiddenByDefault))
-struct FLineRulerAxisData
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
-	bool bDrawAxis = true;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
-	float Length = 100.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
-	FColor Color = FColor::Magenta;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
-	bool bShowTravelTime = false;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData", meta=(EditCondition="bShowTravelTime"))
-	float TravelSpeed = 1000.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData")
-	bool bDrawMarks = true;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LineRulerAxisData", meta=(EditCondition="bDrawMarks"))
-	float MarksDistance = 100.f;
-};
-
-UCLASS(Blueprintable, HideCategories=(AssetUserData, Collision, Cooking, HLOD, Lighting, LOD, Mobile, Navigation, Physics, RayTracing, Rendering, Tags, TextureStreaming, Actor, Replication, Input, Networking, WorldPartition, DataLayers) )
+UCLASS(Blueprintable, HideCategories=(Actor, HLOD, Replication, Networking, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers))
 class TRICKYLEVELHELPERS_API ALineRuler : public AActor
 {
 	GENERATED_BODY()
@@ -55,46 +28,64 @@ protected:
 private:
 	UPROPERTY()
 	TObjectPtr<USceneComponent> Root = nullptr;
-	
+
 	UPROPERTY()
 	TObjectPtr<UBillboardComponent> Billboard = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> DebugTextX = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> DebugTextY = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> DebugTextZ = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<UDebugTextComponent> DebugTextNote = nullptr;
-
-	UPROPERTY(EditAnywhere, Category="LineRuler")
-	FLineRulerAxisData X;
-	
-	UPROPERTY(EditAnywhere, Category="LineRuler")
-	FLineRulerAxisData Y;
-	
-	UPROPERTY(EditAnywhere, Category="LineRuler")
-	FLineRulerAxisData Z;
-
-	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(ClampMin="0"))
-	float Thickness = 5.f;
+	TObjectPtr<UDebugTextComponent> DebugText = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="LineRuler")
 	FString NoteText = "Line Ruler";
 
-	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowNote"))
-	FLinearColor NoteColor = FColor::White;
+	UPROPERTY(EditAnywhere, Category="LineRuler")
+	FVector Length{100.f};
 
 	UPROPERTY(EditAnywhere, Category="LineRuler")
-	bool bShowInGame = false;
-	
-	void DrawLine(const FLineRulerAxisData& AxisData, const FVector& Axis) const;
-	
-	void DrawMarks(const FLineRulerAxisData& AxisData, const FVector& Axis) const;
+	FVector MarksSpacing{100.f};
 
-	void DrawDebugText(UDebugTextComponent* DebugText, const FLineRulerAxisData& AxisData, const FVector& Axis) const;
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(InlineEditConditionToggle))
+	bool bShowTravelTime = false;
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowTravelTime"))
+	float Speed = 1000.f;	
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(InlineEditConditionToggle))
+	bool bShowX = true;
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(InlineEditConditionToggle))
+	bool bShowY = true;
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(InlineEditConditionToggle))
+	bool bShowZ = true;
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowX", HideAlphaChannel, DisplayName="X"))
+	;
+	FColor ColorX{230, 57, 0};
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowY", HideAlphaChannel, DisplayName="Y"))
+	;
+	FColor ColorY{65, 188, 65};
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowZ", HideAlphaChannel, DisplayName="Z"))
+	;
+	FColor ColorZ{0, 149, 230};
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(HideAlphaChannel))
+	FLinearColor TextColor = FColor::Magenta;
+	
+	UPROPERTY(EditAnywhere, Category="LineRuler")
+	bool bShowInGame = false;
+
+	const float Thickness = 3.f;
+
+	void DrawLine(const bool bShow, const double Distance, const double Spacing, const FVector& Axis,
+	              const FColor& Color) const;
+
+	static FString PrintAxisDebug(const bool bShow, const double Length, const FString& AxisName);
+
+	static FString PrintTravelDebug(const bool bShow,
+	                                const double Length,
+	                                const double Speed,
+	                                const FString& AxisName);
 };
