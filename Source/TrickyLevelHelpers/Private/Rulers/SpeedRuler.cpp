@@ -76,7 +76,7 @@ void ASpeedRuler::OnConstruction(const FTransform& Transform)
 			                           ? FMath::Min(InitialSpeed + Acceleration * MovementTime, TargetSpeed)
 			                           : FMath::Max(InitialSpeed - Acceleration * AccelTime, TargetSpeed);
 
-		const float TargetSpeedDistance = AccelTime < MovementTime ? FinalDistance - (AccelDist + DecelDist) : 0.f;
+		const float TargetSpeedDistance = FMath::Max(FinalDistance - (AccelDist + DecelDist), 0.f);
 
 		const FString TotalText = FString::Printf(TEXT("Distance : %d | %.2f m\nTime : %.2f sec"),
 		                                          FMath::RoundToInt32(FinalDistance),
@@ -141,7 +141,7 @@ void ASpeedRuler::CalculateDistance()
 
 	if (InitialSpeed <= TargetSpeed)
 	{
-		RemainingTime = AccelTime < MovementTime ? MovementTime : MovementTime - AccelTime;
+		RemainingTime = MovementTime > AccelTime ? MovementTime - AccelTime : 0.f;
 	}
 	else
 	{
