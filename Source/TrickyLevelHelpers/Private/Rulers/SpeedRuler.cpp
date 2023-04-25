@@ -152,12 +152,9 @@ void ASpeedRuler::CalculateDistance()
 	FinalTime = MovementTime;
 
 	const float CurrentSpeed = FMath::Min(InitialSpeed + Acceleration * MovementTime, TargetSpeed);
-	DecelTime = Deceleration <= 0.f ? 0.f : -(CurrentSpeed / Deceleration);
+	DecelTime = Deceleration <= 0.f ? 0.f : CurrentSpeed / Deceleration;
 	DecelDist = CurrentSpeed * DecelTime - Deceleration * (DecelTime * DecelTime) * 0.5;
-	DecelDist = FMath::Abs(DecelDist);
-	DecelTime = FMath::Abs(DecelTime);
-
-	FinalDistance += FMath::Abs(DecelDist);
+	FinalDistance += DecelDist;
 	FinalTime += DecelTime;
 }
 
