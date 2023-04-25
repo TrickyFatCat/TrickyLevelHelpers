@@ -40,13 +40,48 @@ private:
 	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(MultiLine))
 	FString NoteText = "Speed Ruler";
 
-	float Distance = 0.f;
-
 	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(ClampMin="1"))
+	float MovementTime = 5.f;
+
+	UPROPERTY(EditAnywhere, Category="SpeedRuler")
+	bool bIsUniformSpeed = true;
+
+	UPROPERTY(EditAnywhere,
+		Category="SpeedRuler",
+		meta=(EditCondition="bIsUniformSpeed", EditConditionHides, ClampMin="1"))
 	float Speed = 1000.f;
 
-	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(ClampMin="1"))
-	float Time = 5.f;
+	UPROPERTY(EditAnywhere,
+		Category="SpeedRuler",
+		meta=(EditCondition="!bIsUniformSpeed", EditConditionHides, ClampMin="0"))
+	float InitialSpeed = 0.f;
+	
+	UPROPERTY(EditAnywhere,
+		Category="SpeedRuler",
+		meta=(EditCondition="!bIsUniformSpeed", EditConditionHides, ClampMin="1"))
+	float TargetSpeed = 1000.f;
+
+	UPROPERTY(EditAnywhere,
+		Category="SpeedRuler",
+		meta=(EditCondition="!bIsUniformSpeed", EditConditionHides, ClampMin="0"))
+	float  Acceleration = 200.f;
+
+	float AccelTime = 0.f;
+
+	float AccelDist = 0.f;
+
+	UPROPERTY(EditAnywhere,
+		Category="SpeedRuler",
+		meta=(EditCondition="!bIsUniformSpeed", EditConditionHides, ClampMin="0"))
+	float  Deceleration= 400.f;
+
+	float DecelTime = 0.f;
+
+	float DecelDist = 0.f;
+
+	float FinalDistance = 0.f;
+
+	float FinalTime = 0.f;
 
 	UPROPERTY(EditAnywhere, Category="SpeedRuler")
 	bool bShowCircle = true;
@@ -57,5 +92,14 @@ private:
 	UPROPERTY(EditAnywhere, Category="SpeedRuler")
 	bool bShowInGame = false;
 
-	float Thickness = 3.f;
+	float Thickness = 5.f;
+
+	void CalculateDistance();
+
+	void DrawUniformSpeedDistance() const;
+
+	static FString PrintUniformSpeedDebug(const bool bIsVisible,
+	                                      const float Distance,
+	                                      const float Speed,
+	                                      const float Time);
 };
