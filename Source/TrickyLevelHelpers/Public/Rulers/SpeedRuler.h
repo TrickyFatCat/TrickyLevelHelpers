@@ -55,7 +55,7 @@ private:
 		Category="SpeedRuler",
 		meta=(EditCondition="!bIsUniformSpeed", EditConditionHides, ClampMin="0"))
 	float InitialSpeed = 0.f;
-	
+
 	UPROPERTY(EditAnywhere,
 		Category="SpeedRuler",
 		meta=(EditCondition="!bIsUniformSpeed", EditConditionHides, ClampMin="1"))
@@ -64,7 +64,7 @@ private:
 	UPROPERTY(EditAnywhere,
 		Category="SpeedRuler",
 		meta=(EditCondition="!bIsUniformSpeed", EditConditionHides, ClampMin="0"))
-	float  Acceleration = 200.f;
+	float Acceleration = 200.f;
 
 	float AccelTime = 0.f;
 
@@ -73,7 +73,7 @@ private:
 	UPROPERTY(EditAnywhere,
 		Category="SpeedRuler",
 		meta=(EditCondition="!bIsUniformSpeed", EditConditionHides, ClampMin="0"))
-	float  Deceleration= 400.f;
+	float Deceleration = 400.f;
 
 	float DecelTime = 0.f;
 
@@ -98,8 +98,28 @@ private:
 
 	void DrawUniformSpeedDistance() const;
 
-	static FString PrintUniformSpeedDebug(const bool bIsVisible,
-	                                      const float Distance,
+	void DrawVariableSpeedDistance() const;
+
+	void DrawDistanceLine(const FVector& LineStart, const FVector& LineEnd, const FColor& DrawColor) const;
+
+	void DrawDistanceCircle(const float Radius, const FColor& DrawColor) const;
+
+	static FString PrintUniformSpeedDebug(const float Distance,
 	                                      const float Speed,
+	                                      const float Time);
+
+	static FString PrintAccelerationDebug(const float Acceleration,
+	                                      const float Distance,
+	                                      const float InitialSpeed,
+	                                      const float CurrentSpeed,
+	                                      const float Time);
+
+	static FString PrintTargetSpeedDebug(const float Speed,
+	                                     const float Distance,
+	                                     const float Time);
+
+	static FString PrintDecelerationDebug(const float Deceleration,
+	                                      const float Distance,
+	                                      const float InitialSpeed,
 	                                      const float Time);
 };

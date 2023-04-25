@@ -72,10 +72,34 @@ void ASpeedRuler::OnConstruction(const FTransform& Transform)
 		DebugLabelData.Color = Color;
 		DebugLabelData.TextScale = 1.15;
 
+		const float CurrentSpeed = InitialSpeed < TargetSpeed
+			                           ? FMath::Min(InitialSpeed + Acceleration * MovementTime, TargetSpeed)
+			                           : FMath::Max(InitialSpeed - Acceleration * AccelTime, TargetSpeed);
+
+		const float TargetSpeedDistance = AccelTime < MovementTime ? FinalDistance - (AccelDist + DecelDist) : 0.f;
+
+		const FString TotalText = FString::Printf(TEXT("Distance : %d | %.2f m\nTime : %.2f sec"),
+		                                          FMath::RoundToInt32(FinalDistance),
+		                                          FinalDistance / 100.f,
+		                                          FinalTime);
+
+		const FString VariableText = FString::Printf(TEXT("%s\n---------\n%s\n---------\n%s\n---------\n%s"),
+		                                             *TotalText,
+		                                             *PrintAccelerationDebug(Acceleration,
+		                                                                     AccelDist,
+		                                                                     InitialSpeed,
+		                                                                     CurrentSpeed,
+		                                                                     AccelTime),
+		                                             *PrintTargetSpeedDebug(TargetSpeed,
+		                                                                    TargetSpeedDistance,
+		                                                                    FinalTime - (AccelTime + DecelTime)),
+		                                             *PrintDecelerationDebug(Deceleration,
+		                                                                     DecelDist,
+		                                                                     CurrentSpeed,
+		                                                                     DecelTime));
 		const FString ResultText = bIsUniformSpeed
-			                           ? PrintUniformSpeedDebug(bIsUniformSpeed, FinalDistance, Speed, FinalTime)
-			                           : FString::Printf(
-				                           TEXT("Distance : %.2f\nTime : %.2f"), DecelDist / 100.f, DecelTime);
+			                           ? PrintUniformSpeedDebug(FinalDistance, Speed, FinalTime)
+			                           : VariableText;
 		DebugLabelData.Text = FString::Printf(TEXT("%s\n---------\n%s"), *NoteText, *ResultText);
 		DebugText->SetDebugLabel(DebugLabelData);
 	}
@@ -95,89 +119,7 @@ void ASpeedRuler::Tick(float DeltaTime)
 	}
 	else
 	{
-		FVector LineStart = GetActorLocation();
-		FVector LineEnd = LineStart + GetActorForwardVector() * AccelDist;
-
-		DrawDebugLine(GetWorld(),
-		              LineStart,
-		              LineEnd,
-		              FColor::Purple,
-		              false,
-		              -1,
-		              0,
-		              Thickness);
-
-		if (bShowCircle)
-		{
-			DrawCircle(GetWorld(),
-			           LineStart,
-			           GetActorForwardVector(),
-			           GetActorRightVector(),
-			           FColor::Purple,
-			           AccelDist,
-			           32,
-			           false,
-			           -1,
-			           0,
-			           Thickness);
-		}
-
-		if (AccelTime < MovementTime)
-		{
-			LineStart = LineEnd;
-			LineEnd = LineStart + GetActorForwardVector() * (FinalDistance - (AccelDist + DecelDist));
-
-			DrawDebugLine(GetWorld(),
-			              LineStart,
-			              LineEnd,
-			              Color,
-			              false,
-			              -1,
-			              0,
-			              Thickness);
-
-			if (bShowCircle)
-			{
-				DrawCircle(GetWorld(),
-				           GetActorLocation(),
-				           GetActorForwardVector(),
-				           GetActorRightVector(),
-				           Color,
-				           FinalDistance - DecelDist,
-				           32,
-				           false,
-				           -1,
-				           0,
-				           Thickness);
-			}
-		}
-
-		LineStart = LineEnd;
-		LineEnd = LineStart + GetActorForwardVector() * DecelDist;
-
-		DrawDebugLine(GetWorld(),
-		              LineStart,
-		              LineEnd,
-		              FColor::Red,
-		              false,
-		              -1,
-		              0,
-		              Thickness);
-
-		if (bShowCircle)
-		{
-			DrawCircle(GetWorld(),
-			           GetActorLocation(),
-			           GetActorForwardVector(),
-			           GetActorRightVector(),
-			           FColor::Red,
-			           FinalDistance,
-			           32,
-			           false,
-			           -1,
-			           0,
-			           Thickness);
-		}
+		DrawVariableSpeedDistance();
 	}
 #endif
 }
@@ -199,7 +141,7 @@ void ASpeedRuler::CalculateDistance()
 
 	if (InitialSpeed <= TargetSpeed)
 	{
-		RemainingTime = AccelTime <= MovementTime ? MovementTime : MovementTime - AccelTime;
+		RemainingTime = AccelTime < MovementTime ? MovementTime : MovementTime - AccelTime;
 	}
 	else
 	{
@@ -209,13 +151,13 @@ void ASpeedRuler::CalculateDistance()
 	FinalDistance = AccelDist + TargetSpeed * RemainingTime;
 	FinalTime = MovementTime;
 
-	const float CurrentSpeed = MovementTime < AccelTime ? InitialSpeed + Acceleration * MovementTime : TargetSpeed;
+	const float CurrentSpeed = FMath::Min(InitialSpeed + Acceleration * MovementTime, TargetSpeed);
 	DecelTime = Deceleration <= 0.f ? 0.f : -(CurrentSpeed / Deceleration);
 	DecelDist = CurrentSpeed * DecelTime - Deceleration * (DecelTime * DecelTime) * 0.5;
 	DecelDist = FMath::Abs(DecelDist);
 	DecelTime = FMath::Abs(DecelTime);
-	
-	FinalDistance += DecelDist;
+
+	FinalDistance += FMath::Abs(DecelDist);
 	FinalTime += DecelTime;
 }
 
@@ -223,45 +165,138 @@ void ASpeedRuler::DrawUniformSpeedDistance() const
 {
 	const FVector LineStart = GetActorLocation();
 	const FVector LineEnd = LineStart + GetActorForwardVector() * FinalDistance;
+	DrawDistanceLine(LineStart, LineEnd, Color);
+	DrawDistanceCircle(FinalDistance, Color);
+}
 
+void ASpeedRuler::DrawVariableSpeedDistance() const
+{
+	FVector LineStart = GetActorLocation();
+	FVector LineEnd = LineStart + GetActorForwardVector() * AccelDist;
+
+	if (Acceleration > 0)
+	{
+		DrawDistanceLine(LineStart, LineEnd, FColor::Purple);
+		DrawDistanceCircle(AccelDist, FColor::Purple);
+	}
+
+	if (AccelTime < MovementTime)
+	{
+		LineStart = AccelTime <= 0.f ? GetActorLocation() : LineEnd;
+		LineEnd = LineStart + GetActorForwardVector() * (FinalDistance - (AccelDist + DecelDist));
+		DrawDistanceLine(LineStart, LineEnd, Color);
+		DrawDistanceCircle(FinalDistance - DecelDist, Color);
+	}
+
+	if (DecelDist > 0.f)
+	{
+		LineStart = LineEnd;
+		LineEnd = LineStart + GetActorForwardVector() * DecelDist;
+		DrawDistanceLine(LineStart, LineEnd, FColor::Red);
+		DrawDistanceCircle(FinalDistance, FColor::Red);
+	}
+}
+
+void ASpeedRuler::DrawDistanceLine(const FVector& LineStart, const FVector& LineEnd, const FColor& DrawColor) const
+{
 	DrawDebugLine(GetWorld(),
 	              LineStart,
 	              LineEnd,
-	              Color,
+	              DrawColor,
 	              false,
 	              -1,
 	              0,
 	              Thickness);
-
-	if (bShowCircle)
-	{
-		DrawCircle(GetWorld(),
-		           LineStart,
-		           GetActorForwardVector(),
-		           GetActorRightVector(),
-		           Color,
-		           FinalDistance,
-		           32,
-		           false,
-		           -1,
-		           0,
-		           Thickness);
-	}
 }
 
-FString ASpeedRuler::PrintUniformSpeedDebug(const bool bIsVisible,
-                                            const float Distance,
+void ASpeedRuler::DrawDistanceCircle(const float Radius, const FColor& DrawColor) const
+{
+	if (!bShowCircle)
+	{
+		return;
+	}
+
+	DrawCircle(GetWorld(),
+	           GetActorLocation(),
+	           GetActorForwardVector(),
+	           GetActorRightVector(),
+	           DrawColor,
+	           Radius,
+	           32,
+	           false,
+	           -1,
+	           0,
+	           Thickness);
+}
+
+FString ASpeedRuler::PrintUniformSpeedDebug(const float Distance,
                                             const float Speed,
                                             const float Time)
 {
 	FString Result = "";
+	Result = FString::Printf(TEXT("Distance : %d | %.2f m\nSpeed : %.2f m/s\nTime : %.2f sec"),
+	                         FMath::RoundToInt32(Distance),
+	                         Distance / 100.f,
+	                         Speed / 100.f,
+	                         Time);
 
-	if (bIsVisible)
+	return Result;
+}
+
+FString ASpeedRuler::PrintAccelerationDebug(const float Acceleration,
+                                            const float Distance,
+                                            const float InitialSpeed,
+                                            const float CurrentSpeed,
+                                            const float Time)
+{
+	FString Result = "";
+
+	if (Acceleration > 0.f)
+	{
+		Result = FString::Printf(TEXT(
+			"Acceleration : %.2f m/s^2\nDistance : %d | %.2f m\nSpeed : %.2f -> %.2f m/s\nTime : %.2f sec"),
+		                         Acceleration / 100.f,
+		                         FMath::RoundToInt32(Distance),
+		                         Distance / 100.f,
+		                         InitialSpeed / 100.f,
+		                         CurrentSpeed / 100.f,
+		                         Time);
+	}
+
+	return Result;
+}
+
+FString ASpeedRuler::PrintTargetSpeedDebug(const float Speed, const float Distance, const float Time)
+{
+	FString Result = "";
+
+	if (Distance > 0.f)
 	{
 		Result = FString::Printf(TEXT("Distance : %d | %.2f m\nSpeed : %.2f m/s\nTime : %.2f sec"),
 		                         FMath::RoundToInt32(Distance),
 		                         Distance / 100.f,
 		                         Speed / 100.f,
+		                         Time);
+	}
+
+	return Result;
+}
+
+FString ASpeedRuler::PrintDecelerationDebug(const float Deceleration,
+                                            const float Distance,
+                                            const float InitialSpeed,
+                                            const float Time)
+{
+	FString Result = "";
+
+	if (Deceleration > 0.f)
+	{
+		Result = FString::Printf(TEXT(
+			"Deceleration : %.2f m/s^2\nDistance : %d | %.2f m\nSpeed : %.2f -> 0 m/s\nTime : %.2f sec"),
+		                         Deceleration / 100.f,
+		                         FMath::RoundToInt32(Distance),
+		                         Distance / 100.f,
+		                         InitialSpeed / 100.f,
 		                         Time);
 	}
 
