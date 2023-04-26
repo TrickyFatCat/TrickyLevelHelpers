@@ -135,13 +135,15 @@ void ASpeedRuler::CalculateDistance()
 
 	const int32 AccelDir = InitialSpeed > TargetSpeed ? -1 : 1;
 	AccelTime = FMath::Min(MovementTime, FMath::Abs(TargetSpeed - InitialSpeed) / Acceleration);
-	AccelDist = InitialSpeed * AccelTime + Acceleration * (AccelTime * AccelTime) * 0.5 * AccelDir;
+	AccelDist = Acceleration > 0.f
+			? InitialSpeed * AccelTime + Acceleration * (AccelTime * AccelTime) * 0.5 * AccelDir
+			: 0.f;
 
 	float RemainingTime = 0.f;
 
 	if (InitialSpeed <= TargetSpeed)
 	{
-		RemainingTime = MovementTime > AccelTime ? MovementTime - AccelTime : 0.f;
+		RemainingTime = MovementTime >= AccelTime ? MovementTime - AccelTime : 0.f;
 	}
 	else
 	{
