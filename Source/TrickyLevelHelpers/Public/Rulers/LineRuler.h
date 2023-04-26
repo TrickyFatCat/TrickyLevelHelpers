@@ -10,7 +10,7 @@ class USceneComponent;
 class UBillboardComponent;
 class UDebugTextComponent;
 
-UCLASS(Blueprintable, HideCategories=(Actor, HLOD, Replication, Networking, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers))
+UCLASS(Blueprintable, HideCategories=(Tick, Events, Actor, HLOD, Replication, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers,Networking))
 class TRICKYLEVELHELPERS_API ALineRuler : public AActor
 {
 	GENERATED_BODY()
