@@ -136,8 +136,8 @@ void ASpeedRuler::CalculateDistance()
 	const int32 AccelDir = InitialSpeed > TargetSpeed ? -1 : 1;
 	AccelTime = FMath::Min(MovementTime, FMath::Abs(TargetSpeed - InitialSpeed) / Acceleration);
 	AccelDist = Acceleration > 0.f
-			? InitialSpeed * AccelTime + Acceleration * (AccelTime * AccelTime) * 0.5 * AccelDir
-			: 0.f;
+		            ? InitialSpeed * AccelTime + Acceleration * (AccelTime * AccelTime) * 0.5 * AccelDir
+		            : 0.f;
 
 	float RemainingTime = 0.f;
 
@@ -175,8 +175,8 @@ void ASpeedRuler::DrawVariableSpeedDistance() const
 
 	if (Acceleration > 0)
 	{
-		DrawDistanceLine(LineStart, LineEnd, FColor::Purple);
-		DrawDistanceCircle(AccelDist, FColor::Purple);
+		DrawDistanceLine(LineStart, LineEnd, AccelerationColor);
+		DrawDistanceCircle(AccelDist, AccelerationColor);
 	}
 
 	if (AccelTime < MovementTime)
@@ -191,8 +191,8 @@ void ASpeedRuler::DrawVariableSpeedDistance() const
 	{
 		LineStart = LineEnd;
 		LineEnd = LineStart + GetActorForwardVector() * DecelDist;
-		DrawDistanceLine(LineStart, LineEnd, FColor::Red);
-		DrawDistanceCircle(FinalDistance, FColor::Red);
+		DrawDistanceLine(LineStart, LineEnd, DecelerationColor);
+		DrawDistanceCircle(FinalDistance, DecelerationColor);
 	}
 }
 

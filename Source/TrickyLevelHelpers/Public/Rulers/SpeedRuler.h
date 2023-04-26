@@ -11,8 +11,7 @@ class UBillboardComponent;
 class UDebugTextComponent;
 
 UCLASS(Blueprintable,
-	HideCategories=(Actor, HLOD, Replication, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers,
-		Networking))
+	HideCategories=(Tick, Events, Actor, HLOD, Replication, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers,Networking))
 class TRICKYLEVELHELPERS_API ASpeedRuler : public AActor
 {
 	GENERATED_BODY()
@@ -89,6 +88,16 @@ private:
 	UPROPERTY(EditAnywhere, Category="SpeedRuler", meta=(HideAlphaChannel))
 	FColor Color = FColor::Magenta;
 
+	UPROPERTY(EditAnywhere,
+		Category="SpeedRuler",
+		meta=(EditCondition="!bIsUniformSpeed", EditConditionHides, HideAlphaChannel))
+	FColor AccelerationColor = FColor::Purple;
+
+	UPROPERTY(EditAnywhere,
+		Category="SpeedRuler",
+		meta=(EditCondition="!bIsUniformSpeed", EditConditionHides, HideAlphaChannel))
+	FColor DecelerationColor = FColor::Red;
+	
 	UPROPERTY(EditAnywhere, Category="SpeedRuler")
 	bool bShowInGame = false;
 
