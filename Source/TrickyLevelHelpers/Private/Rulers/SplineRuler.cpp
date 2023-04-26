@@ -15,9 +15,6 @@ ASplineRuler::ASplineRuler()
 
 	SplineComponent = CreateDefaultSubobject<USplineComponent>("Spline");
 	SetRootComponent(ToRawPtr(SplineComponent));
-	SplineComponent->EditorUnselectedSplineSegmentColor = SplineColor;
-	SplineComponent->EditorSelectedSplineSegmentColor = FLinearColor::Yellow;
-	SplineComponent->EditorTangentColor = FLinearColor::Green;
 
 	for (int32 i = 0; i < 2; ++i)
 	{
@@ -27,6 +24,10 @@ ASplineRuler::ASplineRuler()
 
 #if WITH_EDITORONLY_DATA
 	PrimaryActorTick.bCanEverTick = true;
+	
+	SplineComponent->EditorUnselectedSplineSegmentColor = SplineColor;
+	SplineComponent->EditorSelectedSplineSegmentColor = FLinearColor::Yellow;
+	SplineComponent->EditorTangentColor = FLinearColor::Green;
 	
 	PointsDebug = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("PointsDebug");
 	PointsDebug->SetupAttachment(GetRootComponent());
