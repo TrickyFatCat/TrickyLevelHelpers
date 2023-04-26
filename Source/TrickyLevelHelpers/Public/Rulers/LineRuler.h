@@ -10,6 +10,9 @@ class USceneComponent;
 class UBillboardComponent;
 class UDebugTextComponent;
 
+/**
+ * Visualizes a given distance along X, Y and Z axis
+ */
 UCLASS(Blueprintable, HideCategories=(Tick, Events, Actor, HLOD, Replication, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers,Networking))
 class TRICKYLEVELHELPERS_API ALineRuler : public AActor
 {
@@ -60,15 +63,12 @@ private:
 	bool bShowZ = true;
 
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowX", HideAlphaChannel, DisplayName="X"))
-	;
 	FColor ColorX{230, 57, 0};
 
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowY", HideAlphaChannel, DisplayName="Y"))
-	;
 	FColor ColorY{65, 188, 65};
 
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(EditCondition="bShowZ", HideAlphaChannel, DisplayName="Z"))
-	;
 	FColor ColorZ{0, 149, 230};
 
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(HideAlphaChannel))
