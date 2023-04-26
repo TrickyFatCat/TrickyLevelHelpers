@@ -144,8 +144,6 @@ You can create BP versions of these rulers if you need a collection of different
 
 Visualizes a given distance along X, Y, and Z axis.
 
-##### Parameters
-
 1. `NoteText` - a custom text showed on top of debug information;
 2. `Length` - length of each axis;
 3. `MarksSpacing` - distance between marks for each axis;
@@ -160,8 +158,6 @@ Visualizes a given distance along X, Y, and Z axis.
 
 Visualizes given radius.
 
-##### Parameters
-
 1. `NoteText` - a custom text showed on top of debug information;
 2. `Radius` - radius to visualize;
 3. `Shape` - determines what shape to use to visualize `Radius`:
@@ -175,8 +171,6 @@ Visualizes given radius.
 #### SpeedRuler
 
 Visualizes distance calculated using time, speed, acceleration, deceleration.
-
-##### Parameters
 
 1. `NoteText` - a custom text showed on top of debug information;
 2. `MovementTime` - duration of movement;
@@ -195,8 +189,6 @@ Visualizes distance calculated using time, speed, acceleration, deceleration.
 #### SplineRuler
 
 Measures distance from first point to others and length of sectors between points.
-
-##### Parameters
 
 1. `Points` - if enabled, points debug data will be shown;
 2. `Sectors` - if enabled, sectors debug data will be shown;
