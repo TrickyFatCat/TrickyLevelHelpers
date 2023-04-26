@@ -9,6 +9,9 @@
 class USplineComponent;
 class UDebugTextComponent;
 
+/**
+ * Measures distance from first point to others and length of sectors between points.
+ */
 UCLASS(Blueprintable, HideCategories=(Tick, Events, Actor, HLOD, Replication, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers,Networking))
 class TRICKYLEVELHELPERS_API ASplineRuler : public AActor
 {
@@ -39,13 +42,13 @@ private:
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(InlineEditConditionToggle))
 	bool bShowDistance = true;
 
-	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowDistance", HideAlphaChannel))
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowDistance", HideAlphaChannel, DisplayName="Points"))
 	FLinearColor DistanceColor{FColor::Red};
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(InlineEditConditionToggle))
 	bool bShowSectors = false;
 	
-	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowSectors", HideAlphaChannel))
+	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(EditCondition="bShowSectors", HideAlphaChannel, DisplayName="Sectors"))
 	FLinearColor SectorsColor{FColor::Yellow};
 
 	UPROPERTY(EditAnywhere, Category="SplineMeasurer", meta=(InlineEditConditionToggle))

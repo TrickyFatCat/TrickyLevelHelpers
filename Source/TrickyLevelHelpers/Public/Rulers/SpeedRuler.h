@@ -10,6 +10,9 @@ class USceneComponent;
 class UBillboardComponent;
 class UDebugTextComponent;
 
+/**
+ * Visualizes distance calculated using time, speed, acceleration, deceleration.
+ */
 UCLASS(Blueprintable, HideCategories=(Tick, Events, Actor, HLOD, Replication, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers,Networking))
 class TRICKYLEVELHELPERS_API ASpeedRuler : public AActor
 {

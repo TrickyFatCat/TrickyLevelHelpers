@@ -10,6 +10,9 @@ class USceneComponent;
 class UBillboardComponent;
 class UDebugTextComponent;
 
+/**
+ * Visualizes given distance as a cube.
+ */
 UCLASS(Blueprintable, HideCategories=(Tick, Events, Actor, HLOD, Replication, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers,Networking))
 class TRICKYLEVELHELPERS_API AVolumeRuler : public AActor
 {

@@ -18,6 +18,9 @@ enum class ERadiusRulerShape : uint8
 	Cylinder
 };
 
+/**
+ * Visualizes given radius.
+ */
 UCLASS(Blueprintable, HideCategories=(Tick, Events, Actor, HLOD, Replication, Input, Cooking, Collision, Physics, Rendering, WorldPartition, DataLayers,Networking))
 class TRICKYLEVELHELPERS_API ARadiusRuler : public AActor
 {
