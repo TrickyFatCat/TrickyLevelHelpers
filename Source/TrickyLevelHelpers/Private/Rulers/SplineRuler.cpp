@@ -24,18 +24,26 @@ ASplineRuler::ASplineRuler()
 
 #if WITH_EDITORONLY_DATA
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	SplineComponent->EditorUnselectedSplineSegmentColor = SplineColor;
 	SplineComponent->EditorSelectedSplineSegmentColor = FLinearColor::Yellow;
 	SplineComponent->EditorTangentColor = FLinearColor::Green;
-	
+
 	PointsDebug = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("PointsDebug");
-	PointsDebug->SetupAttachment(GetRootComponent());
-	PointsDebug->SetDrawOneLabel(false);
+
+	if (PointsDebug)
+	{
+		PointsDebug->SetupAttachment(GetRootComponent());
+		PointsDebug->SetDrawOneLabel(false);
+	}
 
 	SectorsDebug = CreateEditorOnlyDefaultSubobject<UDebugTextComponent>("SectorsDebug");
-	SectorsDebug->SetupAttachment(GetRootComponent());
-	SectorsDebug->SetDrawOneLabel(false);
+
+	if (SectorsDebug)
+	{
+		SectorsDebug->SetupAttachment(GetRootComponent());
+		SectorsDebug->SetDrawOneLabel(false);
+	}
 #else
 	PrimaryActorTick.bCanEverTick = false;
 #endif
@@ -51,6 +59,11 @@ void ASplineRuler::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 #if WITH_EDITORONLY_DATA
+
+	if (!SplineComponent)
+	{
+		return;
+	}
 
 	const int32 LastSplinePoint = SplineComponent->GetNumberOfSplinePoints();
 	const int32 LastPointIndex = SplineComponent->IsClosedLoop() ? LastSplinePoint : LastSplinePoint - 1;
@@ -81,8 +94,11 @@ void ASplineRuler::OnConstruction(const FTransform& Transform)
 
 	bIsEditorOnlyActor = !bDrawInGame;
 
-	SplineComponent->SetUnselectedSplineSegmentColor(SplineColor);
-	SplineComponent->SetClosedLoop(bIsLooped);
+	if (SplineComponent)
+	{
+		SplineComponent->SetUnselectedSplineSegmentColor(SplineColor);
+		SplineComponent->SetClosedLoop(bIsLooped);
+	}
 
 	if (PointsDebug)
 	{
