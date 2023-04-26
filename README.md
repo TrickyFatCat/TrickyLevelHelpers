@@ -138,7 +138,9 @@ A simple actor with a spline component as a root component.
 
 Rulers are simple editor only actors which allows quickly measure and visualize distances in the level.
 
-You can create BP versions of these rulers if you need a collection of different rulers for quick measurement.
+You can place them in the level using `Place Actor` menu and search.
+
+In addition, you can create BP versions of these rulers if you need a collection of different rulers for quick measurement.
 
 #### LineRuler
 
