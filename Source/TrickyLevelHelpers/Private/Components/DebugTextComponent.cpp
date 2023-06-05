@@ -3,6 +3,8 @@
 #include "Components/DebugTextComponent.h"
 
 #include "Engine/Canvas.h"
+#include "Engine/World.h"
+#include "Engine.h"
 
 FDebugSceneProxy::FDebugSceneProxy(const UPrimitiveComponent* InComponent,
                                    FDebugSceneProxyData* ProxyData) : FDebugRenderSceneProxy(InComponent)
