@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
-	"Version": 4,
-	"VersionName": "2.1",
+	"Version": 5,
+	"VersionName": "2.1.1",
 	"FriendlyName": "TrickyLevelHelpers",
 	"Description": "A plugin for facilitating level design process",
 	"Category": "TrickyPrototyping",
