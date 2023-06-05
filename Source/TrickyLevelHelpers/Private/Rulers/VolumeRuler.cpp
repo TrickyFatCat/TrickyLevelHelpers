@@ -101,7 +101,7 @@ void AVolumeRuler::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 #if WITH_EDITORONLY_DATA
-
+	Extent = Size * 0.5f;
 	Center = bCenterOrigin ? GetActorLocation() : GetActorLocation() + Extent;
 
 	DrawDebugBox(GetWorld(),
