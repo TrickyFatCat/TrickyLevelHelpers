@@ -4,7 +4,7 @@
 
 #include "Engine/Canvas.h"
 #include "Engine/World.h"
-#include "Engine.h"
+#include "Engine/Engine.h"
 
 FDebugSceneProxy::FDebugSceneProxy(const UPrimitiveComponent* InComponent,
                                    FDebugSceneProxyData* ProxyData) : FDebugRenderSceneProxy(InComponent)
