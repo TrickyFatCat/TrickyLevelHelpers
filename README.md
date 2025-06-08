@@ -1,5 +1,7 @@
 ﻿# TrickyLevelHelpers
 
+This plugin isn't in development no more, you can use new version [**here**](https://github.com/TrickyFatCat/TrickyRulers).
+
 A plugin for facilitating level design process.
 
 ## Installation
